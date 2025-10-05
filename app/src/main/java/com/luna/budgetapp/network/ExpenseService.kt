@@ -17,17 +17,27 @@ interface ExpenseService {
     suspend fun getExpenseById(@Path("id") id: Long): ExpenseDto
 
     @GET("type/{type}")
-    suspend fun getExpenseByType(@Path("type") type: String): List<ExpenseDto>
+    suspend fun getExpenseByType(
+        @Path("type") type: String
+    ): List<ExpenseDto>
 
     @GET("category/{category}")
-    suspend fun getExpenseByCategory(@Path("category") category: String): List<ExpenseDto>
+    suspend fun getExpenseByCategory(
+        @Path("category") category: String
+    ): List<ExpenseDto>
 
     @POST("add")
     suspend fun addExpense(@Body expenseDto: ExpenseDto): ExpenseDto
+
+    @PUT("add")
+    suspend fun addExpenses(@Body expenses: List<ExpenseDto>)
 
     @DELETE("{id}")
     suspend fun deleteExpense(@Path("id") id: Long)
 
     @PUT("{id}")
-    suspend fun updateExpense(@Body expenseDto: ExpenseDto): ExpenseDto
+    suspend fun updateExpense(
+        @Body expenseDto: ExpenseDto,
+        @Path("id") id: Long
+    ): ExpenseDto
 }

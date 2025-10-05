@@ -1,8 +1,7 @@
-package com.luna.budgetapp.domain
+package com.luna.budgetapp.domain.model
 
 import java.math.BigDecimal
 import java.time.LocalDate
-
 
 data class Expense(
     val id: Long,

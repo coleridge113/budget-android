@@ -31,7 +31,7 @@ class ExpenseRemoteSource(
         expenseService.deleteExpense(id)
     }
 
-    suspend fun updateExpense(expenseDto: ExpenseDto): ExpenseDto? {
-        return expenseService.updateExpense(expenseDto)
+    suspend fun updateExpense(expenseDto: ExpenseDto, id: Long): ExpenseDto? {
+        return expenseService.updateExpense(expenseDto, id)
     }
 }

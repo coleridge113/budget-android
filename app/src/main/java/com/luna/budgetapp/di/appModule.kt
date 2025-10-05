@@ -34,8 +34,7 @@ val appModule = module {
     }
     single<Repository> {
         RepositoryImpl(
-            get(),
-            remoteSource = get()
+            get()
         )
     }
 }

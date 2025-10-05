@@ -3,6 +3,7 @@ package com.luna.budgetapp.data.local.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Update
 import com.luna.budgetapp.data.local.entity.ExpenseCache
@@ -21,6 +22,9 @@ interface ExpenseDao {
 
     @Insert
     fun addExpense(expenseCache: ExpenseCache): ExpenseCache
+
+    @Insert(onConflict = REPLACE)
+    fun addExpenses(expenses: List<ExpenseCache>)
 
     @Update
     fun updateExpense(expenseCache: ExpenseCache, id: Long): ExpenseCache

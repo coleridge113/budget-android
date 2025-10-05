@@ -23,6 +23,10 @@ class RepositoryImpl(
         return localSource.addExpense(expenseCache)
     }
 
+    override suspend fun addExpenses(expenses: List<ExpenseCache>) {
+        localSource.addExpenses(expenses)
+    }
+
     override suspend fun updateExpense(
         expenseCache: ExpenseCache,
         id: Long

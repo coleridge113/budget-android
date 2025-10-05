@@ -12,6 +12,8 @@ interface Repository {
 
     suspend fun addExpense(expenseCache: ExpenseCache): ExpenseCache
 
+    suspend fun addExpenses(expenses: List<ExpenseCache>)
+
     suspend fun updateExpense(expenseCache: ExpenseCache, id: Long): ExpenseCache
 
     suspend fun deleteExpense(id: Long)

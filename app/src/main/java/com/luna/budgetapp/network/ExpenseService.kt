@@ -5,12 +5,13 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ExpenseService {
 
     @GET("/")
-    suspend fun getExpenses(): List<ExpenseDto>
+    suspend fun getAllExpenses(): List<ExpenseDto>
 
     @GET("{id}")
     suspend fun getExpenseById(@Path("id") id: Long): ExpenseDto
@@ -22,8 +23,11 @@ interface ExpenseService {
     suspend fun getExpenseByCategory(@Path("category") category: String): List<ExpenseDto>
 
     @POST("add")
-    suspend fun addExpense(@Body expenseDto: ExpenseDto)
+    suspend fun addExpense(@Body expenseDto: ExpenseDto): ExpenseDto
 
     @DELETE("{id}")
     suspend fun deleteExpense(@Path("id") id: Long)
+
+    @PUT("{id}")
+    suspend fun updateExpense(@Body expenseDto: ExpenseDto): ExpenseDto
 }

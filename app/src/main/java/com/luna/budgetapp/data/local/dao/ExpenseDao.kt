@@ -20,10 +20,10 @@ interface ExpenseDao {
     fun getExpensesByType(type: String): List<ExpenseCache>
 
     @Insert
-    fun addExpense(expenseCache: ExpenseCache)
+    fun addExpense(expenseCache: ExpenseCache): ExpenseCache
 
     @Update
-    fun updateExpense(expenseCache: ExpenseCache, id: Long)
+    fun updateExpense(expenseCache: ExpenseCache, id: Long): ExpenseCache
 
     @Delete
     fun deleteExpense(id: Long)

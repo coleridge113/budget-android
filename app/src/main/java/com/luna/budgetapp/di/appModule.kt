@@ -2,6 +2,9 @@ package com.luna.budgetapp.di
 
 import androidx.room.Room
 import com.luna.budgetapp.data.local.AppDatabase
+import com.luna.budgetapp.data.local.repository.Repository
+import com.luna.budgetapp.data.local.repository.RepositoryImpl
+import com.luna.budgetapp.data.remote.ExpenseRemoteSource
 import com.luna.budgetapp.network.ExpenseService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -25,5 +28,14 @@ val appModule = module {
     }
     single {
         get<AppDatabase>().expenseDao()
+    }
+    single {
+        ExpenseRemoteSource(get())
+    }
+    single<Repository> {
+        RepositoryImpl(
+            get(),
+            remoteSource = get()
+        )
     }
 }

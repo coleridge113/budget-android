@@ -62,11 +62,23 @@ class ExpenseRemoteSource(
         }
     }
 
-    suspend fun deleteExpense(id: Long) {
-        expenseService.deleteExpense(id)
+    suspend fun deleteExpense(id: Long): Boolean {
+        val response = expenseService.deleteExpense(id)
+        return (if (response.statusCode == HTTP_OK) {
+            response.body
+        } else {
+            Log.e(TAG, response.statusMessage)
+            false
+        }) == true
     }
 
     suspend fun updateExpense(expenseDto: ExpenseDto, id: Long): ExpenseDto? {
-        return expenseService.updateExpense(expenseDto, id)
+        val response = expenseService.updateExpense(expenseDto, id)
+        return if (response.statusCode == HTTP_OK) {
+            response.body
+        } else {
+            Log.e(TAG, response.statusMessage)
+            null
+        }
     }
 }

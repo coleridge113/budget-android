@@ -30,7 +30,7 @@ interface ExpenseService {
     suspend fun addExpense(@Body expenseDto: ExpenseDto): Response<ExpenseDto>
 
     @PUT("add/batch")
-    suspend fun addExpenses(@Body expenses: List<ExpenseDto>): Response<Unit>
+    suspend fun addExpenses(@Body expenses: List<ExpenseDto>): Response<ExpenseDto>
 
     @DELETE("{id}")
     suspend fun deleteExpense(@Path("id") id: Long): Response<Boolean>

@@ -5,6 +5,12 @@ import com.luna.budgetapp.data.local.AppDatabase
 import com.luna.budgetapp.data.local.repository.Repository
 import com.luna.budgetapp.data.local.repository.RepositoryImpl
 import com.luna.budgetapp.data.remote.ExpenseRemoteSource
+import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
+import com.luna.budgetapp.domain.usecase.expense.DeleteExpenseUseCase
+import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
+import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
+import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
+import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.network.ExpenseService
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -36,5 +42,23 @@ val appModule = module {
         RepositoryImpl(
             get()
         )
+    }
+    factory {
+        AddExpenseUseCase(get(), get())
+    }
+    factory {
+        DeleteExpenseUseCase(get(), get())
+    }
+    factory {
+        GetAllExpensesUseCase(get(), get())
+    }
+    factory {
+        GetExpensesByCategoryUseCase(get(), get())
+    }
+    factory {
+        GetExpensesByTypeUseCase(get(), get())
+    }
+    factory {
+        UpdateExpenseUseCase(get(), get())
     }
 }

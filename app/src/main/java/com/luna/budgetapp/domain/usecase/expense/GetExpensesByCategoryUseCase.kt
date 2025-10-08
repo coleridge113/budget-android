@@ -2,6 +2,8 @@ package com.luna.budgetapp.domain.usecase.expense
 
 import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.local.repository.Repository
+import com.luna.budgetapp.data.mapper.fromCacheToEntity
+import com.luna.budgetapp.data.mapper.fromDtoToEntity
 import com.luna.budgetapp.data.mapper.toExpense
 import com.luna.budgetapp.data.mapper.toExpenseCache
 import com.luna.budgetapp.data.remote.ExpenseRemoteSource
@@ -21,11 +23,11 @@ class GetExpensesByCategoryUseCase(
             try {
                 val local = repository.getExpensesByCategory(category)
                 if (local.isNotEmpty()) {
-                    emit(Resource.Success(local.toExpense()))
+                    emit(Resource.Success(local.fromCacheToEntity()))
                 } else {
                     val remote = remoteSource.getExpensesByCategory(category)
                     repository.addExpenses(remote.toExpenseCache())
-                    emit(Resource.Success(remote.toExpense()))
+                    emit(Resource.Success(remote.fromDtoToEntity()))
                 }
             } catch (e: Exception) {
                 emit(Resource.Error(e.localizedMessage ?: "Unknown error"))

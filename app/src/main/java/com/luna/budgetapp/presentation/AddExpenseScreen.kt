@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun AddExpenseScreen(modifier: Modifier = Modifier) {
-    private val viewModel
+//    private val viewModel
 }
 
 @Composable

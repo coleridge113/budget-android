@@ -96,7 +96,7 @@ fun List<ExpenseDto>.toExpenseCache(): List<ExpenseCache> {
     }
 }
 
-fun List<ExpenseDto>.toExpense(): List<Expense> {
+fun List<ExpenseDto>.fromDtoToEntity(): List<Expense> {
     return this.map {
         Expense(
             id = it.id,
@@ -109,7 +109,7 @@ fun List<ExpenseDto>.toExpense(): List<Expense> {
     }
 }
 
-fun List<ExpenseCache>.toExpense(): List<Expense> {
+fun List<ExpenseCache>.fromCacheToEntity(): List<Expense> {
     return this.map {
         Expense(
             id = it.id,

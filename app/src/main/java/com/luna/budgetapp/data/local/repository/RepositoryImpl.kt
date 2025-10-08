@@ -19,7 +19,7 @@ class RepositoryImpl(
         return localSource.getExpensesByType(type)
     }
 
-    override suspend fun addExpense(expenseCache: ExpenseCache): ExpenseCache {
+    override suspend fun addExpense(expenseCache: ExpenseCache) {
         return localSource.addExpense(expenseCache)
     }
 
@@ -27,14 +27,11 @@ class RepositoryImpl(
         localSource.addExpenses(expenses)
     }
 
-    override suspend fun updateExpense(
-        expenseCache: ExpenseCache,
-        id: Long
-    ): ExpenseCache {
-        return localSource.updateExpense(expenseCache, id)
+    override suspend fun updateExpense(expenseCache: ExpenseCache) {
+        return localSource.updateExpense(expenseCache)
     }
 
-    override suspend fun deleteExpense(id: Long) {
-        localSource.deleteExpense(id)
+    override suspend fun deleteExpense(expenseCache: ExpenseCache) {
+        localSource.deleteExpense(expenseCache)
     }
 }

@@ -10,11 +10,11 @@ interface Repository {
 
     suspend fun getExpensesByType(type: String): List<ExpenseCache>
 
-    suspend fun addExpense(expenseCache: ExpenseCache): ExpenseCache
+    suspend fun addExpense(expenseCache: ExpenseCache)
 
     suspend fun addExpenses(expenses: List<ExpenseCache>)
 
-    suspend fun updateExpense(expenseCache: ExpenseCache, id: Long): ExpenseCache
+    suspend fun updateExpense(expenseCache: ExpenseCache)
 
-    suspend fun deleteExpense(id: Long)
+    suspend fun deleteExpense(expenseCache: ExpenseCache)
 }

@@ -20,9 +20,9 @@ class AddExpenseUseCase(
         return flow {
             emit(Resource.Loading())
             try {
-                val localResult = repository.addExpense(expense.toExpenseCache())
-                remoteSource.addExpense(localResult.toExpenseDto())
-                emit(Resource.Success(localResult.toExpense()))
+                repository.addExpense(expense.toExpenseCache())
+                remoteSource.addExpense(expense.toExpenseDto())
+                emit(Resource.Success(expense))
             } catch (e: Exception) {
                 emit(Resource.Error(e.localizedMessage ?: "Unknown error"))
             }

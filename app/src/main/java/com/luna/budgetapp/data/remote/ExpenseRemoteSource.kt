@@ -13,11 +13,11 @@ class ExpenseRemoteSource(
     private val TAG = "ExpenseRemoteSource"
 
     suspend fun getAllExpenses(): List<ExpenseDto> {
-        val response = expenseService.getAllExpenses()
-        return if (response.statusCode == HTTP_OK) {
-            response.body ?: emptyList()
-        } else {
-            Log.e(TAG, response.statusMessage)
+        return try {
+            val response = expenseService.getAllExpenses()
+            response
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
             emptyList()
         }
     }

@@ -10,32 +10,32 @@ import retrofit2.http.Path
 
 interface ExpenseService {
 
-    @GET("/")
-    suspend fun getAllExpenses(): Response<List<ExpenseDto>>
+    @GET("api/v1/expenses")
+    suspend fun getAllExpenses(): List<ExpenseDto>
 
-    @GET("{id}")
+    @GET("api/v1/expenses/{id}")
     suspend fun getExpenseById(@Path("id") id: Long): Response<ExpenseDto>
 
-    @GET("type/{type}")
+    @GET("api/v1/expenses/type/{type}")
     suspend fun getExpenseByType(
         @Path("type") type: String
     ): Response<List<ExpenseDto>>
 
-    @GET("category/{category}")
+    @GET("api/v1/expenses/category/{category}")
     suspend fun getExpenseByCategory(
         @Path("category") category: String
     ): Response<List<ExpenseDto>>
 
-    @POST("add")
+    @POST("api/v1/expenses/add")
     suspend fun addExpense(@Body expenseDto: ExpenseDto): Response<ExpenseDto>
 
-    @PUT("add/batch")
+    @PUT("api/v1/expenses/add/batch")
     suspend fun addExpenses(@Body expenses: List<ExpenseDto>): Response<ExpenseDto>
 
-    @DELETE("{id}")
+    @DELETE("api/v1/expenses/{id}")
     suspend fun deleteExpense(@Path("id") id: Long): Response<Boolean>
 
-    @PUT("{id}")
+    @PUT("api/v1/expenses/{id}")
     suspend fun updateExpense(
         @Body expenseDto: ExpenseDto,
         @Path("id") id: Long

@@ -80,8 +80,6 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.okhttp.curl)
-
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

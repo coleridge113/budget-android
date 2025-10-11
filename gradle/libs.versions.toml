@@ -19,7 +19,6 @@ composeBom = "2025.09.01"
 lifecycleRuntimeKtxVersion = "2.7.0"
 loggingInterceptor = "5.2.0"
 okhttpBom = "5.2.0"
-okhttpCurl = "1.0.0"
 roomRuntime = "2.8.1"
 
 [libraries]
@@ -53,7 +52,6 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
 okhttp = { module = "com.squareup.okhttp3:okhttp" }
 okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttpBom" }
-okhttp-curl = { module = "com.github.mrmike:okhttp-curl", version.ref = "okhttpCurl" }
 okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 

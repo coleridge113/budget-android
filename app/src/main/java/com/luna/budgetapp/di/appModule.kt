@@ -1,5 +1,6 @@
 package com.luna.budgetapp.di
 
+import android.util.Log
 import androidx.room.Room
 import com.luna.budgetapp.data.local.AppDatabase
 import com.luna.budgetapp.data.local.repository.Repository
@@ -12,15 +13,27 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.network.ExpenseService
+import com.luna.budgetapp.ui.screen.addexpense.AddExpenseViewModel
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
     single {
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
         Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/api/v1/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ExpenseService::class.java)
@@ -60,5 +73,8 @@ val appModule = module {
     }
     factory {
         UpdateExpenseUseCase(get(), get())
+    }
+    viewModel {
+        AddExpenseViewModel(get(), get())
     }
 }

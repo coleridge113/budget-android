@@ -4,7 +4,6 @@ import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.local.repository.Repository
 import com.luna.budgetapp.data.mapper.fromCacheToEntity
 import com.luna.budgetapp.data.mapper.fromDtoToEntity
-import com.luna.budgetapp.data.mapper.toExpense
 import com.luna.budgetapp.data.mapper.toExpenseCache
 import com.luna.budgetapp.data.remote.ExpenseRemoteSource
 import com.luna.budgetapp.domain.model.Expense

@@ -22,15 +22,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.luna.budgetapp.domain.model.Expense
+import org.koin.compose.viewmodel.koinViewModel
 import java.math.BigDecimal
 import java.time.LocalDate
 
 
 @Composable
 fun AddExpensesScreen(
-    viewModel: AddExpenseViewModel,
-    modifier: Modifier = Modifier
+    navController: NavController,
+    viewModel: AddExpenseViewModel = koinViewModel()
 ) {
     Column(modifier = Modifier) {
         val state by viewModel.state.collectAsState(initial = AddExpenseState.GetExpenses(emptyList()))
@@ -44,7 +46,7 @@ fun AddExpensesScreen(
                 } else {
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(3),
-                        modifier = modifier
+                        modifier = Modifier
                     ) {
                         items(expenseList) { expense ->
                             PresetExpenseButton(

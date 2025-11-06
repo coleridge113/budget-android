@@ -1,6 +1,5 @@
 package com.luna.budgetapp.di
 
-import android.util.Log
 import androidx.room.Room
 import com.luna.budgetapp.data.local.AppDatabase
 import com.luna.budgetapp.data.local.repository.Repository

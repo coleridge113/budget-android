@@ -8,6 +8,7 @@ import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import android.util.Log
 
 class AddExpenseViewModel(
     private val addExpenseUseCase: AddExpenseUseCase,
@@ -20,8 +21,10 @@ class AddExpenseViewModel(
         viewModelScope.launch {
             getAllExpensesUseCase().collect { resource ->
                 when(resource) {
-                    is Resource.Success ->
+                    is Resource.Success -> {
                         _state.emit(AddExpenseState.GetExpenses(resource.data ?: emptyList()))
+                        Log.d("ExpenseViewModel", "expenses: ${resource.data}")
+                    }
 
                     is Resource.Error -> {}
 

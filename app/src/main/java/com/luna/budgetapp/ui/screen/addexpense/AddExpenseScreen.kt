@@ -27,7 +27,7 @@ import com.luna.budgetapp.domain.model.Expense
 import org.koin.compose.viewmodel.koinViewModel
 import java.math.BigDecimal
 import java.time.LocalDate
-
+import android.util.Log
 
 @Composable
 fun AddExpensesScreen(
@@ -41,6 +41,7 @@ fun AddExpensesScreen(
         when(state) {
             is AddExpenseState.GetExpenses -> {
                 val expenseList = (state as AddExpenseState.GetExpenses).expenses
+                Log.d("ExpenseScreen", "expense list: ${expenseList}")
                 if (expenseList.isEmpty()) {
                     Text("No expenses found", modifier = Modifier.padding(16.dp))
                 } else {

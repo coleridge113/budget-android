@@ -10,7 +10,7 @@ import retrofit2.http.Path
 
 interface ExpenseService {
 
-    @GET("api/v1/expenses")
+    @GET("api/v1/expenses/")
     suspend fun getAllExpenses(): List<ExpenseDto>
 
     @GET("api/v1/expenses/{id}")

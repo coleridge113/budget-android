@@ -21,7 +21,7 @@ class GetAllExpensesUseCase(
             emit(Resource.Loading())
             try {
                 val local = repository.getAllExpenses()
-                if (local.isNotEmpty()) {
+                if (false) {
                     emit(Resource.Success(local.fromCacheToEntity()))
                 } else {
                     val remote = remoteSource.getAllExpenses()

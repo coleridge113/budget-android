@@ -1,4 +1,4 @@
-package com.luna.budgetapp.ui.screen.addexpense
+package com.luna.budgetapp.presentation.screen.addexpense
 
 import com.luna.budgetapp.domain.model.Expense
 

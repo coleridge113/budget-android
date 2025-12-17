@@ -1,4 +1,4 @@
-package com.luna.budgetapp.ui.screen.addexpense
+package com.luna.budgetapp.presentation.screen.addexpense
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.luna.budgetapp.domain.model.Expense
 import org.koin.compose.viewmodel.koinViewModel
-import java.math.BigDecimal
 import java.time.LocalDate
 import android.util.Log
 

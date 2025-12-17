@@ -1,4 +1,4 @@
-package com.luna.budgetapp.ui.screen.addexpense
+package com.luna.budgetapp.presentation.screen.addexpense
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

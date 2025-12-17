@@ -1,3 +1,7 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -36,12 +40,13 @@ android {
 
     kotlin {
         compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -80,6 +85,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
     implementation(libs.okhttp3.logging.interceptor)
+
     // Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)

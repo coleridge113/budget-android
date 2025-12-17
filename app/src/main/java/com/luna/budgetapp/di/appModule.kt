@@ -12,7 +12,7 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.network.ExpenseService
-import com.luna.budgetapp.ui.screen.addexpense.AddExpenseViewModel
+import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -70,6 +71,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // Kotlin Serialization
+    implementation(libs.kotlinx.serialization.json)
+
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
@@ -93,7 +97,6 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v270)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // Navigation

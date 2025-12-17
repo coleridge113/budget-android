@@ -29,7 +29,7 @@ import java.time.LocalDate
 import android.util.Log
 
 @Composable
-fun AddExpensesScreen(
+fun AddExpensesRoute(
     navController: NavController,
     viewModel: AddExpenseViewModel = koinViewModel()
 ) {

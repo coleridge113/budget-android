@@ -7,28 +7,34 @@ import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Update
 import com.luna.budgetapp.data.local.entity.ExpenseEntity
+import kotlinx.coroutines.flow.Flow
+import com.luna.budgetapp.common.Resource
 
 @Dao
 interface ExpenseDao {
 
     @Query("SELECT * FROM expenses")
-    fun getAllExpenses(): List<ExpenseEntity>
+    fun getAllExpenses(): Flow<List<ExpenseEntity>>
 
     @Query("SELECT * FROM expenses WHERE category = :category")
-    fun getExpensesByCategory(category: String): List<ExpenseEntity>
+    fun getExpensesByCategory(category: String): Flow<List<ExpenseEntity>>
 
     @Query("SELECT * FROM expenses WHERE type = :type")
-    fun getExpensesByType(type: String): List<ExpenseEntity>
+    fun getExpensesByType(type: String): Flow<List<ExpenseEntity>>
 
     @Insert
-    fun addExpense(expenseEntity: ExpenseEntity)
+    fun addExpense(expense: ExpenseEntity)
 
     @Insert(onConflict = REPLACE)
     fun addExpenses(expenses: List<ExpenseEntity>)
 
     @Update
-    fun updateExpense(expenseEntity: ExpenseEntity)
+    fun updateExpense(expense: ExpenseEntity)
 
     @Delete
-    fun deleteExpense(expenseEntity: ExpenseEntity)
+    fun deleteExpense(expense: ExpenseEntity)
+
+    @Delete
+    fun deleteExpenses(expenses: List<ExpenseEntity>)
+
 }

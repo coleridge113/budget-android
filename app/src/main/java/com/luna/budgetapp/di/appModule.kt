@@ -3,7 +3,6 @@ package com.luna.budgetapp.di
 import androidx.room.Room
 import com.luna.budgetapp.data.local.AppDatabase
 import com.luna.budgetapp.data.local.repository.RepositoryImpl
-import com.luna.budgetapp.data.remote.ExpenseRemoteSource
 import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.DeleteExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
@@ -46,9 +45,6 @@ val appModule = module {
     }
     single {
         get<AppDatabase>().expenseDao()
-    }
-    single {
-        ExpenseRemoteSource(get())
     }
     single<ExpenseRepository> {
         RepositoryImpl(get(), get())

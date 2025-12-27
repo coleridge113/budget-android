@@ -14,30 +14,30 @@ interface ExpenseService {
     suspend fun getAllExpenses(): List<ExpenseDto>
 
     @GET("api/v1/expenses/{id}")
-    suspend fun getExpenseById(@Path("id") id: Long): Response<ExpenseDto>
+    suspend fun getExpenseById(@Path("id") id: Long): List<ExpenseDto>
 
     @GET("api/v1/expenses/type/{type}")
     suspend fun getExpenseByType(
         @Path("type") type: String
-    ): Response<List<ExpenseDto>>
+    ): List<ExpenseDto>
 
     @GET("api/v1/expenses/category/{category}")
     suspend fun getExpenseByCategory(
         @Path("category") category: String
-    ): Response<List<ExpenseDto>>
+    ): List<ExpenseDto>
 
     @POST("api/v1/expenses/add")
-    suspend fun addExpense(@Body expenseDto: ExpenseDto): Response<ExpenseDto>
+    suspend fun addExpense(@Body expenseDto: ExpenseDto): List<ExpenseDto>
 
     @PUT("api/v1/expenses/add/batch")
-    suspend fun addExpenses(@Body expenses: List<ExpenseDto>): Response<ExpenseDto>
+    suspend fun addExpenses(@Body expenses: List<ExpenseDto>): List<ExpenseDto>
 
     @DELETE("api/v1/expenses/{id}")
-    suspend fun deleteExpense(@Path("id") id: Long): Response<Boolean>
+    suspend fun deleteExpense(@Path("id") id: Long): Boolean
 
     @PUT("api/v1/expenses/{id}")
     suspend fun updateExpense(
         @Body expenseDto: ExpenseDto,
         @Path("id") id: Long
-    ): Response<ExpenseDto>
+    ): ExpenseDto
 }

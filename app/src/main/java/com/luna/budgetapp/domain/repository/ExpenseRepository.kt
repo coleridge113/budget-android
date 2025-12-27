@@ -1,13 +1,15 @@
 package com.luna.budgetapp.domain.repository
 
 import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.common.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface ExpenseRepository {
-    suspend fun getAllExpenses(): List<Expense>
+    suspend fun getAllExpenses(): Flow<Resource<List<Expense>>>
 
-    suspend fun getExpensesByCategory(category: String): List<Expense>
+    suspend fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>>
 
-    suspend fun getExpensesByType(type: String): List<Expense>
+    suspend fun getExpensesByType(type: String): Flow<Resource<List<Expense>>>
 
     suspend fun addExpense(expense: Expense)
 

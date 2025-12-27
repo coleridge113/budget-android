@@ -13,12 +13,18 @@ class GetExpensesByTypeUseCase(
 ) {
     operator fun invoke(type: String): Flow<Resource<List<Expense>>> {
         return flow {
-            emit(Resource.Loading())
-            try {
-                val expenses = repository.getExpensesByType(type)
-                emit(Resource.Success(expenses))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.localizedMessage ?: "Unknown error"))
+            repository.getExpensesByType(type).collect { resource ->
+                when(resource) {
+                    is Resource.Loading -> {
+                        emit(Resource.Loading())
+                    }
+                    is Resource.Error -> {
+                        emit(Resource.Error(resource.message ?: "Something went wrong..."))
+                    }
+                    is Resource.Success -> {
+                        emit(Resource.Success(resource.data ?: emptyList()))
+                    }
+                }
             }
         }.flowOn(Dispatchers.IO)
     }

@@ -68,6 +68,6 @@ val appModule = module {
         UpdateExpenseUseCase(get())
     }
     viewModel {
-        AddExpenseViewModel(get(), get())
+        AddExpenseViewModel(get())
     }
 }

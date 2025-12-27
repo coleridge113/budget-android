@@ -1,11 +1,11 @@
 package com.luna.budgetapp.data.mapper
 
-import com.luna.budgetapp.data.local.entity.ExpenseCache
+import com.luna.budgetapp.data.local.entity.ExpenseEntity
 import com.luna.budgetapp.data.remote.dto.ExpenseDto
 import com.luna.budgetapp.domain.model.Expense
 
-fun ExpenseDto.toCache(): ExpenseCache {
-    return ExpenseCache(
+fun ExpenseDto.toEntity(): ExpenseEntity {
+    return ExpenseEntity(
         id = this.id,
         name = this.name,
         amount = this.amount,
@@ -15,7 +15,7 @@ fun ExpenseDto.toCache(): ExpenseCache {
     )
 }
 
-fun ExpenseCache.toModel(): Expense {
+fun ExpenseEntity.toModel(): Expense {
     return Expense(
         id = this.id,
         name = this.name,
@@ -26,8 +26,8 @@ fun ExpenseCache.toModel(): Expense {
     )
 }
 
-fun Expense.toCache(): ExpenseCache {
-    return ExpenseCache(
+fun Expense.toEntity(): ExpenseEntity {
+    return ExpenseEntity(
         id = this.id,
         name = this.name,
         amount = this.amount,

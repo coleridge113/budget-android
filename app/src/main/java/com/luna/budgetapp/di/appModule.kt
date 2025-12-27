@@ -51,9 +51,7 @@ val appModule = module {
         ExpenseRemoteSource(get())
     }
     single<ExpenseRepository> {
-        RepositoryImpl(
-            get()
-        )
+        RepositoryImpl(get(), get())
     }
     factory {
         AddExpenseUseCase(get())

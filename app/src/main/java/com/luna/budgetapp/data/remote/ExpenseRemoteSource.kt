@@ -6,11 +6,11 @@ import com.luna.budgetapp.network.ExpenseService
 import java.net.HttpURLConnection.HTTP_CREATED
 import java.net.HttpURLConnection.HTTP_OK
 
+const val TAG = "ExpenseRemoteSource"
+
 class ExpenseRemoteSource(
     private val expenseService: ExpenseService
 ) {
-
-    private val TAG = "ExpenseRemoteSource"
 
     suspend fun getAllExpenses(): List<ExpenseDto> {
         return try {

@@ -6,29 +6,29 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Update
-import com.luna.budgetapp.data.local.entity.ExpenseCache
+import com.luna.budgetapp.data.local.entity.ExpenseEntity
 
 @Dao
 interface ExpenseDao {
 
     @Query("SELECT * FROM expenses")
-    fun getAllExpenses(): List<ExpenseCache>
+    fun getAllExpenses(): List<ExpenseEntity>
 
     @Query("SELECT * FROM expenses WHERE category = :category")
-    fun getExpensesByCategory(category: String): List<ExpenseCache>
+    fun getExpensesByCategory(category: String): List<ExpenseEntity>
 
     @Query("SELECT * FROM expenses WHERE type = :type")
-    fun getExpensesByType(type: String): List<ExpenseCache>
+    fun getExpensesByType(type: String): List<ExpenseEntity>
 
     @Insert
-    fun addExpense(expenseCache: ExpenseCache)
+    fun addExpense(expenseEntity: ExpenseEntity)
 
     @Insert(onConflict = REPLACE)
-    fun addExpenses(expenses: List<ExpenseCache>)
+    fun addExpenses(expenses: List<ExpenseEntity>)
 
     @Update
-    fun updateExpense(expenseCache: ExpenseCache)
+    fun updateExpense(expenseEntity: ExpenseEntity)
 
     @Delete
-    fun deleteExpense(expenseCache: ExpenseCache)
+    fun deleteExpense(expenseEntity: ExpenseEntity)
 }

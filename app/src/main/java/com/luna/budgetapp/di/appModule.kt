@@ -2,7 +2,6 @@ package com.luna.budgetapp.di
 
 import androidx.room.Room
 import com.luna.budgetapp.data.local.AppDatabase
-import com.luna.budgetapp.data.local.repository.Repository
 import com.luna.budgetapp.data.local.repository.RepositoryImpl
 import com.luna.budgetapp.data.remote.ExpenseRemoteSource
 import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
@@ -11,6 +10,7 @@ import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
+import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import okhttp3.OkHttpClient
@@ -50,28 +50,28 @@ val appModule = module {
     single {
         ExpenseRemoteSource(get())
     }
-    single<Repository> {
+    single<ExpenseRepository> {
         RepositoryImpl(
             get()
         )
     }
     factory {
-        AddExpenseUseCase(get(), get())
+        AddExpenseUseCase(get())
     }
     factory {
-        DeleteExpenseUseCase(get(), get())
+        DeleteExpenseUseCase(get())
     }
     factory {
-        GetAllExpensesUseCase(get(), get())
+        GetAllExpensesUseCase(get())
     }
     factory {
-        GetExpensesByCategoryUseCase(get(), get())
+        GetExpensesByCategoryUseCase(get())
     }
     factory {
-        GetExpensesByTypeUseCase(get(), get())
+        GetExpensesByTypeUseCase(get())
     }
     factory {
-        UpdateExpenseUseCase(get(), get())
+        UpdateExpenseUseCase(get())
     }
     viewModel {
         AddExpenseViewModel(get(), get())

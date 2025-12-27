@@ -1,4 +1,3 @@
-
 package com.luna.budgetapp.domain.model
 
 import java.math.BigDecimal

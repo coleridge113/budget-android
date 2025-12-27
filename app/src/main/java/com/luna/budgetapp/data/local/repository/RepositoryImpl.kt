@@ -1,37 +1,40 @@
 package com.luna.budgetapp.data.local.repository
 
 import com.luna.budgetapp.data.local.dao.ExpenseDao
-import com.luna.budgetapp.data.local.entity.ExpenseCache
+import com.luna.budgetapp.data.mapper.toCache
+import com.luna.budgetapp.data.mapper.toModel
+import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.domain.repository.ExpenseRepository
 
 class RepositoryImpl(
-    private val localSource: ExpenseDao,
-) : Repository {
+    private val dao: ExpenseDao,
+) : ExpenseRepository {
 
-    override suspend fun getAllExpenses(): List<ExpenseCache> {
-        return localSource.getAllExpenses()
+    override suspend fun getAllExpenses(): List<Expense> {
+        return dao.getAllExpenses().map { it.toModel() }
     }
 
-    override suspend fun getExpensesByCategory(category: String): List<ExpenseCache> {
-        return localSource.getExpensesByCategory(category)
+    override suspend fun getExpensesByCategory(category: String): List<Expense> {
+        return dao.getExpensesByCategory(category).map { it.toModel() }
     }
 
-    override suspend fun getExpensesByType(type: String): List<ExpenseCache> {
-        return localSource.getExpensesByType(type)
+    override suspend fun getExpensesByType(type: String): List<Expense> {
+        return dao.getExpensesByType(type).map { it.toModel() }
     }
 
-    override suspend fun addExpense(expenseCache: ExpenseCache) {
-        return localSource.addExpense(expenseCache)
+    override suspend fun addExpense(expense: Expense) {
+        return dao.addExpense(expense.toCache())
     }
 
-    override suspend fun addExpenses(expenses: List<ExpenseCache>) {
-        localSource.addExpenses(expenses)
+    override suspend fun addExpenses(expenses: List<Expense>) {
+        dao.addExpenses(expenses.map { it.toCache() })
     }
 
-    override suspend fun updateExpense(expenseCache: ExpenseCache) {
-        return localSource.updateExpense(expenseCache)
+    override suspend fun updateExpense(expense: Expense) {
+        return dao.updateExpense(expense.toCache())
     }
 
-    override suspend fun deleteExpense(expenseCache: ExpenseCache) {
-        localSource.deleteExpense(expenseCache)
+    override suspend fun deleteExpense(expense: Expense) {
+        dao.deleteExpense(expense.toCache())
     }
 }

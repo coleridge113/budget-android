@@ -52,6 +52,11 @@ android {
             "PUSHER_API_KEY",
             "\"${localProps["PUSHER_API_KEY"]}\""
         )
+        buildConfigField(
+            "String",
+            "LOCAL_BACKEND_URL",
+            "\"${localProps["LOCAL_BACKEND_URL"]}\""
+        )
     }
 
     buildTypes {

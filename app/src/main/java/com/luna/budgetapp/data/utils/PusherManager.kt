@@ -1,6 +1,8 @@
 package com.luna.budgetapp.data.utils
 
 import com.luna.budgetapp.BuildConfig
+import com.pusher.client.Pusher
+import com.pusher.client.PusherOptions
 
 class PusherManager {
 
@@ -9,7 +11,18 @@ class PusherManager {
     private val secret = BuildConfig.PUSHER_SECRET
     private val cluster = BuildConfig.PUSHER_CLUSTER
     private val apiKey = BuildConfig.PUSHER_API_KEY
-
-    private val privateExpenseChannel = "PRIVATE-EXPENSE-CHANNEL"
+    private val backendUrl = BuildConfig.LOCAL_BACKEND_URL
+    private val authEndpoint = "$backendUrl/api/v1/pusher/auth"
     
+    private val privateExpenseChannel = "private-expense-channel"
+    private val eventName = "expense-added"
+    
+    private val options = PusherOptions().apply {
+        setCluster(cluster)
+        setUseTLS(true)
+        setChannelAuthorizer(JwtChannelAuthorizer(authEndpoint, jwtToken))
+    }
+    
+    val pusher = Pusher(key, options)
+    val channel = pusher.subscribePrivate(privateExpenseChannel) 
 }

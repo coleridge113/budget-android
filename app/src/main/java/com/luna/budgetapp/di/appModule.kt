@@ -10,6 +10,7 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import okhttp3.OkHttpClient
@@ -66,6 +67,11 @@ val appModule = module {
     }
     factory {
         UpdateExpenseUseCase(get())
+    }
+    factory {
+        UseCases(
+            get(), get(), get(), get(), get()
+        )
     }
     viewModel {
         AddExpenseViewModel(get())

@@ -10,6 +10,10 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+val localProps = File(rootDir, "local.properties").inputStream().use {
+    Properties().apply { load(it) }
+}
+
 android {
     namespace = "com.luna.budgetapp"
     compileSdk = 36
@@ -22,6 +26,32 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "PUSHER_APP_ID",
+            "\"${localProps["PUSHER_APP_ID"]}\""
+        )
+        buildConfigField(
+            "String",
+            "PUSHER_KEY",
+            "\"${localProps["PUSHER_KEY"]}\""
+        )
+        buildConfigField(
+            "String",
+            "PUSHER_SECRET",
+            "\"${localProps["PUSHER_SECRET"]}\""
+        )
+        buildConfigField(
+            "String",
+            "PUSHER_CLUSTER",
+            "\"${localProps["PUSHER_CLUSTER"]}\""
+        )
+        buildConfigField(
+            "String",
+            "PUSHER_API_KEY",
+            "\"${localProps["PUSHER_API_KEY"]}\""
+        )
     }
 
     buildTypes {
@@ -101,4 +131,7 @@ dependencies {
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Pusher
+    implementation(libs.pusher.java.client)
 }

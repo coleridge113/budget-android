@@ -1,8 +1,11 @@
 package com.luna.budgetapp.di
 
 import androidx.room.Room
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.luna.budgetapp.data.local.AppDatabase
 import com.luna.budgetapp.data.local.repository.RepositoryImpl
+import com.luna.budgetapp.data.datastore.dataStore
 import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.DeleteExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
@@ -10,6 +13,7 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import com.luna.budgetapp.domain.repository.AuthRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
@@ -75,5 +79,11 @@ val appModule = module {
     }
     viewModel {
         AddExpenseViewModel(get())
+    }
+    single<DataStore<Preferences>> { 
+        androidContext().dataStore 
+    }
+    single {
+        AuthRepository(get())
     }
 }

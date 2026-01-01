@@ -139,4 +139,7 @@ dependencies {
 
     // Pusher
     implementation(libs.pusher.java.client)
+
+    // Datastore
+    implementation(libs.androidx.datastore.preferences)
 }

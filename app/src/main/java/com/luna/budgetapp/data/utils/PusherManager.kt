@@ -11,8 +11,7 @@ class PusherManager {
     private val secret = BuildConfig.PUSHER_SECRET
     private val cluster = BuildConfig.PUSHER_CLUSTER
     private val apiKey = BuildConfig.PUSHER_API_KEY
-    private val backendUrl = BuildConfig.LOCAL_BACKEND_URL
-    private val authEndpoint = "$backendUrl/api/v1/pusher/auth"
+    private val authEndpoint = "${BuildConfig.LOCAL_BACKEND_URL}/api/v1/pusher/auth"
     
     private val privateExpenseChannel = "private-expense-channel"
     private val eventName = "expense-added"

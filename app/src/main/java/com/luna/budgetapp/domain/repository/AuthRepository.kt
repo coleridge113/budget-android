@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
 
 class AuthRepository(
     private val dataStore: DataStore<Preferences>
@@ -18,6 +19,12 @@ class AuthRepository(
         dataStore.edit { prefs ->
             prefs[JWT_TOKEN] = token
         }
+    }
+
+    suspend fun getJwtToken(): String? {
+        return dataStore.data.map { prefs ->
+            prefs[JWT_TOKEN]
+        }.firstOrNull()
     }
 
     suspend fun clearJwtToken() {

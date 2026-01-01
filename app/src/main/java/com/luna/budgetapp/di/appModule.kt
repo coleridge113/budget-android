@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.luna.budgetapp.data.local.AppDatabase
 import com.luna.budgetapp.data.local.repository.RepositoryImpl
 import com.luna.budgetapp.data.datastore.dataStore
+import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.DeleteExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
@@ -15,6 +16,8 @@ import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.repository.AuthRepository
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.domain.usecase.auth.ClearJwtTokenUseCase
+import com.luna.budgetapp.domain.usecase.auth.SaveJwtTokenUseCase
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import okhttp3.OkHttpClient
@@ -74,16 +77,23 @@ val appModule = module {
     }
     factory {
         UseCases(
-            get(), get(), get(), get(), get()
+            get(), 
+            get(), 
+            get(), 
+            get(), 
+            get(),
         )
     }
     viewModel {
-        AddExpenseViewModel(get())
+        AddExpenseViewModel(get(), get<PusherManager>())
     }
     single<DataStore<Preferences>> { 
         androidContext().dataStore 
     }
     single {
         AuthRepository(get())
+    }
+    single {
+        PusherManager(get())
     }
 }

@@ -10,10 +10,19 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import android.util.Log
+import com.luna.budgetapp.data.utils.PusherManager
 
 class AddExpenseViewModel(
-    private val useCases: UseCases
+    private val useCases: UseCases,
+    private val pusherManager: PusherManager
 ): ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            pusherManager.initPusher()
+        }
+    }
+
     private val _state = MutableSharedFlow<AddExpenseState>()
     val state = _state.asSharedFlow()
 

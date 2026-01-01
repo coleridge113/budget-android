@@ -11,5 +11,5 @@ data class UseCases(
     val deleteExpenseUseCase: DeleteExpenseUseCase,
     val getAllExpensesUseCase: GetAllExpensesUseCase,
     val getExpensesByCategoryUseCase: GetExpensesByCategoryUseCase,
-    val getExpensesByTypeUseCase: GetExpensesByTypeUseCase
+    val getExpensesByTypeUseCase: GetExpensesByTypeUseCase,
 )

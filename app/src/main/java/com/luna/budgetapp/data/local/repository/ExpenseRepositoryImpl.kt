@@ -16,7 +16,7 @@ import java.io.IOException
 
 const val TAG = "RepositoryImpl"
 
-class RepositoryImpl(
+class ExpenseRepositoryImpl(
     private val dao: ExpenseDao,
     private val api: ExpenseService
 ) : ExpenseRepository {

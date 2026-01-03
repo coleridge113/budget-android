@@ -4,7 +4,8 @@ import androidx.room.Room
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.luna.budgetapp.data.local.AppDatabase
-import com.luna.budgetapp.data.local.repository.RepositoryImpl
+import com.luna.budgetapp.data.local.repository.ExpenseRepositoryImpl
+import com.luna.budgetapp.data.local.repository.AuthRepositoryImpl
 import com.luna.budgetapp.data.datastore.dataStore
 import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
@@ -14,8 +15,11 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import com.luna.budgetapp.data.datastore.AuthLocalDataSource
+import com.luna.budgetapp.data.remote.source.AuthRemoteDataSource
 import com.luna.budgetapp.domain.repository.AuthRepository
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.domain.usecase.auth.GetTokenUseCase
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import okhttp3.OkHttpClient
@@ -53,7 +57,13 @@ val appModule = module {
         get<AppDatabase>().expenseDao()
     }
     single<ExpenseRepository> {
-        RepositoryImpl(get(), get())
+        ExpenseRepositoryImpl(get(), get())
+    }
+    single {
+        AuthRemoteDataSource(get())
+    }
+    single<AuthRepository> {
+        AuthRepositoryImpl(get(), get())
     }
     factory {
         AddExpenseUseCase(get())
@@ -74,6 +84,9 @@ val appModule = module {
         UpdateExpenseUseCase(get())
     }
     factory {
+        GetTokenUseCase(get())
+    }
+    factory {
         UseCases(
             get(), 
             get(), 
@@ -89,7 +102,7 @@ val appModule = module {
         androidContext().dataStore 
     }
     single {
-        AuthRepository(get())
+        AuthLocalDataSource(get())
     }
     single {
         PusherManager(get())

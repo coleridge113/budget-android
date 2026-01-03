@@ -12,10 +12,8 @@ import androidx.navigation.compose.rememberNavController
 import com.luna.budgetapp.presentation.nav.NavGraphSetup
 import com.luna.budgetapp.ui.theme.BudgetAppTheme
 
-@OptIn(
-    ExperimentalMaterial3Api::class, 
-    ExperimentalSharedTransitionApi::class
-)
+@ExperimentalMaterial3Api
+@ExperimentalSharedTransitionApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

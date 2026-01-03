@@ -20,6 +20,7 @@ import com.luna.budgetapp.data.remote.source.AuthRemoteDataSource
 import com.luna.budgetapp.domain.repository.AuthRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.usecase.auth.GetTokenUseCase
+import com.luna.budgetapp.network.AuthService
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import okhttp3.OkHttpClient
@@ -35,16 +36,23 @@ val appModule = module {
         val logging = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-        val client = OkHttpClient.Builder()
+        OkHttpClient.Builder()
             .addInterceptor(logging)
             .build()
-
+    }
+    single {
         Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
-            .client(client)
+            .client(get())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ExpenseService::class.java)
+    }
+    single {
+        get<Retrofit>().create(ExpenseService::class.java)
+
+    }
+    single {
+        get<Retrofit>().create(AuthService::class.java)
     }
     single {
         Room.databaseBuilder(

@@ -18,9 +18,7 @@ class AddExpenseViewModel(
 ): ViewModel() {
 
     init {
-        viewModelScope.launch {
-            pusherManager.initPusher()
-        }
+        initializePusher()
     }
 
     private val _state = MutableSharedFlow<AddExpenseState>()
@@ -29,7 +27,7 @@ class AddExpenseViewModel(
     fun getAllExpenses() {
         viewModelScope.launch {
             useCases.getAllExpensesUseCase().collect { resource ->
-                when(resource) {
+                when (resource) {
                     is Resource.Success -> {
                         _state.emit(AddExpenseState.GetExpenses(resource.data ?: emptyList()))
                         Log.d("ExpenseViewModel", "expenses: ${resource.data}")
@@ -40,6 +38,13 @@ class AddExpenseViewModel(
                     is Resource.Loading -> {}
                 }
             }
+        }
+    }
+
+    private fun initializePusher() {
+        viewModelScope.launch {
+            pusherManager.initPusher()
+            pusherManager.subscribeToExpenseChannel { getAllExpenses() }
         }
     }
 }

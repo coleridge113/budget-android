@@ -142,4 +142,7 @@ dependencies {
 
     // Datastore
     implementation(libs.androidx.datastore.preferences)
+
+    // JWT Decode
+    implementation(libs.jwt.decode)
 }

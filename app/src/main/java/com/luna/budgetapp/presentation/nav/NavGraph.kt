@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpensesRoute
+import com.luna.budgetapp.presentation.screen.auth.AuthViewModel
+import com.luna.budgetapp.presentation.screen.auth.AuthRoute
 
 @ExperimentalMaterial3Api
 @ExperimentalSharedTransitionApi
@@ -48,6 +50,13 @@ fun NavGraphSetup(
                 )
             }
         ) {
+            composable<Routes.AuthRoute> {
+                val viewModel: AuthViewModel = koinViewModel() 
+                AuthRoute(
+                    navController = navController,
+                    viewModel = viewModel
+                )
+            }
             composable<Routes.AddExpensesRoute> {
                 val viewModel: AddExpenseViewModel = koinViewModel()
                 AddExpensesRoute(

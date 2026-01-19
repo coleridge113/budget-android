@@ -7,5 +7,5 @@ class GetTokenUseCase(
 ) {
     suspend operator fun invoke(): String {
         return repository.fetchJwtToken() ?: throw IllegalStateException("Empty token")
-   }
+    }
 }

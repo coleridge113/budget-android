@@ -23,6 +23,7 @@ import com.luna.budgetapp.domain.usecase.auth.GetTokenUseCase
 import com.luna.budgetapp.network.AuthService
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
+import com.luna.budgetapp.presentation.screen.auth.AuthViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -101,10 +102,14 @@ val appModule = module {
             get(), 
             get(), 
             get(),
+            get()
         )
     }
     viewModel {
         AddExpenseViewModel(get(), get<PusherManager>())
+    }
+    viewModel {
+        AuthViewModel(get())
     }
     single<DataStore<Preferences>> { 
         androidContext().dataStore 

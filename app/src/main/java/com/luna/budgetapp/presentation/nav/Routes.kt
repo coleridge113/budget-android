@@ -3,9 +3,12 @@ package com.luna.budgetapp.presentation.nav
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Routes {
+sealed interface Routes {
 
     @Serializable
-    data object AddExpensesRoute : Routes()
+    data object AuthRoute : Routes
+
+    @Serializable
+    data object AddExpensesRoute : Routes
 
 }

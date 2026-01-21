@@ -9,10 +9,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 
 class AuthViewModel(
     private val useCases: UseCases
 ) : ViewModel() {
+
+    init {
+        fetchToken()
+    }
 
     private val _state = MutableStateFlow(ViewModelStateEvents.uiState())
     val state = _state.asStateFlow()
@@ -26,9 +31,26 @@ class AuthViewModel(
             ViewModelStateEvents.Event.GotoAddExpenseRoute -> { gotoAddExpenseRoute() }
         }
     }
+
     private fun fetchToken() {
         viewModelScope.launch {
-            useCases.getTokenUseCase()
+            try {
+                useCases.getTokenUseCase()
+                _state.update { curr ->
+                    curr.copy(
+                        isLoading = false,
+                        success = true
+                    )
+                }
+            } catch (e: IllegalStateException) {
+               _state.update { curr ->
+                   curr.copy(
+                       isLoading = false,
+                       error = e.message ?: "Unknown error occurred...",
+                       success = false
+                   )
+               } 
+            }
         }
     }
 
@@ -43,7 +65,7 @@ object ViewModelStateEvents {
     data class uiState(
         val isLoading: Boolean = true,
         val error: String = "",
-        val success: String = ""
+        val success: Boolean = false
     ) 
 
     sealed interface Event {

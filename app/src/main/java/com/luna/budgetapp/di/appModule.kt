@@ -22,38 +22,53 @@ import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.usecase.auth.GetTokenUseCase
 import com.luna.budgetapp.network.AuthService
 import com.luna.budgetapp.network.ExpenseService
+import com.luna.budgetapp.network.interceptors.AuthInterceptor
 import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
 import com.luna.budgetapp.presentation.screen.auth.AuthViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
     single {
-        val logging = HttpLoggingInterceptor().apply {
+        HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
+    }
+    single(named("auth")) {
         OkHttpClient.Builder()
-            .addInterceptor(logging)
+            .addInterceptor(get<HttpLoggingInterceptor>())
+            .addInterceptor(AuthInterceptor { get<AuthLocalDataSource>().getJwtToken() })
+            .build()
+    }
+    single(named("public")) {
+        OkHttpClient.Builder()
+            .addInterceptor(get<HttpLoggingInterceptor>())
             .build()
     }
     single {
         Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/")
-            .client(get())
             .addConverterFactory(GsonConverterFactory.create())
+    }
+    single {
+        get<Retrofit.Builder>()
+            .client(get(named("auth")))
             .build()
     }
     single {
         get<Retrofit>().create(ExpenseService::class.java)
-
     }
     single {
-        get<Retrofit>().create(AuthService::class.java)
+        val publicRetrofit = get<Retrofit.Builder>()
+            .client(get(named("public")))
+            .build()
+        publicRetrofit.create(AuthService::class.java)
     }
     single {
         Room.databaseBuilder(

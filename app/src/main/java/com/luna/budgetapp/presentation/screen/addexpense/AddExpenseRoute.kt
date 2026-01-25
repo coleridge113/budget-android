@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.domain.model.ExpensePreset
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import com.luna.budgetapp.presentation.screen.addexpense.components.FontAwesomeCoffee
+import com.luna.budgetapp.presentation.screen.addexpense.components.ExpenseTable
 
 @Composable
 fun AddExpensesRoute(
@@ -57,74 +58,42 @@ fun MainContent(
     uiState: ViewModelStateEvents.UiState,
     modifier: Modifier = Modifier
 ) {
-
-}
-
-@Composable
-fun TableRow(
-    icon: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(imageVector = icon, contentDescription = null)
-        }
-        Box(
-            modifier = Modifier.weight(3f),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = text)
-        }
-    }
-}
-
-@Preview
-@Composable
-fun TableRowPreview() {
-    TableRow(
-        icon = FontAwesomeCoffee,
-        text = "Description here"
-    )
-}
-
-@Composable
-fun PresetExpenseButton(
-    expense: Expense,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = Modifier
-            .size(100.dp)
-            .clip(CircleShape)
-            .background(Color.Black)
-    ) {
-        Text(
-            text = expense.amount.toString(),
-            color = Color.White,
-            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-            modifier = modifier
-                .align(Alignment.Center)
+    val expensePresets = listOf(
+        ExpensePreset(
+            id = 1L,
+            amount = 4.50,
+            category = "Coffee",
+            type = "Food & Drink"
+        ),
+        ExpensePreset(
+            id = 2L,
+            amount = 12.00,
+            category = "Lunch",
+            type = "Food & Drink"
+        ),
+        ExpensePreset(
+            id = 3L,
+            amount = 65.00,
+            category = "Gas",
+            type = "Transport"
+        ),
+        ExpensePreset(
+            id = 4L,
+            amount = 15.99,
+            category = "Streaming",
+            type = "Entertainment"
+        ),
+        ExpensePreset(
+            id = 5L,
+            amount = 120.00,
+            category = "Groceries",
+            type = "Housekeeping"
         )
-    }
-}
-
-@Preview
-@Composable
-fun PresetExpenseButtonPreview() {
-    val expense = Expense(
-        id = 1,
-        name = "AM Commute",
-        amount = 16.00,
-        category = "Work",
-        type = "Commute"
     )
+    Box(modifier = modifier) {
+        ExpenseTable(
+            expensePresets = expensePresets
+        )
 
-    PresetExpenseButton(expense)
+    }
 }

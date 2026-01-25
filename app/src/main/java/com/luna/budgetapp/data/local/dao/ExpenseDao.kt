@@ -23,18 +23,18 @@ interface ExpenseDao {
     fun getExpensesByType(type: String): Flow<List<ExpenseEntity>>
 
     @Insert
-    fun addExpense(expense: ExpenseEntity)
+    suspend fun addExpense(expense: ExpenseEntity)
 
     @Insert(onConflict = REPLACE)
-    fun addExpenses(expenses: List<ExpenseEntity>)
+    suspend fun addExpenses(expenses: List<ExpenseEntity>)
 
     @Update
-    fun updateExpense(expense: ExpenseEntity)
+    suspend fun updateExpense(expense: ExpenseEntity)
 
     @Delete
-    fun deleteExpense(expense: ExpenseEntity)
+    suspend fun deleteExpense(expense: ExpenseEntity)
 
     @Delete
-    fun deleteExpenses(expenses: List<ExpenseEntity>)
+    suspend fun deleteExpenses(expenses: List<ExpenseEntity>)
 
 }

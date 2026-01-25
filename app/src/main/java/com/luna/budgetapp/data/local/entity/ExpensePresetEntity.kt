@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
-@Entity(tableName = "expense_preset")
+@Entity(tableName = "expense_presets")
 data class ExpensePresetEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = "amount") val amount: Double,

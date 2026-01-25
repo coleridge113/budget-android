@@ -8,5 +8,5 @@ interface ExpensePresetRepository {
 
     fun getAllExpensePresets(): Flow<Resource<List<ExpensePreset>>>
 
-    fun addExpensePresets(expensePresets: List<ExpensePreset)
+    fun addExpensePresets(expensePresets: List<ExpensePreset>)
 }

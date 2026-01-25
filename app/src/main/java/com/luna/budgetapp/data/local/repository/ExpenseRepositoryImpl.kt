@@ -13,55 +13,42 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import retrofit2.HttpException
 import java.io.IOException
-
-const val TAG = "RepositoryImpl"
 
 class ExpenseRepositoryImpl(
     private val dao: ExpenseDao,
     private val api: ExpenseService
 ) : ExpenseRepository {
 
-    override fun getAllExpenses(): Flow<Resource<List<Expense>>> = flow {
-        emit(Resource.Loading)
-        try {
-            val remote = api.getAllExpenses()
-            dao.addExpenses(remote.map { it.toEntity() })
-        } catch (e: Exception) {
-            val errorMessage = when(e) {
-                is IOException -> "Network error, showing cached data"
-                is HttpException -> "Server error, showing cached data"
-                else -> "Unknown error occurred"
-            }
+    override fun getAllExpenses(): Flow<Resource<List<Expense>>> {
+        return dao.getAllExpenses()
+            .map {
+                val resource: Resource<List<Expense>> = Resource.Success(it.map { e -> e.toModel() })
+                resource
+            }.onStart {
+                emit(Resource.Loading)
+                try {
+                    val remote = api.getAllExpenses()
+                    dao.addExpenses(remote.map { it.toEntity() })
+                } catch (e: IOException) { }
+            }.flowOn(Dispatchers.IO)
+    }
 
-            emit(Resource.Error(errorMessage))
-        }
-
-        emitAll(dao.getAllExpenses().map { local ->
-            Resource.Success(local.map { it.toModel() })
-        })
-    }.flowOn(Dispatchers.IO)
-
-    override fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>> = flow {
-        emit(Resource.Loading)
-        try {
-            val remote = api.getExpenseByCategory(category)
-            dao.addExpenses(remote.map { it.toEntity() })
-        } catch (e: Exception) {
-            val errorMessage = when(e) {
-                is IOException -> "Network error, showing cached data"
-                is HttpException -> "Server error, showing cached data"
-                else -> "Unknown error occurred"
-            }
-            emit(Resource.Error(errorMessage))
-        }
-
-        emitAll(dao.getExpensesByCategory(category).map { local ->
-            Resource.Success(local.map { it.toModel() })
-        })
-    }.flowOn(Dispatchers.IO)
-
+    override fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>> {
+        return dao.getExpensesByCategory(category)
+            .map {
+                val resource: Resource<List<Expense>> = Resource.Success(it.map { e -> e.toModel() })
+                resource
+            }.onStart {
+                emit(Resource.Loading)
+                try {
+                    val remote = api.getExpenseByCategory(category)
+                    dao.addExpenses(remote.map { it.toEntity() })
+                } catch (e: Exception) { }
+            }.flowOn(Dispatchers.IO)
+    }
 
     override fun getExpensesByType(type: String): Flow<Resource<List<Expense>>> = flow { 
         emit(Resource.Loading)

@@ -13,12 +13,6 @@ class GetExpensesByCategoryUseCase(
     private val repository: ExpenseRepository
 ) {
     operator fun invoke(category: String): Flow<Resource<List<Expense>>> {
-        return repository.getExpensesByCategory(category).map { resource ->
-            when (resource) {
-                is Resource.Loading -> Resource.Loading
-                is Resource.Error -> Resource.Error(resource.message)
-                is Resource.Success -> Resource.Success(resource.data)
-            }
-        }
+        return repository.getExpensesByCategory(category)
     } 
 }

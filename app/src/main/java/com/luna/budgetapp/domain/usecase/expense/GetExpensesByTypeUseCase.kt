@@ -13,12 +13,6 @@ class GetExpensesByTypeUseCase(
     private val repository: ExpenseRepository
 ) {
     operator fun invoke(type: String): Flow<Resource<List<Expense>>> {
-        return repository.getExpensesByType(type).map { resource ->
-            when (resource) {
-                is Resource.Loading -> Resource.Loading
-                is Resource.Error -> Resource.Error(resource.message)
-                is Resource.Success -> Resource.Success(resource.data)
-            }
-        }
+        return repository.getExpensesByType(type)
     }
 }

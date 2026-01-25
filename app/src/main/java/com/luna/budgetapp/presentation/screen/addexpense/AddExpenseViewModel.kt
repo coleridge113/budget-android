@@ -25,8 +25,8 @@ class AddExpenseViewModel(
 
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
-            ViewModelStateEvents.Event.LoadExpenses -> { getAllExpenses() }
             ViewModelStateEvents.Event.AddExpense -> {}
+            ViewModelStateEvents.Event.LoadTable -> {}
         }
     }
 
@@ -70,8 +70,8 @@ object ViewModelStateEvents {
     )
 
     sealed interface Event {
-        data object LoadExpenses : Event
         data object AddExpense : Event
+        data object LoadTable : Event
     }
 
     sealed class Navigation {

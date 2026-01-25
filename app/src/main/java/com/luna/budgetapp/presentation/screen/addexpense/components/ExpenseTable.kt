@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ fun ExpenseTable(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        items(expensePresets.size) { item ->
+        items(expensePresets) { item ->
             TableRow(
                 icon = FontAwesomeCoffee,
                 text = "More contents"

@@ -2,23 +2,15 @@ package com.luna.budgetapp.data.local
 
 import androidx.room.TypeConverter
 import java.math.BigDecimal
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 object Converters {
 
     @TypeConverter
     @JvmStatic
-    fun fromBigDecimal(value: BigDecimal?) = value?.toPlainString()
+    fun fromLocalDateTime(date: LocalDateTime?) = date?.toString()
 
     @TypeConverter
     @JvmStatic
-    fun toBigDecimal(value: String?) = value?.toBigDecimal()
-
-    @TypeConverter
-    @JvmStatic
-    fun fromLocalDate(date: LocalDate?) = date?.toString()
-
-    @TypeConverter
-    @JvmStatic
-    fun toLocalDate(date: String?) = date?.let { LocalDate.parse(it) }
+    fun toLocalDateTime(date: String?) = date?.let { LocalDateTime.parse(it) }
 }

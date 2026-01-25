@@ -1,6 +1,7 @@
 package com.luna.budgetapp.network
 
 import com.luna.budgetapp.data.remote.dto.ExpenseDto
+import com.luna.budgetapp.data.remote.dto.ExpensePresetDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -40,4 +41,7 @@ interface ExpenseService {
         @Body expenseDto: ExpenseDto,
         @Path("id") id: Long
     ): ExpenseDto
+
+    @GET("api/v1/expense-presets")
+    suspend fun getAllExpensePresets(): List<ExpensePresetDto>
 }

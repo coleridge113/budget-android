@@ -29,6 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.luna.budgetapp.domain.model.Expense
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.LocalDate
+import java.time.LocalDateTime
 import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -122,8 +123,8 @@ fun PresetExpenseButtonPreview() {
         name = "AM Commute",
         amount = 16.00,
         category = "Work",
-        type = "Commute",
-        date = LocalDate.now().toString()
+        type = "Commute"
     )
+
     PresetExpenseButton(expense)
 }

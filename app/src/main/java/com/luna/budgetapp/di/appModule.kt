@@ -15,7 +15,9 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.data.datastore.AuthLocalDataSource
+import com.luna.budgetapp.data.local.repository.ExpensePresetRepositoryImpl
 import com.luna.budgetapp.data.remote.source.AuthRemoteDataSource
 import com.luna.budgetapp.domain.repository.AuthRepository
 import com.luna.budgetapp.domain.usecase.UseCases
@@ -82,6 +84,9 @@ val appModule = module {
     }
     single<ExpenseRepository> {
         ExpenseRepositoryImpl(get(), get())
+    }
+    single<ExpensePresetRepository> {
+        ExpensePresetRepositoryImpl(get(), get())
     }
     single {
         AuthRemoteDataSource(get())

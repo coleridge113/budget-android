@@ -13,7 +13,7 @@ class AddExpenseUseCase(
 ) {
     operator fun invoke(expense: Expense): Flow<Resource<Expense>> {
         return flow {
-            emit(Resource.Loading())
+            emit(Resource.Loading)
             try {
                 repository.addExpense(expense)
                 emit(Resource.Success(expense))

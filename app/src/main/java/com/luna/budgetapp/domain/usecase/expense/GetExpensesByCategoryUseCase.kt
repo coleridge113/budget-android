@@ -7,25 +7,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 
 class GetExpensesByCategoryUseCase(
     private val repository: ExpenseRepository
 ) {
     operator fun invoke(category: String): Flow<Resource<List<Expense>>> {
-        return flow {
-            repository.getExpensesByCategory(category).collect { resource ->
-                when(resource) {
-                    is Resource.Loading -> {
-                        emit(Resource.Loading())
-                    }
-                    is Resource.Error -> {
-                        emit(Resource.Error(resource.message ?: "Something went wrong..."))
-                    }
-                    is Resource.Success -> {
-                        emit(Resource.Success(resource.data ?: emptyList()))
-                    }
-                }
+        return repository.getExpensesByCategory(category).map { resource ->
+            when (resource) {
+                is Resource.Loading -> Resource.Loading
+                is Resource.Error -> Resource.Error(resource.message)
+                is Resource.Success -> Resource.Success(resource.data)
             }
-        }.flowOn(Dispatchers.IO)
-    }
+        }
+    } 
 }

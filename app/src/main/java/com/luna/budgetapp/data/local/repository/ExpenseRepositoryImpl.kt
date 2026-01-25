@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.flow
 import com.luna.budgetapp.network.ExpenseService
 import retrofit2.HttpException
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import java.io.IOException
 
@@ -21,65 +25,64 @@ class ExpenseRepositoryImpl(
     private val api: ExpenseService
 ) : ExpenseRepository {
 
-    override suspend fun getAllExpenses(): Flow<Resource<List<Expense>>> {
-        return flow {
-            emit(Resource.Loading())
-            dao.getAllExpenses().collect { local ->
-                emit(Resource.Success(local.map { it.toModel() }))
+    override fun getAllExpenses(): Flow<Resource<List<Expense>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val remote = api.getAllExpenses()
+            dao.addExpenses(remote.map { it.toEntity() })
+        } catch (e: Exception) {
+            val errorMessage = when(e) {
+                is IOException -> "Network error, showing cached data"
+                is HttpException -> "Server error, showing cached data"
+                else -> "Unknown error occurred"
             }
-        }.onStart {
-            try {
-                val remote = api.getAllExpenses()
-                dao.addExpenses(remote.map { it.toEntity() })
-            } catch (e: IOException) {
-                emit(Resource.Error("Network error, showing cached data"))
-                Log.e(TAG, "IOException: ${e.message}")
-            } catch (e: HttpException) {
-                Log.e(TAG, "HttpException: ${e.message}")
-                emit(Resource.Error("Server error, showing cached data"))
-            }
-        }
-    }
 
-    override suspend fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>> {
-        return flow {
-            emit(Resource.Loading())
-            dao.getExpensesByCategory(category).collect { local ->
-                emit(Resource.Success(local.map { it.toModel() }))
-            }
-        }.onStart {
-            try {
-                val remote = api.getExpenseByCategory(category)
-                dao.addExpenses(remote.map { it.toEntity() })
-            } catch (e: IOException) {
-                Log.e(TAG, "IOException: ${e.message}")
-                emit(Resource.Error("Network error, showing cached data"))
-            } catch (e: HttpException) {
-                Log.e(TAG, "HttpException: ${e.message}")
-                emit(Resource.Error("Server error, showing cached data"))
-            }
+            emit(Resource.Error(errorMessage))
         }
-    }
 
-    override suspend fun getExpensesByType(type: String): Flow<Resource<List<Expense>>> {
-        return flow {
-            emit(Resource.Loading())
-            dao.getExpensesByType(type).collect { local ->
-                emit(Resource.Success(local.map { it.toModel() }))
+        emitAll(dao.getAllExpenses().map { local ->
+            Resource.Success(local.map { it.toModel() })
+        })
+    }.flowOn(Dispatchers.IO)
+
+    override fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>> = flow {
+        emit(Resource.Loading)
+        try {
+            val remote = api.getExpenseByCategory(category)
+            dao.addExpenses(remote.map { it.toEntity() })
+        } catch (e: Exception) {
+            val errorMessage = when(e) {
+                is IOException -> "Network error, showing cached data"
+                is HttpException -> "Server error, showing cached data"
+                else -> "Unknown error occurred"
             }
-        }.onStart {
-            try {
-                val remote = api.getExpenseByType(type)
-                dao.addExpenses(remote.map { it.toEntity() })
-            } catch (e: IOException) {
-                Log.e(TAG, "IOException: ${e.message}")
-                emit(Resource.Error("Network error, showing cached data"))
-            } catch (e: HttpException) {
-                Log.e(TAG, "HttpException: ${e.message}")
-                emit(Resource.Error("Server error, showing cached data"))
-            }
+            emit(Resource.Error(errorMessage))
         }
-    }
+
+        emitAll(dao.getExpensesByCategory(category).map { local ->
+            Resource.Success(local.map { it.toModel() })
+        })
+    }.flowOn(Dispatchers.IO)
+
+
+    override fun getExpensesByType(type: String): Flow<Resource<List<Expense>>> = flow { 
+        emit(Resource.Loading)
+        try {
+            val remote = api.getExpenseByType(type)
+            dao.addExpenses(remote.map { it.toEntity() })
+        } catch (e: Exception) {
+            val errorMessage = when(e) {
+                is IOException -> "Network error, showing cached data"
+                is HttpException -> "Server error, showing cached data"
+                else -> "Unknown error occurred"
+            }
+            emit(Resource.Error(errorMessage))
+        }
+
+        emitAll(dao.getExpensesByType(type).map { local ->
+            Resource.Success(local.map { it.toModel()} )
+        })
+    }.flowOn(Dispatchers.IO)
 
     override suspend fun addExpense(expense: Expense) {
         return dao.addExpense(expense.toEntity())

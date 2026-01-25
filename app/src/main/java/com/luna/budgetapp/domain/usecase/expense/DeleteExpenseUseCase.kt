@@ -13,7 +13,7 @@ class DeleteExpenseUseCase(
 ) {
     operator fun invoke(expense: Expense): Flow<Resource<Expense>> {
         return flow {
-            emit(Resource.Loading())
+            emit(Resource.Loading)
             try {
                 repository.deleteExpense(expense)
                 emit(Resource.Success(expense))

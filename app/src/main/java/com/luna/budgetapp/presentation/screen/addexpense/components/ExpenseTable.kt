@@ -21,7 +21,8 @@ import com.luna.budgetapp.ui.icons.CirclePlusIcon
 @Composable
 fun ExpenseTable(
     expensePresets: List<ExpensePreset>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickItem: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -31,7 +32,8 @@ fun ExpenseTable(
             items(expensePresets) { item ->
                 ExpenseItem(
                     icon = CoffeeIcon,
-                    text = "More contents"
+                    text = "More contents",
+                    onClick = onClickItem
                 )            
             }
         }
@@ -43,6 +45,7 @@ fun ExpenseTable(
 fun ExpenseItem(
     icon: ImageVector,
     text: String,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -78,7 +81,8 @@ fun AddItemPrompt(modifier: Modifier = Modifier) {
 fun ExpenseItemPreview() {
     ExpenseItem(
         icon = CoffeeIcon,
-        text = "Description here"
+        text = "Description here",
+        onClick = {}
     )
 }
 
@@ -118,6 +122,7 @@ fun ExpenseTablePreview() {
         )
     )
     ExpenseTable(
-        expensePresets = expensePresets
+        expensePresets = expensePresets,
+        onClickItem = {}
     )
 }

@@ -23,7 +23,8 @@ fun AddExpensesRoute(
     Scaffold { innerPadding ->
         MainContent(
             uiState = state,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onClickItem = {}
         )
     }
 }
@@ -31,7 +32,8 @@ fun AddExpensesRoute(
 @Composable
 fun MainContent(
     uiState: ViewModelStateEvents.UiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickItem: () -> Unit
 ) {
     val expensePresets = listOf(
         ExpensePreset(
@@ -67,7 +69,8 @@ fun MainContent(
     )
     Box(modifier = modifier) {
         ExpenseTable(
-            expensePresets = expensePresets
+            expensePresets = expensePresets,
+            onClickItem = {}
         )
 
     }

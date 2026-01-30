@@ -3,6 +3,8 @@ package com.luna.budgetapp.presentation.screen.addexpense.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
@@ -13,27 +15,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.luna.budgetapp.domain.model.ExpensePreset
+import com.luna.budgetapp.ui.icons.CoffeeIcon
+import com.luna.budgetapp.ui.icons.CirclePlusIcon
 
 @Composable
 fun ExpenseTable(
     expensePresets: List<ExpensePreset>,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        items(expensePresets) { item ->
-            TableRow(
-                icon = FontAwesomeCoffee,
-                text = "More contents"
-            )            
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LazyColumn {
+            items(expensePresets) { item ->
+                ExpenseItem(
+                    icon = CoffeeIcon,
+                    text = "More contents"
+                )            
+            }
         }
-    }
+        AddItemPrompt()
+    } 
 }
 
 @Composable
-fun TableRow(
+fun ExpenseItem(
     icon: ImageVector,
     text: String,
-    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -54,11 +63,21 @@ fun TableRow(
     }
 }
 
+@Composable
+fun AddItemPrompt(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
+        Icon(
+            imageVector = CirclePlusIcon,
+            contentDescription = null
+        )
+    }
+}
+
 @Preview
 @Composable
-fun TableRowPreview() {
-    TableRow(
-        icon = FontAwesomeCoffee,
+fun ExpenseItemPreview() {
+    ExpenseItem(
+        icon = CoffeeIcon,
         text = "Description here"
     )
 }

@@ -116,6 +116,7 @@ dependencies {
     implementation(libs.koin.compose.viewmodel.navigation)
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
 
     // Retrofit & OkHttp
     implementation(libs.retrofit)

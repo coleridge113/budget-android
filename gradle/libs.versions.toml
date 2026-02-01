@@ -64,6 +64,8 @@ okhttp3-logging-interceptor = { module = "com.squareup.okhttp3:logging-intercept
 pusher-java-client = { module = "com.pusher:pusher-java-client", version.ref = "pusherJavaClient" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "converterGson" }
 jwt-decode = { group = "com.auth0.android", name = "jwtdecode", version.ref = "jwtDecode" }
+androidx-material-icons-core = { group = "androidx.compose.material", name = "material-icons-core" }
+androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

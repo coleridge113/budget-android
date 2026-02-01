@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.usecase.UseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,39 +26,29 @@ class AddExpenseViewModel(
 
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
-            ViewModelStateEvents.Event.AddExpense -> {}
             ViewModelStateEvents.Event.LoadTable -> {}
+            ViewModelStateEvents.Event.AddExpensePreset -> addExpensePreset()
         }
     }
 
-    private fun getAllExpenses() {
-        viewModelScope.launch {
-            useCases.getAllExpensesUseCase().collect { resource ->
-                _uiState.update { curr ->
-                    when (resource) {
-                        Resource.Loading -> curr.copy(
-                            isLoading = true,
-                            error = ""
-                        )
-                        is Resource.Error -> curr.copy(
-                            isLoading = false,
-                            error = resource.message
-                        )
-                        is Resource.Success -> curr.copy(
-                            isLoading = false,
-                            error = "",
-                            success = resource.data
-                        )
-                    }
-                }
-            }
+    private fun addExpensePreset() {
+        val expensePreset = ExpensePreset(
+            id = 4L,
+            amount = 15.99,
+            category = "Streaming",
+            type = "Entertainment"
+        )
+        _uiState.update { currentState ->
+            currentState.copy(
+                success = currentState.success + expensePreset
+            )
         }
     }
 
     private fun initializePusher() {
         viewModelScope.launch {
             pusherManager.initPusher()
-            pusherManager.subscribeToExpenseChannel { getAllExpenses() }
+            pusherManager.subscribeToExpenseChannel {}
         }
     }
 }
@@ -66,12 +57,12 @@ object ViewModelStateEvents {
     data class UiState(
         val isLoading: Boolean = false,
         val error: String = "",
-        val success: List<Expense> = emptyList()
+        val success: List<ExpensePreset> = emptyList()
     )
 
     sealed interface Event {
-        data object AddExpense : Event
         data object LoadTable : Event
+        data object AddExpensePreset : Event
     }
 
     sealed class Navigation {

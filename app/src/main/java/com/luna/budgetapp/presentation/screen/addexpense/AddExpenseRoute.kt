@@ -24,7 +24,7 @@ fun AddExpensesRoute(
         MainContent(
             uiState = state,
             modifier = Modifier.padding(innerPadding),
-            onClickItem = {}
+            onEvent = viewModel::onEvent,
         )
     }
 }
@@ -33,44 +33,13 @@ fun AddExpensesRoute(
 fun MainContent(
     uiState: ViewModelStateEvents.UiState,
     modifier: Modifier = Modifier,
-    onClickItem: () -> Unit
+    onEvent: (ViewModelStateEvents.Event) -> Unit,
 ) {
-    val expensePresets = listOf(
-        ExpensePreset(
-            id = 1L,
-            amount = 4.50,
-            category = "Coffee",
-            type = "Food & Drink"
-        ),
-        ExpensePreset(
-            id = 2L,
-            amount = 12.00,
-            category = "Lunch",
-            type = "Food & Drink"
-        ),
-        ExpensePreset(
-            id = 3L,
-            amount = 65.00,
-            category = "Gas",
-            type = "Transport"
-        ),
-        ExpensePreset(
-            id = 4L,
-            amount = 15.99,
-            category = "Streaming",
-            type = "Entertainment"
-        ),
-        ExpensePreset(
-            id = 5L,
-            amount = 120.00,
-            category = "Groceries",
-            type = "Housekeeping"
-        )
-    )
     Box(modifier = modifier) {
         ExpenseTable(
-            expensePresets = expensePresets,
-            onClickItem = {}
+            expensePresets = uiState.success,
+            onClickItem = {},
+            onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) }
         )
 
     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,8 @@ import com.luna.budgetapp.ui.icons.CirclePlusIcon
 fun ExpenseTable(
     expensePresets: List<ExpensePreset>,
     modifier: Modifier = Modifier,
-    onClickItem: () -> Unit
+    onClickItem: () -> Unit,
+    onClickAdd: () -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -31,18 +33,20 @@ fun ExpenseTable(
         LazyColumn {
             items(expensePresets) { item ->
                 ExpenseItem(
+                    item = item,
                     icon = CoffeeIcon,
                     text = "More contents",
                     onClick = onClickItem
                 )            
             }
         }
-        AddItemPrompt()
+        AddItemPrompt(onClick = onClickAdd)
     } 
 }
 
 @Composable
 fun ExpenseItem(
+    item: ExpensePreset,
     icon: ImageVector,
     text: String,
     onClick: () -> Unit
@@ -67,8 +71,11 @@ fun ExpenseItem(
 }
 
 @Composable
-fun AddItemPrompt(modifier: Modifier = Modifier) {
-    Box(modifier = modifier) {
+fun AddItemPrompt(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Box(modifier = modifier.clickable { onClick() }) {
         Icon(
             imageVector = CirclePlusIcon,
             contentDescription = null
@@ -79,7 +86,14 @@ fun AddItemPrompt(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun ExpenseItemPreview() {
+    val item = ExpensePreset(
+            id = 1L,
+            amount = 4.50,
+            category = "Coffee",
+            type = "Food & Drink"
+        )
     ExpenseItem(
+        item = item,
         icon = CoffeeIcon,
         text = "Description here",
         onClick = {}
@@ -123,6 +137,7 @@ fun ExpenseTablePreview() {
     )
     ExpenseTable(
         expensePresets = expensePresets,
-        onClickItem = {}
+        onClickItem = {},
+        onClickAdd = {}
     )
 }

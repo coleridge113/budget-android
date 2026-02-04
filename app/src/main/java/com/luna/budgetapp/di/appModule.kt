@@ -23,7 +23,7 @@ import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.network.AuthService
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.network.interceptors.AuthInterceptor
-import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
+import com.luna.budgetapp.presentation.screen.expensepreset.AddExpenseViewModel
 import com.luna.budgetapp.presentation.screen.auth.AuthViewModel
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

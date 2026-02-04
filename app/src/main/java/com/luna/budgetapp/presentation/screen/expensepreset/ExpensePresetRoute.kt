@@ -1,4 +1,4 @@
-package com.luna.budgetapp.presentation.screen.addexpense
+package com.luna.budgetapp.presentation.screen.expensepreset
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -8,9 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.luna.budgetapp.domain.model.ExpensePreset
 import org.koin.compose.viewmodel.koinViewModel
-import com.luna.budgetapp.presentation.screen.addexpense.components.ExpenseTable
+import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
 
 @Composable
 fun AddExpensesRoute(
@@ -41,6 +40,5 @@ fun MainContent(
             onClickItem = {},
             onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) }
         )
-
     }
 }

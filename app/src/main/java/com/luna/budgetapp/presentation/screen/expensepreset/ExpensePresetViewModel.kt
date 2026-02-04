@@ -1,12 +1,11 @@
-package com.luna.budgetapp.presentation.screen.addexpense
+package com.luna.budgetapp.presentation.screen.expensepreset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.utils.PusherManager
-import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -14,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class AddExpenseViewModel(
     private val useCases: UseCases,
-    private val pusherManager: PusherManager
+    private val pusherManager: PusherManager,
+    private val repository: ExpensePresetRepository
 ): ViewModel() {
 
     init {

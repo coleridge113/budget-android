@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.luna.budgetapp.presentation.screen.addexpense.AddExpenseViewModel
+import com.luna.budgetapp.presentation.screen.expensepreset.AddExpenseViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import com.luna.budgetapp.presentation.screen.addexpense.AddExpensesRoute
+import com.luna.budgetapp.presentation.screen.expensepreset.AddExpensesRoute
 import com.luna.budgetapp.presentation.screen.auth.AuthViewModel
 import com.luna.budgetapp.presentation.screen.auth.AuthRoute
 

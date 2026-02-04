@@ -92,13 +92,30 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Standard JUnit 4
+    testImplementation(libs.junit)
+
+    // Coroutines Testing (Required for viewModelScope)
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    // MockK (For mocking your UseCases and Repository)
+    testImplementation(libs.mockk)
+
+    // Turbine (For easy StateFlow testing)
+    testImplementation(libs.turbine)
+
+    // Google Truth (For readable assertions)
+    testImplementation(libs.truth)
+
+    // Arch Core Testing (Required for LiveData or InstantTaskExecutorRule)
+    testImplementation(libs.androidx.core.testing)
 
     // Compose
     implementation(libs.androidx.activity.compose)

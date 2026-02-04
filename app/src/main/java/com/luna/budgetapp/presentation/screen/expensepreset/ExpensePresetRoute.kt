@@ -12,9 +12,9 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
 
 @Composable
-fun AddExpensesRoute(
+fun ExpensePresetRoute(
     navController: NavController,
-    viewModel: AddExpenseViewModel = koinViewModel()
+    viewModel: ExpensePresetViewModel = koinViewModel()
 ) {
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()

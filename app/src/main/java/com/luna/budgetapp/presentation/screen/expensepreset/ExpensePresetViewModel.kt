@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddExpenseViewModel(
+class ExpensePresetViewModel(
     private val useCases: UseCases,
     private val pusherManager: PusherManager,
     private val repository: ExpensePresetRepository

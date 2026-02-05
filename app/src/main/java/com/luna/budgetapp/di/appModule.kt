@@ -74,6 +74,7 @@ val databaseModule = module {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "budget_db").build()
     }
     single { get<AppDatabase>().expenseDao() }
+    single { get<AppDatabase>().expensePresetDao() }
     single { androidContext().dataStore }
 }
 

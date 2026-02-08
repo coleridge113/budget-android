@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
 import org.koin.compose.viewmodel.koinViewModel
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
 
@@ -26,10 +27,9 @@ fun ExpensePresetRoute(
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
-            when (effect) {
-                ViewModelStateEvents.UiEffect.DismissDialog -> {
-                    showDialog = false
-                }
+            showDialog = when (effect) {
+                ViewModelStateEvents.UiEffect.DismissDialog -> false
+                ViewModelStateEvents.UiEffect.ShowDialog -> true
             }
         }
     }
@@ -57,5 +57,14 @@ fun MainContent(
             onClickItem = {},
             onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) }
         )
+
+        if (showDialog) {
+            ExpensePresetDialog(
+                onDismissRequest = { onEvent(ViewModelStateEvents.Event.DismissDialog) },
+                onConfirm = { category, amount ->
+                    onEvent(ViewModelStateEvents.Event.ConfirmDialog(category, amount))
+                }
+            )
+        }
     }
 }

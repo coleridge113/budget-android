@@ -35,12 +35,13 @@ fun ExpenseTable(
                 ExpenseItem(
                     item = item,
                     icon = CoffeeIcon,
-                    text = "More contents",
+                    text = item.amount,
                     onClick = onClickItem
                 )            
             }
         }
-        AddItemPrompt(onClick = onClickAdd)
+
+        AddItemPrompt() { onClickAdd() }
     } 
 }
 
@@ -48,7 +49,7 @@ fun ExpenseTable(
 fun ExpenseItem(
     item: ExpensePreset,
     icon: ImageVector,
-    text: String,
+    text: Double,
     onClick: () -> Unit
 ) {
     Row(
@@ -65,7 +66,7 @@ fun ExpenseItem(
             modifier = Modifier.weight(3f),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = text)
+            Text(text = "P${text}")
         }
     }
 }
@@ -83,7 +84,7 @@ fun AddItemPrompt(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ExpenseItemPreview() {
     val item = ExpensePreset(
@@ -95,12 +96,12 @@ fun ExpenseItemPreview() {
     ExpenseItem(
         item = item,
         icon = CoffeeIcon,
-        text = "Description here",
+        text = 100.0,
         onClick = {}
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ExpenseTablePreview() {
     val expensePresets = listOf(

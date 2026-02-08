@@ -33,20 +33,28 @@ class ExpensePresetViewModel(
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
             ViewModelStateEvents.Event.LoadTable -> {}
-            ViewModelStateEvents.Event.AddExpensePreset -> addExpensePreset()
+            ViewModelStateEvents.Event.AddExpensePreset -> {
+                viewModelScope.launch {
+                    _effect.send(ViewModelStateEvents.UiEffect.ShowDialog)
+                }
+            }
             ViewModelStateEvents.Event.DismissDialog -> {
                 viewModelScope.launch {
                     _effect.send(ViewModelStateEvents.UiEffect.DismissDialog)
                 }
             }
+            is ViewModelStateEvents.Event.ConfirmDialog -> { 
+                addExpensePreset(event.category, event.amount.toDouble())
+                dismissDialog()
+            }
         }
     }
 
-    private fun addExpensePreset() {
+    private fun addExpensePreset(category: String, amount: Double) {
         val expensePreset = ExpensePreset(
             id = 4L,
-            amount = 15.99,
-            category = "Streaming",
+            amount = amount,
+            category = category,
             type = "Entertainment"
         )
         _uiState.update { currentState ->
@@ -62,6 +70,10 @@ class ExpensePresetViewModel(
             pusherManager.subscribeToExpenseChannel {}
         }
     }
+
+    private fun dismissDialog() {
+        onEvent(ViewModelStateEvents.Event.DismissDialog) 
+    }
 }
 
 object ViewModelStateEvents {
@@ -73,12 +85,14 @@ object ViewModelStateEvents {
 
     sealed interface UiEffect {
         data object DismissDialog : UiEffect
+        data object ShowDialog : UiEffect
     }
 
     sealed interface Event {
         data object LoadTable : Event
         data object AddExpensePreset : Event
         data object DismissDialog : Event
+        data class ConfirmDialog(val category: String, val amount: String) : Event
     }
 
     sealed class Navigation {

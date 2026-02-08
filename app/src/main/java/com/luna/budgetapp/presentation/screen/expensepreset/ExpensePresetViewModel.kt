@@ -6,12 +6,12 @@ import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
-import com.luna.budgetapp.presentation.screen.expensepreset.ViewModelStateEvents
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class ExpensePresetViewModel(
@@ -33,19 +33,11 @@ class ExpensePresetViewModel(
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
             ViewModelStateEvents.Event.LoadTable -> {}
-            ViewModelStateEvents.Event.AddExpensePreset -> {
-                viewModelScope.launch {
-                    _effect.send(ViewModelStateEvents.UiEffect.ShowDialog)
-                }
-            }
-            ViewModelStateEvents.Event.DismissDialog -> {
-                viewModelScope.launch {
-                    _effect.send(ViewModelStateEvents.UiEffect.DismissDialog)
-                }
-            }
+            ViewModelStateEvents.Event.AddExpensePreset -> emitShowDialog()
+            ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
                 addExpensePreset(event.category, event.amount.toDouble())
-                dismissDialog()
+                emitDismissDialog()
             }
         }
     }
@@ -71,8 +63,16 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun dismissDialog() {
-        onEvent(ViewModelStateEvents.Event.DismissDialog) 
+    private fun emitShowDialog() {
+        viewModelScope.launch {
+            _effect.send(ViewModelStateEvents.UiEffect.ShowDialog)
+        }
+    }
+
+    private fun emitDismissDialog() {
+        viewModelScope.launch {
+            _effect.send(ViewModelStateEvents.UiEffect.DismissDialog)
+        }
     }
 }
 

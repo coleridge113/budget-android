@@ -27,7 +27,7 @@ class ExpensePresetViewModel(
     private val _uiState = MutableStateFlow(ViewModelStateEvents.UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _effect = Channel<ViewModelStateEvents.UiEffect>()
+    private val _effect = Channel<ViewModelStateEvents.UiEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
     fun onEvent(event: ViewModelStateEvents.Event) {

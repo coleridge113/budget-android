@@ -27,32 +27,29 @@ class ExpensePresetViewModel(
     private val _uiState = MutableStateFlow(ViewModelStateEvents.UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _effect = Channel<ViewModelStateEvents.UiEffect>(Channel.BUFFERED)
-    val effect = _effect.receiveAsFlow()
-
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
             ViewModelStateEvents.Event.LoadTable -> {}
             ViewModelStateEvents.Event.AddExpensePreset -> emitShowDialog()
             ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
-                addExpensePreset(event.category, event.amount.toDouble())
-                emitDismissDialog()
-            }
-        }
-    }
+                val state = _uiState.value
+                if (!state.isDialogVisible) return
 
-    private fun addExpensePreset(category: String, amount: Double) {
-        val expensePreset = ExpensePreset(
-            id = 4L,
-            amount = amount,
-            category = category,
-            type = "Entertainment"
-        )
-        _uiState.update { currentState ->
-            currentState.copy(
-                success = currentState.success + expensePreset
-            )
+                val expensePreset = ExpensePreset(
+                    id = 4L,
+                    amount = event.amount.toDouble(),
+                    category = event.category,
+                    type = "Entertainment"
+                )
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isDialogVisible = false,
+                        expensePresets = currentState.expensePresets + expensePreset
+                    )
+                }
+            }
         }
     }
 
@@ -65,13 +62,21 @@ class ExpensePresetViewModel(
 
     private fun emitShowDialog() {
         viewModelScope.launch {
-            _effect.send(ViewModelStateEvents.UiEffect.ShowDialog)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isDialogVisible = true
+                )
+            }
         }
     }
 
     private fun emitDismissDialog() {
         viewModelScope.launch {
-            _effect.send(ViewModelStateEvents.UiEffect.DismissDialog)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isDialogVisible = false
+                )
+            }
         }
     }
 }
@@ -80,13 +85,9 @@ object ViewModelStateEvents {
     data class UiState(
         val isLoading: Boolean = false,
         val error: String = "",
-        val success: List<ExpensePreset> = emptyList()
+        val expensePresets: List<ExpensePreset> = emptyList(),
+        val isDialogVisible: Boolean = false
     )
-
-    sealed interface UiEffect {
-        data object DismissDialog : UiEffect
-        data object ShowDialog : UiEffect
-    }
 
     sealed interface Event {
         data object LoadTable : Event

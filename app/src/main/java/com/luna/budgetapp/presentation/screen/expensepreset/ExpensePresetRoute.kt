@@ -23,23 +23,12 @@ fun ExpensePresetRoute(
 ) {
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    var showDialog by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        viewModel.effect.collect { effect ->
-            showDialog = when (effect) {
-                ViewModelStateEvents.UiEffect.DismissDialog -> false
-                ViewModelStateEvents.UiEffect.ShowDialog -> true
-            }
-        }
-    }
 
     Scaffold { innerPadding ->
         MainContent(
             uiState = state,
             modifier = Modifier.padding(innerPadding),
             onEvent = viewModel::onEvent,
-            showDialog = showDialog
         )
     }
 }
@@ -49,16 +38,15 @@ fun MainContent(
     uiState: ViewModelStateEvents.UiState,
     modifier: Modifier = Modifier,
     onEvent: (ViewModelStateEvents.Event) -> Unit,
-    showDialog: Boolean
 ) {
     Box(modifier = modifier) {
         ExpenseTable(
-            expensePresets = uiState.success,
+            expensePresets = uiState.expensePresets,
             onClickItem = {},
             onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) }
         )
 
-        if (showDialog) {
+        if (uiState.isDialogVisible) {
             ExpensePresetDialog(
                 onDismissRequest = { onEvent(ViewModelStateEvents.Event.DismissDialog) },
                 onConfirm = { category, amount ->

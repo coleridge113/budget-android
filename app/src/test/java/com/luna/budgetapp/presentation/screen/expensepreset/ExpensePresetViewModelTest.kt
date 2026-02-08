@@ -35,27 +35,48 @@ class ExpensePresetViewModelTest {
     }
 
     @Test
-    fun `AddExpensePreset event should add a preset to the success list`() = runTest {
+    fun `dialog shows when clicking add expense preset`() = runTest {
         viewModel.uiState.test {
-            val initialState = awaitItem()
-            assertThat(initialState.success).isEmpty()
+            val initial = awaitItem()
+            assertThat(initial.isDialogVisible).isFalse()
 
             viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
 
-            val updatedState = awaitItem()
-            assertThat(updatedState.success).hasSize(1)
-            assertThat(updatedState.success.first().category).isEqualTo("Streaming")
-            cancelAndIgnoreRemainingEvents()
+            val final = awaitItem()
+            assertThat(final.isDialogVisible).isTrue()
+            expectNoEvents()
+        }
+    }
+
+
+    @Test
+    fun `confirming dialog updates list and dismisses it`() = runTest {
+        viewModel.uiState.test {
+            skipItems(1)
+
+            viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
+            awaitItem() // shown
+
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Coffee", "10.0"))
+            val dismissed = awaitItem()
+
+            assertThat(dismissed.isDialogVisible).isFalse()
+            assertThat(dismissed.expensePresets).hasSize(1)
         }
     }
 
     @Test
-    fun `multiple AddExpensePreset events should append to the list`() = runTest {
-        viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
-        viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
+    fun `rapidly clicking confirm should only add one item`() = runTest {
+        viewModel.uiState.test {
+            awaitItem()
 
-        val finalState = viewModel.uiState.value
-        assertThat(finalState.success).hasSize(2)
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Coffee", "10.0"))
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Coffee", "10.0"))
+
+            awaitItem()
+            assertThat(viewModel.uiState.value.expensePresets).hasSize(1)
+            expectNoEvents()
+        }
     }
 }
 

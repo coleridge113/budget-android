@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "expenses")
 data class ExpenseEntity(
-    @PrimaryKey val id: Long,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name =  "name") val name: String?,
     @ColumnInfo(name =  "amount") val amount: Double,
     @ColumnInfo(name =  "category") val category: String,

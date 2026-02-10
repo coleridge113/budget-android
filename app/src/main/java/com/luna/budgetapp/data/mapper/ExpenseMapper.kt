@@ -28,7 +28,7 @@ fun ExpenseEntity.toModel(): Expense {
 
 fun Expense.toEntity(): ExpenseEntity {
     return ExpenseEntity(
-        id = this.id,
+        id = this.id ?: 0,
         name = this.name,
         amount = this.amount,
         category = this.category,

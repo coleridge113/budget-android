@@ -5,8 +5,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class Expense(
-    val id: Long,
-    val name: String?,
+    val id: Long? = null,
+    val name: String? = null,
     val amount: Double,
     val category: String,
     val type: String,

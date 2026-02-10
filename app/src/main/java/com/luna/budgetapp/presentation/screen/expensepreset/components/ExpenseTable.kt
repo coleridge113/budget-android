@@ -23,7 +23,7 @@ import com.luna.budgetapp.ui.icons.CirclePlusIcon
 fun ExpenseTable(
     expensePresets: List<ExpensePreset>,
     modifier: Modifier = Modifier,
-    onClickItem: () -> Unit,
+    onClickItem: (ExpensePreset) -> Unit,
     onClickAdd: () -> Unit
 ) {
     Column(
@@ -31,17 +31,16 @@ fun ExpenseTable(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn {
-            items(expensePresets) { item ->
+            items(expensePresets) { expensePreset ->
                 ExpenseItem(
-                    item = item,
+                    item = expensePreset,
                     icon = CoffeeIcon,
-                    text = item.amount,
-                    onClick = onClickItem
+                    onClick = { onClickItem(expensePreset) }
                 )            
             }
         }
 
-        AddItemPrompt() { onClickAdd() }
+        AddItemPrompt { onClickAdd() }
     } 
 }
 
@@ -49,11 +48,11 @@ fun ExpenseTable(
 fun ExpenseItem(
     item: ExpensePreset,
     icon: ImageVector,
-    text: Double,
-    onClick: () -> Unit
+    onClick: (ExpensePreset) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .clickable { onClick(item) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -66,7 +65,7 @@ fun ExpenseItem(
             modifier = Modifier.weight(3f),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "P${text}")
+            Text(text = "${item.type} - P${item.amount}")
         }
     }
 }
@@ -96,7 +95,6 @@ fun ExpenseItemPreview() {
     ExpenseItem(
         item = item,
         icon = CoffeeIcon,
-        text = 100.0,
         onClick = {}
     )
 }
@@ -108,33 +106,21 @@ fun ExpenseTablePreview() {
         ExpensePreset(
             id = 1L,
             amount = 4.50,
-            category = "Coffee",
-            type = "Food & Drink"
+            category = "Food & Drink",
+            type = "Coffee"
         ),
         ExpensePreset(
             id = 2L,
             amount = 12.00,
-            category = "Lunch",
-            type = "Food & Drink"
+            category = "Food & Drink",
+            type = "Lunch"
         ),
         ExpensePreset(
             id = 3L,
             amount = 65.00,
-            category = "Gas",
-            type = "Transport"
+            category = "Commute",
+            type = "Angkas"
         ),
-        ExpensePreset(
-            id = 4L,
-            amount = 15.99,
-            category = "Streaming",
-            type = "Entertainment"
-        ),
-        ExpensePreset(
-            id = 5L,
-            amount = 120.00,
-            category = "Groceries",
-            type = "Housekeeping"
-        )
     )
     ExpenseTable(
         expensePresets = expensePresets,

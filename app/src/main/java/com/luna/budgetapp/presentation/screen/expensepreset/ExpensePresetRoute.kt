@@ -42,7 +42,7 @@ fun MainContent(
     Box(modifier = modifier) {
         ExpenseTable(
             expensePresets = uiState.expensePresets,
-            onClickItem = {},
+            onClickItem = { onEvent(ViewModelStateEvents.Event.AddExpense(it))},
             onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) }
         )
 

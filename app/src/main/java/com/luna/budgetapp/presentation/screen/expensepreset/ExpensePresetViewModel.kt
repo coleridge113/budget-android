@@ -38,7 +38,7 @@ class ExpensePresetViewModel(
                 val expensePreset = ExpensePreset(
                     amount = event.amount.toDouble(),
                     category = event.category,
-                    type = "Entertainment"
+                    type = event.type
                 )
 
                 _uiState.update { currentState ->
@@ -102,7 +102,7 @@ object ViewModelStateEvents {
         data object LoadTable : Event
         data object AddExpensePreset : Event
         data object DismissDialog : Event
-        data class ConfirmDialog(val category: String, val amount: String) : Event
+        data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
         data class AddExpense(val expensePreset: ExpensePreset) : Event
     }
 

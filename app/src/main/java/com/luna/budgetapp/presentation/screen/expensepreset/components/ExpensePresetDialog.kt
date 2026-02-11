@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ExpensePresetDialog(
     onDismissRequest: () -> Unit,
-    onConfirm: (String, String) -> Unit,
+    onConfirm: (String, String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -47,9 +47,10 @@ fun ExpensePresetDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
     ) {
-        val options = listOf("Food", "Coffee", "Commute")
+        val options = listOf("Food", "Beverage", "Commute")
         var expanded by remember { mutableStateOf(false) }
-        var selectedOption by remember { mutableStateOf(options[0])}
+        var selectedOption by remember { mutableStateOf(options[0]) }
+        var typeState = rememberTextFieldState("")
         var amountState = rememberTextFieldState("")
 
         Surface(
@@ -96,10 +97,15 @@ fun ExpensePresetDialog(
                         }
                     }
                 }
+                
+                OutlinedTextField(
+                    state = typeState,
+                    label = { Text("Type") }
+                )
 
                 OutlinedTextField(
                     state = amountState,
-                    label = { Text("Amount")}
+                    label = { Text("Amount") }
                 )
 
                 Row(
@@ -112,7 +118,11 @@ fun ExpensePresetDialog(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
-                        onConfirm(selectedOption, amountState.text.toString())
+                        onConfirm(
+                            selectedOption, 
+                            typeState.text.toString(), 
+                            amountState.text.toString()
+                        )
                     }) {
                         Text("Confirm")
                     }
@@ -134,7 +144,7 @@ fun ExpensePresetDialogPreview() {
     Box(modifier = Modifier.fillMaxSize()){
         ExpensePresetDialog(
             onDismissRequest = {},
-            onConfirm = { _, _ -> }
+            onConfirm = { _, _, _ -> }
         )
     }
 }

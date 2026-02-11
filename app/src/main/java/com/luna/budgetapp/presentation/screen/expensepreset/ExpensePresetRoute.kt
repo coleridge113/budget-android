@@ -67,8 +67,8 @@ fun MainContent(
         if (uiState.isDialogVisible) {
             ExpensePresetDialog(
                 onDismissRequest = { onEvent(ViewModelStateEvents.Event.DismissDialog) },
-                onConfirm = { category, amount ->
-                    onEvent(ViewModelStateEvents.Event.ConfirmDialog(category, amount))
+                onConfirm = { category, type, amount ->
+                    onEvent(ViewModelStateEvents.Event.ConfirmDialog(category, type, amount))
                 }
             )
         }

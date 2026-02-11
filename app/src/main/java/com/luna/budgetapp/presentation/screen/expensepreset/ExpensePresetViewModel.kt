@@ -23,10 +23,6 @@ class ExpensePresetViewModel(
     private val expenseRepo: ExpenseRepository
 ): ViewModel() {
 
-    init {
-        initializePusher()
-    }
-
     private val _uiState = MutableStateFlow(ViewModelStateEvents.UiState())
     val uiState = _uiState.asStateFlow()
 

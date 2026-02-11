@@ -47,9 +47,9 @@ fun ExpensePresetDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
     ) {
-        val options = listOf("Food", "Beverage", "Commute")
+        val options = CategoryOptions.entries
         var expanded by remember { mutableStateOf(false) }
-        var selectedOption by remember { mutableStateOf(options[0]) }
+        var selectedOption by remember { mutableStateOf(options.first()) }
         var typeState = rememberTextFieldState("")
         var amountState = rememberTextFieldState("")
 
@@ -72,7 +72,7 @@ fun ExpensePresetDialog(
                     onExpandedChange = { expanded = !expanded }
                 ) {
                     TextField(
-                        value = selectedOption,
+                        value = selectedOption.displayName,
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Select category")},
@@ -87,7 +87,7 @@ fun ExpensePresetDialog(
                     ) {
                         options.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(option) },
+                                text = { Text(option.displayName) },
                                 onClick = {
                                     selectedOption = option
                                     expanded = false
@@ -119,7 +119,7 @@ fun ExpensePresetDialog(
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(onClick = {
                         onConfirm(
-                            selectedOption, 
+                            selectedOption.displayName,
                             typeState.text.toString(), 
                             amountState.text.toString()
                         )

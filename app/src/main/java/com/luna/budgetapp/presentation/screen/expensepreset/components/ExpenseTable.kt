@@ -15,6 +15,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +27,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
 import com.luna.budgetapp.domain.model.ExpensePreset
+import com.luna.budgetapp.ui.icons.BillsIcon
 import com.luna.budgetapp.ui.icons.CoffeeIcon
+import com.luna.budgetapp.ui.icons.FoodIcon
+import com.luna.budgetapp.ui.icons.HeartIcon
+import com.luna.budgetapp.ui.icons.HouseIcon
+import com.luna.budgetapp.ui.icons.MotorcycleIcon
 
 @Composable
 fun ExpenseTable(
@@ -39,14 +45,15 @@ fun ExpenseTable(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LazyColumn {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             items(expensePresets) { expensePreset ->
                 ExpenseItem(
                     item = expensePreset,
-                    icon = CoffeeIcon,
+                    icon = iconSelector(expensePreset.category),
                     onClick = { onClickItem(expensePreset) }
                 )            
-                Spacer(Modifier.height(8.dp))
             }
         }
     } 
@@ -130,4 +137,20 @@ fun ExpenseTablePreview() {
         onClickItem = {},
         onClickAdd = {}
     )
+}
+
+private fun iconSelector(category: String): ImageVector {
+    return CategoryOptions.entries
+        .firstOrNull { it.displayName == category }
+        ?.icon
+        ?: FoodIcon
+}
+
+enum class CategoryOptions(val displayName: String, val icon: ImageVector) {
+    FOOD("Food", FoodIcon),
+    BEVERAGE("Beverage", CoffeeIcon),
+    DATE("Date", HeartIcon),
+    HOUSE("House", HouseIcon),
+    COMMUTE("Commute", MotorcycleIcon),
+    BILLS("Bills", BillsIcon)
 }

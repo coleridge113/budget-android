@@ -83,7 +83,7 @@ val servicesModule = module {
 }
 
 val appModule = module {
-    includes(networkModule, databaseModule)
+    includes(networkModule, databaseModule, servicesModule)
 
     // Repositories
     singleOf(::ExpenseRepositoryImpl) { bind<ExpenseRepository>() }

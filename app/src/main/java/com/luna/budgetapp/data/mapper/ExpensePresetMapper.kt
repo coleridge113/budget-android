@@ -26,7 +26,7 @@ fun ExpensePresetEntity.toModel(): ExpensePreset {
 
 fun ExpensePreset.toEntity(): ExpensePresetEntity {
     return ExpensePresetEntity(
-        id = this.id,
+        id = this.id ?: 0,
         amount = this.amount,
         category = this.category,
         type = this.type,

@@ -3,7 +3,7 @@ package com.luna.budgetapp.domain.model
 import java.time.LocalDateTime
 
 data class ExpensePreset(
-    val id: Long,
+    val id: Long? = null,
     val amount: Double,
     val category: String,
     val type: String,

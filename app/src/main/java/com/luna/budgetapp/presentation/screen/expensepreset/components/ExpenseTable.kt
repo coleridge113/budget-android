@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.draw.clip
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.ui.icons.CoffeeIcon
-import com.luna.budgetapp.ui.icons.CirclePlusIcon
 
 @Composable
 fun ExpenseTable(
@@ -48,8 +47,6 @@ fun ExpenseTable(
                 )            
             }
         }
-
-        AddItemPrompt { onClickAdd() }
     } 
 }
 
@@ -85,19 +82,6 @@ fun ExpenseItem(
         ) {
             Text(text = "${item.type} - P${item.amount}")
         }
-    }
-}
-
-@Composable
-fun AddItemPrompt(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Box(modifier = modifier.clickable { onClick() }) {
-        Icon(
-            imageVector = CirclePlusIcon,
-            contentDescription = null
-        )
     }
 }
 

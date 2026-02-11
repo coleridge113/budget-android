@@ -1,20 +1,23 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
-import org.koin.compose.viewmodel.koinViewModel
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
+import com.luna.budgetapp.ui.icons.CirclePlusIcon
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ExpensePresetRoute(
@@ -24,12 +27,26 @@ fun ExpensePresetRoute(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold { innerPadding ->
-        MainContent(
-            uiState = state,
-            modifier = Modifier.padding(innerPadding),
-            onEvent = viewModel::onEvent,
-        )
+    Box (modifier = Modifier.fillMaxSize()){
+        Scaffold { innerPadding ->
+            MainContent(
+                uiState = state,
+                modifier = Modifier.padding(innerPadding),
+                onEvent = viewModel::onEvent,
+            )
+        }
+
+        FloatingActionButton(
+            modifier = Modifier.align(Alignment.CenterEnd)
+                .padding(end = 16.dp),
+            onClick = { viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset) },
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = CirclePlusIcon,
+                contentDescription = null
+            )
+        }
     }
 }
 

@@ -36,7 +36,6 @@ class ExpensePresetViewModel(
                 if (!state.isDialogVisible) return
 
                 val expensePreset = ExpensePreset(
-                    id = 4L,
                     amount = event.amount.toDouble(),
                     category = event.category,
                     type = "Entertainment"

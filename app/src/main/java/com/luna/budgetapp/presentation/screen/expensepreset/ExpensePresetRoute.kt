@@ -31,7 +31,8 @@ fun ExpensePresetRoute(
         Scaffold { innerPadding ->
             MainContent(
                 uiState = state,
-                modifier = Modifier.padding(innerPadding),
+                modifier = Modifier.padding(innerPadding)
+                    .padding(16.dp),
                 onEvent = viewModel::onEvent,
             )
         }

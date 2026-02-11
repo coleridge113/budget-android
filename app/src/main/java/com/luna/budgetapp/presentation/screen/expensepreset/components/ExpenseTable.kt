@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -45,6 +46,7 @@ fun ExpenseTable(
                     icon = CoffeeIcon,
                     onClick = { onClickItem(expensePreset) }
                 )            
+                Spacer(Modifier.height(8.dp))
             }
         }
     } 
@@ -58,8 +60,7 @@ fun ExpenseItem(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
-            .clickable { onClick(item) }
-            .padding(vertical = 8.dp),
+            .clickable { onClick(item) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(

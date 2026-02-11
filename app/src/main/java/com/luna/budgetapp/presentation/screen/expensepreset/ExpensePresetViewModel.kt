@@ -73,13 +73,6 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun initializePusher() {
-        viewModelScope.launch {
-            pusherManager.initPusher()
-            pusherManager.subscribeToExpenseChannel {}
-        }
-    }
-
     private fun emitShowDialog() {
         viewModelScope.launch {
             _uiState.update { currentState ->

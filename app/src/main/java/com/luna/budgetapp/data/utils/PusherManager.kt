@@ -15,12 +15,19 @@ import java.lang.Exception
 class PusherManager(
     private val repository: AuthRepository
 ) {
+    companion object {
+        const val EXPENSE_CHANNEL = "private-expense-channel"
+        const val EXPENSE_EVENT = "expense-added"
+    }
+
     private val key = BuildConfig.PUSHER_KEY
     private val cluster = BuildConfig.PUSHER_CLUSTER
     private val authEndpoint = "${BuildConfig.LOCAL_BACKEND_URL}/api/v1/auth/pusher/auth"
-    private val privateExpenseChannel = "private-expense-channel"
-    private val expenseEventName = "expense-added"
     private var pusher: Pusher? = null
+
+    private val channelEventMap = mapOf(
+        EXPENSE_CHANNEL to EXPENSE_EVENT
+    )
 
     private val privateChannelEventListener = object: PrivateChannelEventListener {
         override fun onAuthenticationFailure(message: String?, e: Exception?) {
@@ -62,12 +69,13 @@ class PusherManager(
         ) }
     }
 
-    fun subscribeToExpenseChannel(
+    fun subscribeToPrivateChannel(
+        privateChannelName: String,
         onEvent: (PusherEvent?) -> Unit
     ) {
         val instance = pusher ?: throw IllegalStateException("Pusher not initialized")
         instance.subscribePrivate(
-            privateExpenseChannel, 
+            privateChannelName, 
             object : PrivateChannelEventListener {
                 override fun onAuthenticationFailure(message: String?, e: Exception?) {
                     Log.e("PusherChannelEvent", "Failed authentication: $message")
@@ -81,7 +89,7 @@ class PusherManager(
                     onEvent(event)
                 }
             },
-            expenseEventName
+            channelEventMap[privateChannelName]
         )
     }
 

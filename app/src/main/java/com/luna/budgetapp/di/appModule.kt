@@ -78,6 +78,10 @@ val databaseModule = module {
     single { androidContext().dataStore }
 }
 
+val servicesModule = module {
+    singleOf(::PusherManager)
+}
+
 val appModule = module {
     includes(networkModule, databaseModule)
 
@@ -87,7 +91,6 @@ val appModule = module {
     singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
     singleOf(::AuthRemoteDataSource)
     singleOf(::AuthLocalDataSource)
-    singleOf(::PusherManager)
 
     // UseCases
     factoryOf(::AddExpenseUseCase)

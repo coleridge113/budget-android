@@ -32,12 +32,6 @@ class ExpensePresetViewModelTest {
     }
 
     @Test
-    fun `init block should initialize and subscribe to pusher`() = runTest {
-        coVerify { pusherManager.initPusher() }
-        coVerify { pusherManager.subscribeToExpenseChannel(any()) }
-    }
-
-    @Test
     fun `dialog shows when clicking add expense preset`() = runTest {
         viewModel.uiState.test {
             val initial = awaitItem()

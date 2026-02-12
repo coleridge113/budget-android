@@ -55,6 +55,7 @@ class ExpensePresetViewModelTest {
             awaitItem() // shown
 
             viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Beverage", "Coffee", "10.0"))
+            awaitItem()
             val dismissed = awaitItem()
 
             assertThat(dismissed.isDialogVisible).isFalse()
@@ -63,7 +64,7 @@ class ExpensePresetViewModelTest {
     }
 
     @Test
-    fun `rapidly clicking confirm should only add one item`() = runTest {
+    fun `rapidly clicking confirm should not add multiple expense presets`() = runTest {
         viewModel.uiState.test {
             awaitItem()
 
@@ -89,12 +90,13 @@ class ExpensePresetViewModelTest {
             val preset = ExpensePreset(
                 id = 0L,
                 amount = 100.0,
-                category = "Drink",
+                category = "Beverage",
                 type = "Coffee"
             )
             viewModel.onEvent(ViewModelStateEvents.Event.AddExpense(preset))
             val state = awaitItem()
             assertThat(state.expenses).hasSize(1)
+            assertThat(state.totalAmount).isAtLeast(preset.amount)
         }
     }
 }

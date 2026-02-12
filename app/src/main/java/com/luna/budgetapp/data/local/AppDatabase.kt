@@ -8,7 +8,7 @@ import com.luna.budgetapp.data.local.dao.ExpensePresetDao
 import com.luna.budgetapp.data.local.entity.ExpenseEntity
 import com.luna.budgetapp.data.local.entity.ExpensePresetEntity
 
-@Database(entities =  [ExpenseEntity::class, ExpensePresetEntity::class], version =  2, exportSchema = false)
+@Database(entities =  [ExpenseEntity::class, ExpensePresetEntity::class], version =  1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 

@@ -3,18 +3,15 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.data.utils.PusherManager
-import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.model.Expense
-import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import com.luna.budgetapp.domain.usecase.UseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.receiveAsFlow
 
 class ExpensePresetViewModel(
     private val useCases: UseCases,
@@ -64,11 +61,12 @@ class ExpensePresetViewModel(
                         type = event.expensePreset.type,
                         amount = event.expensePreset.amount
                     )
-                    expenseRepo.addExpense(expense)
-
+                    // expenseRepo.addExpense(expense)
+                    
                     _uiState.update { currentState ->
                         currentState.copy(
-                            expenses = currentState.expenses + expense
+                            expenses = currentState.expenses + expense,
+                            totalAmount = currentState.totalAmount + expense.amount
                         )
                     }
                 }
@@ -104,7 +102,8 @@ object ViewModelStateEvents {
         val expensePresets: List<ExpensePreset> = emptyList(),
         val expenses: List<Expense> = emptyList(),
         val isSaving: Boolean = false,
-        val isDialogVisible: Boolean = false
+        val isDialogVisible: Boolean = false,
+        val totalAmount: Double = 0.0
     )
 
     sealed interface Event {

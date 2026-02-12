@@ -49,7 +49,6 @@ class ExpensePresetViewModel(
 
                 viewModelScope.launch {
                     _uiState.update { currentState ->
-                        delay(500L)
                         currentState.copy(
                             isDialogVisible = false,
                             isSaving = false,
@@ -73,7 +72,6 @@ class ExpensePresetViewModel(
                         )
                     }
                 }
-
             }
         }
     }

@@ -84,8 +84,7 @@ fun ExpenseItem(
             modifier = Modifier.weight(3f)
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
-            ,
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Text(text = "${item.type} - P${item.amount}")

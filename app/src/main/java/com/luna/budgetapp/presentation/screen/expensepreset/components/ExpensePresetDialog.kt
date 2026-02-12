@@ -24,6 +24,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.dp
 fun ExpensePresetDialog(
     onDismissRequest: () -> Unit,
     onConfirm: (String, String, String) -> Unit,
+    isSaving: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -97,7 +99,7 @@ fun ExpensePresetDialog(
                         }
                     }
                 }
-                
+
                 OutlinedTextField(
                     state = typeState,
                     label = { Text("Type") }
@@ -120,10 +122,12 @@ fun ExpensePresetDialog(
                     Button(onClick = {
                         onConfirm(
                             selectedOption.displayName,
-                            typeState.text.toString(), 
+                            typeState.text.toString(),
                             amountState.text.toString()
                         )
-                    }) {
+                    },
+                        enabled = !isSaving
+                    ) {
                         Text("Confirm")
                     }
 
@@ -144,7 +148,8 @@ fun ExpensePresetDialogPreview() {
     Box(modifier = Modifier.fillMaxSize()){
         ExpensePresetDialog(
             onDismissRequest = {},
-            onConfirm = { _, _, _ -> }
+            onConfirm = { _, _, _ -> },
+            isSaving = false,
         )
     }
 }

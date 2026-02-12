@@ -69,7 +69,8 @@ fun MainContent(
                 onDismissRequest = { onEvent(ViewModelStateEvents.Event.DismissDialog) },
                 onConfirm = { category, type, amount ->
                     onEvent(ViewModelStateEvents.Event.ConfirmDialog(category, type, amount))
-                }
+                },
+                isSaving = uiState.isSaving
             )
         }
     }

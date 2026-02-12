@@ -33,7 +33,7 @@ class ExpensePresetViewModel(
             ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
                 val state = _uiState.value
-                if (!state.isDialogVisible) return
+                if (!state.isDialogVisible || state.isSaving) return
 
                 val expensePreset = ExpensePreset(
                     amount = event.amount.toDouble(),
@@ -43,9 +43,19 @@ class ExpensePresetViewModel(
 
                 _uiState.update { currentState ->
                     currentState.copy(
-                        isDialogVisible = false,
-                        expensePresets = currentState.expensePresets + expensePreset
+                        isSaving = true
                     )
+                }
+
+                viewModelScope.launch {
+                    _uiState.update { currentState ->
+                        delay(500L)
+                        currentState.copy(
+                            isDialogVisible = false,
+                            isSaving = false,
+                            expensePresets = currentState.expensePresets + expensePreset
+                        )
+                    }
                 }
             }
             is ViewModelStateEvents.Event.AddExpense -> { 
@@ -95,6 +105,7 @@ object ViewModelStateEvents {
         val error: String = "",
         val expensePresets: List<ExpensePreset> = emptyList(),
         val expenses: List<Expense> = emptyList(),
+        val isSaving: Boolean = false,
         val isDialogVisible: Boolean = false
     )
 

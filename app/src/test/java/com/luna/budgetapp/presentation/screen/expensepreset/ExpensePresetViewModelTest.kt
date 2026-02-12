@@ -47,14 +47,14 @@ class ExpensePresetViewModelTest {
 
 
     @Test
-    fun `confirming dialog updates list and dismisses it`() = runTest {
+    fun `confirming dialog updates preset list and dismisses it`() = runTest {
         viewModel.uiState.test {
             skipItems(1)
 
             viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
             awaitItem() // shown
 
-            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Coffee", "10.0"))
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Beverage", "Coffee", "10.0"))
             val dismissed = awaitItem()
 
             assertThat(dismissed.isDialogVisible).isFalse()
@@ -67,12 +67,17 @@ class ExpensePresetViewModelTest {
         viewModel.uiState.test {
             awaitItem()
 
-            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Coffee", "10.0"))
-            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Coffee", "10.0"))
+            viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
+            awaitItem()
+
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Beverage", "Coffee","10.0"))
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Beverage", "Coffee","10.0"))
+            viewModel.onEvent(ViewModelStateEvents.Event.ConfirmDialog("Beverage", "Coffee","10.0"))
 
             awaitItem()
-            assertThat(viewModel.uiState.value.expensePresets).hasSize(1)
-            expectNoEvents()
+            val dismissed = awaitItem()
+            assertThat(dismissed.isDialogVisible).isFalse()
+            assertThat(dismissed.expensePresets).hasSize(1)
         }
     }
 

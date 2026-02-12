@@ -25,7 +25,6 @@ class ExpensePresetViewModel(
 
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
-            ViewModelStateEvents.Event.LoadTable -> {}
             ViewModelStateEvents.Event.AddExpensePreset -> emitShowDialog()
             ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
@@ -107,7 +106,6 @@ object ViewModelStateEvents {
     )
 
     sealed interface Event {
-        data object LoadTable : Event
         data object AddExpensePreset : Event
         data object DismissDialog : Event
         data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event

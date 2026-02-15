@@ -52,11 +52,11 @@ fun ExpensePresetDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
     ) {
-        val options = CategoryOptions.entries
+        val options = remember { CategoryOptions.entries }
         var expanded by remember { mutableStateOf(false) }
         var selectedOption by remember { mutableStateOf(options.first()) }
-        var typeState = rememberTextFieldState("")
-        var amountState = rememberTextFieldState("")
+        val typeState = rememberTextFieldState("")
+        val amountState = rememberTextFieldState("")
 
         Surface(
             shape = MaterialTheme.shapes.large,

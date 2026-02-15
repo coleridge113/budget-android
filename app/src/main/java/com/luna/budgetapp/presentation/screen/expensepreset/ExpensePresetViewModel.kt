@@ -36,7 +36,7 @@ class ExpensePresetViewModel(
                 val expensePreset = ExpensePreset(
                     amount = event.amount.toDoubleOrNull() ?: 0.0,
                     category = event.category,
-                    type = event.type
+                    type = event.type.ifEmpty { event.category }
                 )
 
                 _uiState.update { currentState ->

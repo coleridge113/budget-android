@@ -115,7 +115,8 @@ fun ExpensePresetDialog(
                         keyboardType = KeyboardType.Decimal
                     ),
                     inputTransformation = InputTransformation {
-                        if (!asCharSequence().all { it.isDigit() }) {
+                        val text = asCharSequence().toString()
+                        if (!text.matches(Regex("^\\d*\\.?\\d*$"))) {
                             revertAllChanges()
                         }
                     }

@@ -8,7 +8,6 @@ import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
-import com.luna.budgetapp.presentation.screen.expensepreset.ViewModelStateEvents
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,9 +25,21 @@ class ExpensePresetViewModel(
 
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
-            ViewModelStateEvents.Event.AddExpensePreset -> emitShowDialog()
+            ViewModelStateEvents.Event.AddExpensePreset -> { 
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isDialogVisible = true
+                    )
+                }
+            }
             ViewModelStateEvents.Event.CycleDateFilter -> {}
-            ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
+            ViewModelStateEvents.Event.DismissDialog -> { 
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isDialogVisible = false
+                    )
+                }
+            }
             is ViewModelStateEvents.Event.ConfirmDialog -> {
                 val state = _uiState.value
                 if (!state.isDialogVisible || state.isSaving) return
@@ -71,26 +82,6 @@ class ExpensePresetViewModel(
                         )
                     }
                 }
-            }
-        }
-    }
-
-    private fun emitShowDialog() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isDialogVisible = true
-                )
-            }
-        }
-    }
-
-    private fun emitDismissDialog() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    isDialogVisible = false
-                )
             }
         }
     }

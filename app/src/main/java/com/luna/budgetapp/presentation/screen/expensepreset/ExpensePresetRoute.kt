@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -67,7 +68,8 @@ fun MainContent(
     ) {
         Box(
             modifier = Modifier.fillMaxWidth()
-                .weight(1f),
+                .weight(1f)
+                .clickable {},
             contentAlignment = Alignment.Center
         ) {
             Text(

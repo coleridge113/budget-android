@@ -8,6 +8,7 @@ import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.presentation.screen.expensepreset.ViewModelStateEvents
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,6 +27,7 @@ class ExpensePresetViewModel(
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
             ViewModelStateEvents.Event.AddExpensePreset -> emitShowDialog()
+            ViewModelStateEvents.Event.CycleDateFilter -> {}
             ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
                 val state = _uiState.value
@@ -102,12 +104,14 @@ object ViewModelStateEvents {
         val expenses: List<Expense> = emptyList(),
         val isSaving: Boolean = false,
         val isDialogVisible: Boolean = false,
-        val totalAmount: Double = 0.0
+        val totalAmount: Double = 0.0,
+        val dateFilter: String = "",
     )
 
     sealed interface Event {
         data object AddExpensePreset : Event
         data object DismissDialog : Event
+        data object CycleDateFilter : Event
         data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
         data class AddExpense(val expensePreset: ExpensePreset) : Event
     }

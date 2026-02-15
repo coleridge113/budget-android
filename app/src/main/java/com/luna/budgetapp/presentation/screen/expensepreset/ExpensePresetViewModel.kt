@@ -29,12 +29,12 @@ class ExpensePresetViewModel(
             ViewModelStateEvents.Event.AddExpensePreset -> emitShowDialog()
             ViewModelStateEvents.Event.CycleDateFilter -> {}
             ViewModelStateEvents.Event.DismissDialog -> emitDismissDialog()
-            is ViewModelStateEvents.Event.ConfirmDialog -> { 
+            is ViewModelStateEvents.Event.ConfirmDialog -> {
                 val state = _uiState.value
                 if (!state.isDialogVisible || state.isSaving) return
 
                 val expensePreset = ExpensePreset(
-                    amount = event.amount.toDouble(),
+                    amount = event.amount.toDoubleOrNull() ?: 0.0,
                     category = event.category,
                     type = event.type
                 )

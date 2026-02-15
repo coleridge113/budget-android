@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.KeyboardType
 import com.luna.budgetapp.presentation.model.CategoryOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,7 +110,15 @@ fun ExpensePresetDialog(
 
                 OutlinedTextField(
                     state = amountState,
-                    label = { Text("Amount") }
+                    label = { Text("Amount") },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal
+                    ),
+                    inputTransformation = InputTransformation {
+                        if (!asCharSequence().all { it.isDigit() }) {
+                            revertAllChanges()
+                        }
+                    }
                 )
 
                 Row(

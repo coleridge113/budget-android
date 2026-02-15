@@ -8,13 +8,15 @@ import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
-import org.junit.Rule
 import io.mockk.mockk
-import io.mockk.coVerify
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ExpensePresetViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
@@ -99,5 +101,23 @@ class ExpensePresetViewModelTest {
             assertThat(state.totalAmount).isAtLeast(preset.amount)
         }
     }
+
+    @Test
+    fun `confirming an expense preset with empty type defaults to use category string`() = runTest {
+        val default = "Food"
+        viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
+        viewModel.onEvent(
+            ViewModelStateEvents.Event.ConfirmDialog(
+                category = default,
+                type = "",
+                amount = "100"
+            )
+        )
+        advanceUntilIdle()
+        val state = viewModel.uiState.value
+        assertThat(state.expensePresets.first().type).isEqualTo(default)
+    }
+
+    
 }
 

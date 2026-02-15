@@ -3,10 +3,15 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -57,11 +62,24 @@ fun MainContent(
     modifier: Modifier = Modifier,
     onEvent: (ViewModelStateEvents.Event) -> Unit,
 ) {
-    Box(modifier = modifier) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (uiState.totalAmount == 0.0) "-" else "P${uiState.totalAmount}",
+                style = MaterialTheme.typography.displayMedium
+            ) 
+        }
         ExpenseTable(
             expensePresets = uiState.expensePresets,
             onClickItem = { onEvent(ViewModelStateEvents.Event.AddExpense(it))},
-            onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) }
+            onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) },
+            modifier = Modifier.weight(3f)
         )
 
         if (uiState.isDialogVisible) {

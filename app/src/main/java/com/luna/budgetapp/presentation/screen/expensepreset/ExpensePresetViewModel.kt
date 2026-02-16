@@ -2,6 +2,7 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
@@ -10,8 +11,11 @@ import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalTime
 
 class ExpensePresetViewModel(
     private val useCases: UseCases,
@@ -19,6 +23,38 @@ class ExpensePresetViewModel(
     private val expensePresetRepo: ExpensePresetRepository,
     private val expenseRepo: ExpenseRepository
 ): ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            expenseRepo.getExpensesByDateRange(
+                start = LocalDate.now().atStartOfDay(),
+                end = LocalDate.now().atTime(LocalTime.MAX)
+            ).collectLatest { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        _uiState.update {
+                            it.copy(
+                                expenses = resource.data,
+                                totalAmount = resource.data.sumOf { it.amount }
+                            )
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        _uiState.update {
+                            it.copy(isLoading = true)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _uiState.update {
+                            it.copy(error = resource.message)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     private val _uiState = MutableStateFlow(ViewModelStateEvents.UiState())
     val uiState = _uiState.asStateFlow()
@@ -74,11 +110,10 @@ class ExpensePresetViewModel(
                         type = event.expensePreset.type,
                         amount = event.expensePreset.amount
                     )
-                    // expenseRepo.addExpense(expense)
+                    expenseRepo.addExpense(expense)
                     
                     _uiState.update { currentState ->
                         currentState.copy(
-                            expenses = currentState.expenses + expense,
                             totalAmount = currentState.totalAmount + expense.amount
                         )
                     }

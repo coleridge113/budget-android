@@ -145,5 +145,20 @@ class ExpensePresetViewModelTest {
         val state = viewModel.uiState.value
         assertThat(state.selectedPreset).isNull()
     }
+
+    @Test
+    fun `adding an expense updates the total amount via flow`() = runTest {
+        val initialAmount = viewModel.uiState.value.totalAmount
+        val preset = ExpensePreset(
+            id = 0L,
+            amount = 100.0,
+            category = "Beverage",
+            type = "Coffee"
+        )
+        viewModel.onEvent(ViewModelStateEvents.Event.AddExpense(preset))
+        advanceUntilIdle()
+        val newAmount = viewModel.uiState.value.totalAmount
+        assertThat(newAmount).isGreaterThan(initialAmount)
+    }
 }
 

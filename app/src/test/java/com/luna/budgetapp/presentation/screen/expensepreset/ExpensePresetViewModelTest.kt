@@ -115,5 +115,35 @@ class ExpensePresetViewModelTest {
         val state = viewModel.uiState.value
         assertThat(state.expensePresets.first().type).isEqualTo(default)
     }
+
+    @Test
+    fun `clicking the expense preset icon opens a dialog`() = runTest {
+
+        val preset = ExpensePreset(
+            id = 0L,
+            amount = 100.0,
+            category = "Beverage",
+            type = "Coffee"
+        )
+        viewModel.onEvent(ViewModelStateEvents.Event.AddCustomExpense(preset))
+        advanceUntilIdle()
+        val state = viewModel.uiState.value
+        assertThat(state.isDialogVisible).isTrue()
+        assertThat(state.selectedPreset).isNotNull()
+    }
+
+    @Test
+    fun `confirming a custom expense nullifies selectedPreset value`() = runTest {
+        viewModel.onEvent(
+            ViewModelStateEvents.Event.ConfirmDialog(
+                category = "Food",
+                type = "",
+                amount = "100"
+            )
+        )
+        advanceUntilIdle()
+        val state = viewModel.uiState.value
+        assertThat(state.selectedPreset).isNull()
+    }
 }
 

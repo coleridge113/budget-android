@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import retrofit2.HttpException
 import java.io.IOException
+import java.time.LocalDateTime
 
 class ExpenseRepositoryImpl(
     private val dao: ExpenseDao,
@@ -64,9 +65,37 @@ class ExpenseRepositoryImpl(
             emit(Resource.Error(errorMessage))
         }
 
-        emitAll(dao.getExpensesByType(type).map { local ->
-            Resource.Success(local.map { it.toModel()} )
-        })
+        emitAll(
+            dao.getExpensesByType(type)
+            .map { local ->
+                Resource.Success(local.map { it.toModel()} )
+            }
+        )
+    }.flowOn(Dispatchers.IO)
+
+    override fun getExpensesByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<Resource<List<Expense>>> = flow {
+
+        emit(Resource.Loading)
+
+        try {
+            // val remote = api.getExpensesByDateRange(start, end)
+            // dao.insertExpenses(remote.map { it.toEntity() })
+        } catch (e: IOException) {
+            // optionally emit an event, not a state
+        } catch (e: HttpException) {
+            // optionally emit an event
+        }
+
+        emitAll(
+            dao.getExpensesByDateRange(start, end)
+            .map { local ->
+                Resource.Success(local.map { it.toModel() })
+            }
+        )
+
     }.flowOn(Dispatchers.IO)
 
     override suspend fun addExpense(expense: Expense) {

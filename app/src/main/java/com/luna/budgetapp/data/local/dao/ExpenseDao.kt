@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.luna.budgetapp.data.local.entity.ExpenseEntity
 import kotlinx.coroutines.flow.Flow
 import com.luna.budgetapp.common.Resource
+import java.time.LocalDateTime
 
 @Dao
 interface ExpenseDao {
@@ -21,6 +22,16 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expenses WHERE type = :type")
     fun getExpensesByType(type: String): Flow<List<ExpenseEntity>>
+
+    @Query("""
+        SELECT * FROM expenses
+        WHERE date BETWEEN :start AND :end
+        ORDER BY date DESC
+    """)
+    fun getExpensesByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<ExpenseEntity>>
 
     @Insert
     suspend fun addExpense(expense: ExpenseEntity)

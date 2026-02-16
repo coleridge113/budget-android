@@ -61,12 +61,13 @@ class ExpensePresetViewModel(
                         currentState.copy(
                             isDialogVisible = false,
                             isSaving = false,
+                            selectedPreset = null,
                             expensePresets = currentState.expensePresets + expensePreset
                         )
                     }
                 }
             }
-            is ViewModelStateEvents.Event.AddExpense -> { 
+            is ViewModelStateEvents.Event.AddExpense -> {
                 viewModelScope.launch {
                     val expense = Expense(
                         category = event.expensePreset.category,
@@ -83,6 +84,15 @@ class ExpensePresetViewModel(
                     }
                 }
             }
+
+            is ViewModelStateEvents.Event.AddCustomExpense -> {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        selectedPreset = event.selectedPreset,
+                        isDialogVisible = true
+                    )
+                }
+            }
         }
     }
 }
@@ -95,6 +105,7 @@ object ViewModelStateEvents {
         val expenses: List<Expense> = emptyList(),
         val isSaving: Boolean = false,
         val isDialogVisible: Boolean = false,
+        val selectedPreset: ExpensePreset? = null,
         val totalAmount: Double = 0.0,
         val dateFilter: String = "",
     )
@@ -105,6 +116,7 @@ object ViewModelStateEvents {
         data object CycleDateFilter : Event
         data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
         data class AddExpense(val expensePreset: ExpensePreset) : Event
+        data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
     }
 
     sealed class Navigation {

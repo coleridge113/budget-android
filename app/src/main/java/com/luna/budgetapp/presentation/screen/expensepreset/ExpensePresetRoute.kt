@@ -79,13 +79,14 @@ fun MainContent(
         }
         ExpenseTable(
             expensePresets = uiState.expensePresets,
+            onClickIcon = { onEvent(ViewModelStateEvents.Event.AddCustomExpense(it)) },
             onClickItem = { onEvent(ViewModelStateEvents.Event.AddExpense(it))},
-            onClickAdd = { onEvent(ViewModelStateEvents.Event.AddExpensePreset) },
             modifier = Modifier.weight(3f)
         )
 
         if (uiState.isDialogVisible) {
             ExpensePresetDialog(
+                selectedPreset = uiState.selectedPreset,
                 onDismissRequest = { onEvent(ViewModelStateEvents.Event.DismissDialog) },
                 onConfirm = { category, type, amount ->
                     onEvent(ViewModelStateEvents.Event.ConfirmDialog(category, type, amount))

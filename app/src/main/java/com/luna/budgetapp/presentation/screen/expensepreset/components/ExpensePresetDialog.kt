@@ -38,10 +38,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.KeyboardType
 import com.luna.budgetapp.presentation.model.CategoryOptions
+import com.luna.budgetapp.domain.model.ExpensePreset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpensePresetDialog(
+    selectedPreset: ExpensePreset?,
     onDismissRequest: () -> Unit,
     onConfirm: (String, String, String) -> Unit,
     isSaving: Boolean,
@@ -54,8 +56,15 @@ fun ExpensePresetDialog(
     ) {
         val options = remember { CategoryOptions.entries }
         var expanded by remember { mutableStateOf(false) }
-        var selectedOption by remember { mutableStateOf(options.first()) }
-        val typeState = rememberTextFieldState("")
+        var selectedOption by remember {
+            mutableStateOf(
+                options.first {
+                    selectedPreset?.category == it.displayName
+                        .replaceFirstChar { c -> c.lowercase() }
+                }
+            )
+        }
+        val typeState = rememberTextFieldState(selectedPreset?.type ?: "")
         val amountState = rememberTextFieldState("")
 
         Surface(
@@ -159,6 +168,7 @@ fun ExpensePresetDialogPreview() {
     Spacer(modifier = Modifier.height(50.dp))
     Box(modifier = Modifier.fillMaxSize()){
         ExpensePresetDialog(
+            selectedPreset = null,
             onDismissRequest = {},
             onConfirm = { _, _, _ -> },
             isSaving = false,

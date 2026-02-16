@@ -33,8 +33,8 @@ import com.luna.budgetapp.ui.icons.FoodIcon
 fun ExpenseTable(
     expensePresets: List<ExpensePreset>,
     modifier: Modifier = Modifier,
-    onClickItem: (ExpensePreset) -> Unit,
-    onClickAdd: () -> Unit
+    onClickIcon: (ExpensePreset) -> Unit,
+    onClickItem: (ExpensePreset) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -47,7 +47,8 @@ fun ExpenseTable(
                 ExpenseItem(
                     item = expensePreset,
                     icon = iconSelector(expensePreset.category),
-                    onClick = { onClickItem(expensePreset) }
+                    onClickIcon = {},
+                    onClickItem = { onClickItem(expensePreset) }
                 )            
             }
         }
@@ -58,18 +59,19 @@ fun ExpenseTable(
 fun ExpenseItem(
     item: ExpensePreset,
     icon: ImageVector,
-    onClick: (ExpensePreset) -> Unit
+    onClickIcon: (ExpensePreset) -> Unit,
+    onClickItem: (ExpensePreset) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
-            .clickable { onClick(item) },
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier.weight(1f)
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
+                .clickable { onClickIcon(item) },
             contentAlignment = Alignment.Center
         ) {
             Icon(imageVector = icon, contentDescription = null)
@@ -79,7 +81,8 @@ fun ExpenseItem(
             modifier = Modifier.weight(3f)
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f))
+                .clickable { onClickItem(item) },
             contentAlignment = Alignment.Center
         ) {
             Text(text = "${item.type} - P${item.amount}")
@@ -99,7 +102,8 @@ fun ExpenseItemPreview() {
     ExpenseItem(
         item = item,
         icon = CoffeeIcon,
-        onClick = {}
+        onClickIcon = {},
+        onClickItem = {}
     )
 }
 
@@ -129,7 +133,7 @@ fun ExpenseTablePreview() {
     ExpenseTable(
         expensePresets = expensePresets,
         onClickItem = {},
-        onClickAdd = {}
+        onClickIcon = {}
     )
 }
 

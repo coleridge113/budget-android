@@ -56,12 +56,12 @@ fun ExpensePresetDialog(
     ) {
         val options = remember { CategoryOptions.entries }
         var expanded by remember { mutableStateOf(false) }
-        var selectedOption by remember {
+        var selectedOption by remember(selectedPreset) {
             mutableStateOf(
-                options.first {
-                    selectedPreset?.category == it.displayName
-                        .replaceFirstChar { c -> c.lowercase() }
-                }
+                options.firstOrNull {
+                    selectedPreset?.category ==
+                            it.displayName.replaceFirstChar { c -> c.lowercase() }
+                } ?: options.first()
             )
         }
         val typeState = rememberTextFieldState(selectedPreset?.type ?: "")

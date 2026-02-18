@@ -30,19 +30,19 @@ class ExpensePresetViewModel(
         observeExpensePresets()
     }
 
-    private val _uiState = MutableStateFlow(ViewModelStateEvents.UiState())
+    private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onEvent(event: ViewModelStateEvents.Event) {
+    fun onEvent(event: Event) {
         when (event) {
-            ViewModelStateEvents.Event.AddExpensePreset -> showPresetDialog()
-            ViewModelStateEvents.Event.DismissDialog -> dismissPresetDialog()
-            ViewModelStateEvents.Event.CycleDateFilter -> {}
-            is ViewModelStateEvents.Event.AddExpense -> addExpense(event.expensePreset)
-            is ViewModelStateEvents.Event.AddCustomExpense -> addCustomExpense(event.selectedPreset)
-            is ViewModelStateEvents.Event.DeleteExpense -> deleteExpense(event.expenseId)
-            is ViewModelStateEvents.Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
-            is ViewModelStateEvents.Event.ConfirmDialog -> { 
+            Event.AddExpensePreset -> showAddPresetDialog()
+            Event.DismissDialog -> dismissPresetDialog()
+            Event.CycleDateFilter -> {}
+            is Event.AddExpense -> addExpense(event.expensePreset)
+            is Event.AddCustomExpense -> addCustomExpense(event.selectedPreset)
+            is Event.DeleteExpense -> deleteExpense(event.expenseId)
+            is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
+            is Event.ConfirmDialog -> { 
                 saveExpensePreset(event.category, event.type, event.amount) 
             }
         }
@@ -58,7 +58,7 @@ class ExpensePresetViewModel(
                     is Resource.Success -> {
                         _uiState.update { currentState ->
                             currentState.copy(
-                                isLoading = false,
+                                isExpensesLoading = false,
                                 expenses = resource.data,
                             )
                         }
@@ -66,7 +66,7 @@ class ExpensePresetViewModel(
 
                     is Resource.Loading -> {
                         _uiState.update {
-                            it.copy(isLoading = true)
+                            it.copy(isExpensesLoading = true)
                         }
                     }
 
@@ -87,7 +87,7 @@ class ExpensePresetViewModel(
                     is Resource.Success -> {
                         _uiState.update { currentState ->
                             currentState.copy(
-                                isLoading = false,
+                                isPresetsLoading = false,
                                 expensePresets = resource.data
                             )
                         }
@@ -95,7 +95,7 @@ class ExpensePresetViewModel(
 
                     is Resource.Loading -> {
                         _uiState.update {
-                            it.copy(isLoading = true)
+                            it.copy(isPresetsLoading = true)
                         }
                     }
 
@@ -110,11 +110,13 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun showPresetDialog() {
+    private fun showAddPresetDialog() {
         _uiState.update { currentState ->
             currentState.copy(
-                isDialogVisible = true,
-                selectedPreset = null
+                dialogState = DialogState.ExpenseForm(
+                    selectedPreset = null,
+                    isSaving = false
+                )
             )
         }
     }
@@ -122,14 +124,15 @@ class ExpensePresetViewModel(
     private fun dismissPresetDialog() {
         _uiState.update { currentState ->
             currentState.copy(
-                isDialogVisible = false
+                 dialogState = null
             )
         }
     }
 
     private fun saveExpensePreset(category: String, type: String, amount: String) {
-        val state = _uiState.value
-        if (!state.isDialogVisible || state.isSaving) return
+        val dialog = _uiState.value.dialogState
+
+        if (dialog !is DialogState.ExpenseForm || dialog.isSaving) return 
 
         val expensePreset = ExpensePreset(
             amount = amount.toDoubleOrNull() ?: 0.0,
@@ -139,25 +142,23 @@ class ExpensePresetViewModel(
 
         _uiState.update { currentState ->
             currentState.copy(
-                isSaving = true
+                 dialogState = dialog.copy(isSaving = true)
             )
         }
 
         viewModelScope.launch {
             try {
-                expensePresetRepo.addExpensePreset(expensePreset)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isDialogVisible = false,
-                        isSaving = false,
-                        selectedPreset = null
+                useCases.addExpensePresetUseCase(expensePreset)
+                _uiState.update {
+                    it.copy(
+                        dialogState = null
                     )
                 }
             } catch (e: Exception) {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isSaving = false,
-                        error = "Failed to save Expense Preset..."
+                _uiState.update {
+                    it.copy(
+                        dialogState = dialog.copy(isSaving = false),
+                        error = "Error saving preset..."
                     )
                 }
             }
@@ -172,20 +173,16 @@ class ExpensePresetViewModel(
                 amount = expensePreset.amount
             )
             expenseRepo.addExpense(expense)
-
-            _uiState.update { currentState ->
-                currentState.copy(
-                    totalAmount = currentState.totalAmount + expense.amount
-                )
-            }
         }
     }
 
     private fun addCustomExpense(selectedPreset: ExpensePreset) {
         _uiState.update { currentState ->
             currentState.copy(
-                selectedPreset = selectedPreset,
-                isDialogVisible = true
+                dialogState = DialogState.ExpenseForm(
+                    selectedPreset = selectedPreset,
+                    isSaving = false
+                )
             )
         }
     }
@@ -200,35 +197,5 @@ class ExpensePresetViewModel(
         viewModelScope.launch {
             useCases.deleteExpensePresetUseCase(expensePresetId)
         }
-    }
-}
-
-object ViewModelStateEvents {
-    data class UiState(
-        val isLoading: Boolean = false,
-        val error: String = "",
-        val expensePresets: List<ExpensePreset> = emptyList(),
-        val expenses: List<Expense> = emptyList(),
-        val isSaving: Boolean = false,
-        val isDialogVisible: Boolean = false,
-        val selectedPreset: ExpensePreset? = null,
-        val dateFilter: String = "",
-    ) {
-        val totalAmount: Double
-            get() = expenses.sumOf { it.amount }
-    }
-
-    sealed interface Event {
-        data object AddExpensePreset : Event
-        data object DismissDialog : Event
-        data object CycleDateFilter : Event
-        data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
-        data class AddExpense(val expensePreset: ExpensePreset) : Event
-        data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
-        data class DeleteExpense(val expenseId: Long) : Event
-        data class DeleteExpensePreset(val expensePresetId: Long) : Event
-    }
-
-    sealed class Navigation {
     }
 }

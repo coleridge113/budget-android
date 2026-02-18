@@ -46,7 +46,7 @@ fun ExpensePresetRoute(
         FloatingActionButton(
             modifier = Modifier.align(Alignment.CenterEnd)
                 .padding(end = 16.dp),
-            onClick = { viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset) },
+            onClick = { viewModel.onEvent(Event.AddExpensePreset) },
             shape = CircleShape
         ) {
             Icon(
@@ -59,9 +59,9 @@ fun ExpensePresetRoute(
 
 @Composable
 fun MainContent(
-    uiState: ViewModelStateEvents.UiState,
+    uiState: UiState,
     modifier: Modifier = Modifier,
-    onEvent: (ViewModelStateEvents.Event) -> Unit,
+    onEvent: (Event) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -79,21 +79,26 @@ fun MainContent(
         }
         ExpenseTable(
             expensePresets = uiState.expensePresets,
-            onClickIcon = { onEvent(ViewModelStateEvents.Event.AddCustomExpense(it)) },
-            onLongClickIcon = { onEvent(ViewModelStateEvents.Event.DeleteExpensePreset(it)) },
-            onClickItem = { onEvent(ViewModelStateEvents.Event.AddExpense(it))},
+            onClickIcon = { onEvent(Event.AddCustomExpense(it)) },
+            onLongClickIcon = { onEvent(Event.DeleteExpensePreset(it)) },
+            onClickItem = { onEvent(Event.AddExpense(it))},
             modifier = Modifier.weight(3f)
         )
 
-        if (uiState.isDialogVisible) {
-            ExpensePresetDialog(
-                selectedPreset = uiState.selectedPreset,
-                onDismissRequest = { onEvent(ViewModelStateEvents.Event.DismissDialog) },
-                onConfirm = { category, type, amount ->
-                    onEvent(ViewModelStateEvents.Event.ConfirmDialog(category, type, amount))
-                },
-                isSaving = uiState.isSaving
-            )
+        when (val dialog = uiState.dialogState) {
+            is DialogState.ExpenseForm -> {
+                ExpensePresetDialog(
+                    selectedPreset = dialog.selectedPreset,
+                    onDismissRequest = { onEvent(Event.DismissDialog) },
+                    onConfirm = { category, type, amount ->
+                        onEvent(Event.ConfirmDialog(category, type, amount))
+                    },
+                    isSaving = dialog.isSaving
+                )
+            }
+            is DialogState.ConfirmDeleteExpense -> {}
+            is DialogState.ConfirmDeleteExpensePreset -> {}
+            null -> Unit
         }
     }
 }

@@ -113,7 +113,8 @@ class ExpensePresetViewModel(
     private fun showPresetDialog() {
         _uiState.update { currentState ->
             currentState.copy(
-                isDialogVisible = true
+                isDialogVisible = true,
+                selectedPreset = null
             )
         }
     }

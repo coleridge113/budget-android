@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,16 +57,17 @@ fun ExpensePresetDialog(
     ) {
         val options = remember { CategoryOptions.entries }
         var expanded by remember { mutableStateOf(false) }
-        var selectedOption by remember(selectedPreset) {
-            mutableStateOf(
-                options.firstOrNull {
-                    selectedPreset?.category ==
-                            it.displayName.replaceFirstChar { c -> c.lowercase() }
-                } ?: options.first()
-            )
-        }
+        var selectedOption by remember { mutableStateOf(options.first()) }
         val typeState = rememberTextFieldState(selectedPreset?.type ?: "")
         val amountState = rememberTextFieldState("")
+
+        LaunchedEffect(selectedPreset) {
+            selectedPreset?.let {
+                selectedOption = options.firstOrNull { option ->
+                    option.displayName.equals(it.category, ignoreCase = true)
+                } ?: options.first()
+            }
+        }
 
         Surface(
             shape = MaterialTheme.shapes.large,

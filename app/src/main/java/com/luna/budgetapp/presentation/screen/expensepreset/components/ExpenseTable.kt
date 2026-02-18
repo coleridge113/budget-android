@@ -47,7 +47,7 @@ fun ExpenseTable(
                 ExpenseItem(
                     item = expensePreset,
                     icon = iconSelector(expensePreset.category),
-                    onClickIcon = {},
+                    onClickIcon = { onClickIcon(expensePreset) },
                     onClickItem = { onClickItem(expensePreset) }
                 )            
             }

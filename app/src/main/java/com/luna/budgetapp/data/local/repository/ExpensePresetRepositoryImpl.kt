@@ -48,4 +48,8 @@ class ExpensePresetRepositoryImpl(
     override suspend fun addExpensePreset(expensePreset: ExpensePreset) {
         dao.addExpensePreset(expensePreset.toEntity())
     }
+
+    override suspend fun deleteExpensePreset(expensePresetId: Long) {
+        dao.deleteExpensePreset(expensePresetId)
+    }
 }

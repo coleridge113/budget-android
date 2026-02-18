@@ -80,6 +80,7 @@ fun MainContent(
         ExpenseTable(
             expensePresets = uiState.expensePresets,
             onClickIcon = { onEvent(ViewModelStateEvents.Event.AddCustomExpense(it)) },
+            onLongClickIcon = { onEvent(ViewModelStateEvents.Event.DeleteExpensePreset(it)) },
             onClickItem = { onEvent(ViewModelStateEvents.Event.AddExpense(it))},
             modifier = Modifier.weight(3f)
         )

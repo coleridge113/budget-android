@@ -1,5 +1,6 @@
 package com.luna.budgetapp.presentation.screen.expensepreset.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ fun ExpenseTable(
     expensePresets: List<ExpensePreset>,
     modifier: Modifier = Modifier,
     onClickIcon: (ExpensePreset) -> Unit,
+    onLongClickIcon: (Long) -> Unit,
     onClickItem: (ExpensePreset) -> Unit
 ) {
     Column(
@@ -48,6 +51,7 @@ fun ExpenseTable(
                     item = expensePreset,
                     icon = iconSelector(expensePreset.category),
                     onClickIcon = { onClickIcon(expensePreset) },
+                    onLongClickIcon = { onLongClickIcon(expensePreset.id!!) },
                     onClickItem = { onClickItem(expensePreset) }
                 )            
             }
@@ -60,6 +64,7 @@ fun ExpenseItem(
     item: ExpensePreset,
     icon: ImageVector,
     onClickIcon: (ExpensePreset) -> Unit,
+    onLongClickIcon: (Long) -> Unit,
     onClickItem: (ExpensePreset) -> Unit
 ) {
     Row(
@@ -71,7 +76,10 @@ fun ExpenseItem(
                 .size(48.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
-                .clickable { onClickIcon(item) },
+                .combinedClickable(
+                    onClick = { onClickIcon(item) }.also { Log.d("ExpenseTable", "Item: ${item}") },
+                    onLongClick = { onLongClickIcon(item.id!!) }
+                ),
             contentAlignment = Alignment.Center
         ) {
             Icon(imageVector = icon, contentDescription = null)
@@ -103,6 +111,7 @@ fun ExpenseItemPreview() {
         item = item,
         icon = CoffeeIcon,
         onClickIcon = {},
+        onLongClickIcon = {},
         onClickItem = {}
     )
 }
@@ -133,6 +142,7 @@ fun ExpenseTablePreview() {
     ExpenseTable(
         expensePresets = expensePresets,
         onClickItem = {},
+        onLongClickIcon = {},
         onClickIcon = {}
     )
 }

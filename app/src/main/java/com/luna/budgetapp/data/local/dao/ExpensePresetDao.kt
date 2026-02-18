@@ -18,4 +18,7 @@ interface ExpensePresetDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun addExpensePreset(expensePreset: ExpensePresetEntity)
+
+    @Query("DELETE FROM expense_presets WHERE id = :expensePresetId")
+    suspend fun deleteExpensePreset(expensePresetId: Long)
 }

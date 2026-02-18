@@ -41,6 +41,7 @@ class ExpensePresetViewModel(
             is ViewModelStateEvents.Event.AddExpense -> addExpense(event.expensePreset)
             is ViewModelStateEvents.Event.AddCustomExpense -> addCustomExpense(event.selectedPreset)
             is ViewModelStateEvents.Event.DeleteExpense -> deleteExpense(event.expenseId)
+            is ViewModelStateEvents.Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
                 saveExpensePreset(event.category, event.type, event.amount) 
             }
@@ -195,6 +196,12 @@ class ExpensePresetViewModel(
             useCases.deleteExpenseUseCase(expenseId)
         }
     }
+
+    private fun deleteExpensePreset(expensePresetId: Long) {
+        viewModelScope.launch {
+            useCases.deleteExpensePresetUseCase(expensePresetId)
+        }
+    }
 }
 
 object ViewModelStateEvents {
@@ -218,6 +225,7 @@ object ViewModelStateEvents {
         data class AddExpense(val expensePreset: ExpensePreset) : Event
         data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
         data class DeleteExpense(val expenseId: Long) : Event
+        data class DeleteExpensePreset(val expensePresetId: Long) : Event
     }
 
     sealed class Navigation {

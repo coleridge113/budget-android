@@ -60,7 +60,6 @@ class ExpensePresetViewModel(
                             currentState.copy(
                                 isLoading = false,
                                 expenses = resource.data,
-                                totalAmount = resource.data.sumOf { it.amount }
                             )
                         }
                     }
@@ -213,9 +212,11 @@ object ViewModelStateEvents {
         val isSaving: Boolean = false,
         val isDialogVisible: Boolean = false,
         val selectedPreset: ExpensePreset? = null,
-        val totalAmount: Double = 0.0,
         val dateFilter: String = "",
-    )
+    ) {
+        val totalAmount: Double
+            get() = expenses.sumOf { it.amount }
+    }
 
     sealed interface Event {
         data object AddExpensePreset : Event

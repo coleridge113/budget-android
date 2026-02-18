@@ -14,5 +14,8 @@ interface ExpensePresetDao {
     fun getAllExpensePresets(): Flow<List<ExpensePresetEntity>>
 
     @Insert(onConflict = REPLACE)
-    fun addExpensePresets(expensePresets: List<ExpensePresetEntity>)
+    suspend fun addExpensePresets(expensePresets: List<ExpensePresetEntity>)
+
+    @Insert(onConflict = REPLACE)
+    suspend fun addExpensePreset(expensePreset: ExpensePresetEntity)
 }

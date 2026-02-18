@@ -41,7 +41,11 @@ class ExpensePresetRepositoryImpl(
         })
     }.flowOn(Dispatchers.IO)
 
-    override fun addExpensePresets(expensePresets: List<ExpensePreset>) {
+    override suspend fun addExpensePresets(expensePresets: List<ExpensePreset>) {
         dao.addExpensePresets(expensePresets.map { it.toEntity() })
+    }
+
+    override suspend fun addExpensePreset(expensePreset: ExpensePreset) {
+        dao.addExpensePreset(expensePreset.toEntity())
     }
 }

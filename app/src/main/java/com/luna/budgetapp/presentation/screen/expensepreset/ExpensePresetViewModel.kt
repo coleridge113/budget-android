@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
+import android.util.Log
 
 class ExpensePresetViewModel(
     private val useCases: UseCases,
@@ -25,35 +26,8 @@ class ExpensePresetViewModel(
 ): ViewModel() {
 
     init {
-        viewModelScope.launch {
-            expenseRepo.getExpensesByDateRange(
-                start = LocalDate.now().atStartOfDay(),
-                end = LocalDate.now().atTime(LocalTime.MAX)
-            ).collectLatest { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        _uiState.update {
-                            it.copy(
-                                expenses = resource.data,
-                                totalAmount = resource.data.sumOf { it.amount }
-                            )
-                        }
-                    }
-
-                    is Resource.Loading -> {
-                        _uiState.update {
-                            it.copy(isLoading = true)
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        _uiState.update {
-                            it.copy(error = resource.message)
-                        }
-                    }
-                }
-            }
-        }
+        observeExpenses()
+        observeExpensePresets()
     }
 
     private val _uiState = MutableStateFlow(ViewModelStateEvents.UiState())
@@ -93,13 +67,22 @@ class ExpensePresetViewModel(
                 }
 
                 viewModelScope.launch {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isDialogVisible = false,
-                            isSaving = false,
-                            selectedPreset = null,
-                            expensePresets = currentState.expensePresets + expensePreset
-                        )
+                    try {
+                        expensePresetRepo.addExpensePreset(expensePreset)
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isDialogVisible = false,
+                                isSaving = false,
+                                selectedPreset = null
+                            )
+                        }
+                    } catch (e: Exception) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isSaving = false,
+                                error = "Failed to save Expense Preset..."
+                            )
+                        }
                     }
                 }
             }
@@ -126,6 +109,69 @@ class ExpensePresetViewModel(
                         selectedPreset = event.selectedPreset,
                         isDialogVisible = true
                     )
+                }
+            }
+        }
+    }
+
+    private fun observeExpenses() {
+        viewModelScope.launch {
+            expenseRepo.getExpensesByDateRange(
+                start = LocalDate.now().atStartOfDay(),
+                end = LocalDate.now().atTime(LocalTime.MAX)
+            ).collectLatest { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                expenses = resource.data,
+                                totalAmount = resource.data.sumOf { it.amount }
+                            )
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        _uiState.update {
+                            it.copy(isLoading = true)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        _uiState.update {
+                            it.copy(error = resource.message)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeExpensePresets() {
+        viewModelScope.launch {
+            expensePresetRepo.getAllExpensePresets().collectLatest { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                expensePresets = resource.data
+                            )
+                        }
+                    }
+
+                    is Resource.Loading -> {
+                        _uiState.update {
+                            it.copy(isLoading = true)
+                        }
+                    }
+
+                    is Resource.Error -> {
+                        Log.e("ExpensePreset", "Failed to get resource: ${resource.message}")
+                        _uiState.update {
+                            it.copy(error = resource.message)
+                        }
+                    }
                 }
             }
         }

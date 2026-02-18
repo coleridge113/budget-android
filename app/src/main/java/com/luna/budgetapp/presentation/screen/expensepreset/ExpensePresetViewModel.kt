@@ -40,6 +40,7 @@ class ExpensePresetViewModel(
             ViewModelStateEvents.Event.CycleDateFilter -> {}
             is ViewModelStateEvents.Event.AddExpense -> addExpense(event.expensePreset)
             is ViewModelStateEvents.Event.AddCustomExpense -> addCustomExpense(event.selectedPreset)
+            is ViewModelStateEvents.Event.DeleteExpense -> deleteExpense(event.expenseId)
             is ViewModelStateEvents.Event.ConfirmDialog -> { 
                 saveExpensePreset(event.category, event.type, event.amount) 
             }
@@ -190,7 +191,7 @@ class ExpensePresetViewModel(
 
     private fun deleteExpense(expenseId: Long) {
         viewModelScope.launch {
-            expenseRepo.deleteExpense(expenseId)
+            useCases.deleteExpenseUseCase(expenseId)
         }
     }
 }

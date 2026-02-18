@@ -111,6 +111,6 @@ class ExpenseRepositoryImpl(
     }
 
     override suspend fun deleteExpense(expenseId: Long) {
-        dao.deleteExpense(expense.toEntity())
+        dao.deleteExpense(expenseId)
     }
 }

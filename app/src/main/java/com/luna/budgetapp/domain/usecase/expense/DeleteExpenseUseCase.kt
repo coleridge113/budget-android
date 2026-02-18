@@ -11,15 +11,7 @@ import kotlinx.coroutines.flow.flowOn
 class DeleteExpenseUseCase(
     private val repository: ExpenseRepository
 ) {
-    operator fun invoke(expense: Expense): Flow<Resource<Expense>> {
-        return flow {
-            emit(Resource.Loading)
-            try {
-                repository.deleteExpense(expense)
-                emit(Resource.Success(expense))
-            } catch (e: Exception) {
-                emit(Resource.Error(e.localizedMessage ?: "Unknown error"))
-            }
-        }.flowOn(Dispatchers.IO)
+    suspend operator fun invoke(expenseId: Long) {
+        repository.deleteExpense(expenseId)
     }
 }

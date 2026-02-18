@@ -35,81 +35,13 @@ class ExpensePresetViewModel(
 
     fun onEvent(event: ViewModelStateEvents.Event) {
         when (event) {
-            ViewModelStateEvents.Event.AddExpensePreset -> { 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isDialogVisible = true
-                    )
-                }
-            }
+            ViewModelStateEvents.Event.AddExpensePreset -> showPresetDialog()
+            ViewModelStateEvents.Event.DismissDialog -> dismissPresetDialog()
             ViewModelStateEvents.Event.CycleDateFilter -> {}
-            ViewModelStateEvents.Event.DismissDialog -> { 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isDialogVisible = false
-                    )
-                }
-            }
-            is ViewModelStateEvents.Event.ConfirmDialog -> {
-                val state = _uiState.value
-                if (!state.isDialogVisible || state.isSaving) return
-
-                val expensePreset = ExpensePreset(
-                    amount = event.amount.toDoubleOrNull() ?: 0.0,
-                    category = event.category,
-                    type = event.type.ifEmpty { event.category }
-                )
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isSaving = true
-                    )
-                }
-
-                viewModelScope.launch {
-                    try {
-                        expensePresetRepo.addExpensePreset(expensePreset)
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isDialogVisible = false,
-                                isSaving = false,
-                                selectedPreset = null
-                            )
-                        }
-                    } catch (e: Exception) {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isSaving = false,
-                                error = "Failed to save Expense Preset..."
-                            )
-                        }
-                    }
-                }
-            }
-            is ViewModelStateEvents.Event.AddExpense -> {
-                viewModelScope.launch {
-                    val expense = Expense(
-                        category = event.expensePreset.category,
-                        type = event.expensePreset.type,
-                        amount = event.expensePreset.amount
-                    )
-                    expenseRepo.addExpense(expense)
-                    
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            totalAmount = currentState.totalAmount + expense.amount
-                        )
-                    }
-                }
-            }
-
-            is ViewModelStateEvents.Event.AddCustomExpense -> {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        selectedPreset = event.selectedPreset,
-                        isDialogVisible = true
-                    )
-                }
+            is ViewModelStateEvents.Event.AddExpense -> addExpense(event.expensePreset)
+            is ViewModelStateEvents.Event.AddCustomExpense -> addCustomExpense(event.selectedPreset)
+            is ViewModelStateEvents.Event.ConfirmDialog -> { 
+                saveExpensePreset(event.category, event.type, event.amount) 
             }
         }
     }
@@ -174,6 +106,85 @@ class ExpensePresetViewModel(
                     }
                 }
             }
+        }
+    }
+
+    private fun showPresetDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDialogVisible = true
+            )
+        }
+    }
+
+    private fun dismissPresetDialog() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isDialogVisible = false
+            )
+        }
+    }
+
+    private fun saveExpensePreset(category: String, type: String, amount: String) {
+        val state = _uiState.value
+        if (!state.isDialogVisible || state.isSaving) return
+
+        val expensePreset = ExpensePreset(
+            amount = amount.toDoubleOrNull() ?: 0.0,
+            category = category,
+            type = type.ifEmpty { category }
+        )
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                isSaving = true
+            )
+        }
+
+        viewModelScope.launch {
+            try {
+                expensePresetRepo.addExpensePreset(expensePreset)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isDialogVisible = false,
+                        isSaving = false,
+                        selectedPreset = null
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isSaving = false,
+                        error = "Failed to save Expense Preset..."
+                    )
+                }
+            }
+        }
+    }
+
+    private fun addExpense(expensePreset: ExpensePreset) {
+        viewModelScope.launch {
+            val expense = Expense(
+                category = expensePreset.category,
+                type = expensePreset.type,
+                amount = expensePreset.amount
+            )
+            expenseRepo.addExpense(expense)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    totalAmount = currentState.totalAmount + expense.amount
+                )
+            }
+        }
+    }
+
+    private fun addCustomExpense(selectedPreset: ExpensePreset) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedPreset = selectedPreset,
+                isDialogVisible = true
+            )
         }
     }
 }

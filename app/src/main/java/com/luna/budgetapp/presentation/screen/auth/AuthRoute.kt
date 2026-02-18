@@ -15,10 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import com.luna.budgetapp.presentation.nav.Routes
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun AuthRoute(
@@ -50,7 +47,7 @@ fun AuthRoute(
 
 @Composable
 fun AuthContent(
-    state: ViewModelStateEvents.uiState,
+    state: ViewModelStateEvents.UiState,
     onEvent: (ViewModelStateEvents.Event) -> Unit,
     modifier: Modifier = Modifier
 ) {

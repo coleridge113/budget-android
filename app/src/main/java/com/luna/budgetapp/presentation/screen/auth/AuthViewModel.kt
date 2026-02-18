@@ -3,7 +3,6 @@ package com.luna.budgetapp.presentation.screen.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.domain.usecase.UseCases
-import com.luna.budgetapp.presentation.screen.auth.ViewModelStateEvents
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +18,7 @@ class AuthViewModel(
         fetchToken()
     }
 
-    private val _state = MutableStateFlow(ViewModelStateEvents.uiState())
+    private val _state = MutableStateFlow(ViewModelStateEvents.UiState())
     val state = _state.asStateFlow()
 
     private val _navigation = Channel<ViewModelStateEvents.Navigation>()
@@ -62,7 +61,7 @@ class AuthViewModel(
 }
 
 object ViewModelStateEvents {
-    data class uiState(
+    data class UiState(
         val isLoading: Boolean = true,
         val error: String = "",
         val success: Boolean = false

@@ -187,6 +187,12 @@ class ExpensePresetViewModel(
             )
         }
     }
+
+    private fun deleteExpense(expenseId: Long) {
+        viewModelScope.launch {
+            expenseRepo.deleteExpense(expenseId)
+        }
+    }
 }
 
 object ViewModelStateEvents {
@@ -209,6 +215,7 @@ object ViewModelStateEvents {
         data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
         data class AddExpense(val expensePreset: ExpensePreset) : Event
         data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
+        data class DeleteExpense(val expenseId: Long) : Event
     }
 
     sealed class Navigation {

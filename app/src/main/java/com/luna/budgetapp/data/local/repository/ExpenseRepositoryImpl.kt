@@ -110,7 +110,7 @@ class ExpenseRepositoryImpl(
         return dao.updateExpense(expense.toEntity())
     }
 
-    override suspend fun deleteExpense(expense: Expense) {
+    override suspend fun deleteExpense(expenseId: Long) {
         dao.deleteExpense(expense.toEntity())
     }
 }

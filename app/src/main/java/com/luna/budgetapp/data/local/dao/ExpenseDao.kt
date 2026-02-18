@@ -43,7 +43,7 @@ interface ExpenseDao {
     suspend fun updateExpense(expense: ExpenseEntity)
 
     @Delete
-    suspend fun deleteExpense(expense: ExpenseEntity)
+    suspend fun deleteExpense(expenseId: Long)
 
     @Delete
     suspend fun deleteExpenses(expenses: List<ExpenseEntity>)

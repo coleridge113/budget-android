@@ -5,8 +5,8 @@ import com.google.common.truth.Truth.assertThat
 import com.luna.budgetapp.MainDispatcherRule
 import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.model.ExpensePreset
-import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import com.luna.budgetapp.domain.repository.FakeExpensePresetRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +23,7 @@ class ExpensePresetViewModelTest {
 
     private val useCases = mockk<UseCases>(relaxed = true)
     private val pusherManager = mockk<PusherManager>(relaxed = true)
-    private val expensePresetRepo = mockk<ExpensePresetRepository>(relaxed = true)
+    private val expensePresetRepo = FakeExpensePresetRepository()
     private val expenseRepo = mockk<ExpenseRepository>(relaxed = true)
 
     private lateinit var viewModel: ExpensePresetViewModel
@@ -48,7 +48,12 @@ class ExpensePresetViewModelTest {
 
     @Test
     fun `confirming dialog updates preset list and dismisses it`() = runTest {
+        // Let init{} launch collectors
+        advanceUntilIdle()
+
         viewModel.onEvent(ViewModelStateEvents.Event.AddExpensePreset)
+
+        advanceUntilIdle() // allow dialog state update
 
         viewModel.onEvent(
             ViewModelStateEvents.Event.ConfirmDialog(
@@ -58,7 +63,7 @@ class ExpensePresetViewModelTest {
             )
         )
 
-        advanceUntilIdle()
+        advanceUntilIdle() // allow insert + flow emission
 
         val state = viewModel.uiState.value
 

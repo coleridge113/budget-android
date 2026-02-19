@@ -3,6 +3,11 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.presentation.model.DateFilter
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 data class UiState(
     val isExpensesLoading: Boolean = false,
@@ -10,7 +15,8 @@ data class UiState(
     val error: String? = null,
     val expensePresets: List<ExpensePreset> = emptyList(),
     val expenses: List<Expense> = emptyList(),
-    val dialogState: DialogState? = null
+    val dialogState: DialogState? = null,
+    val selectedRange: DateFilter = DateFilter.entries.first()
 ) {
     val totalAmount: Double
         get() = expenses.sumOf { it.amount }
@@ -27,7 +33,7 @@ sealed class DialogState {
 
 sealed interface Event {
     data object DismissDialog : Event
-    data object CycleDateFilter : Event
+    data class SelectDateRange(val selectedRange: DateFilter) : Event
     data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ShowConfirmationDialog(val expensePresetId: Long) : Event
     data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event

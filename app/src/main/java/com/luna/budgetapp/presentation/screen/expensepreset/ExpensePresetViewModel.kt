@@ -9,6 +9,7 @@ import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.presentation.model.DateFilter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -39,16 +40,14 @@ class ExpensePresetViewModel(
     fun onEvent(event: Event) {
         when (event) {
             Event.DismissDialog -> dismissDialog()
-            Event.CycleDateFilter -> {}
             is Event.AddExpense -> addExpense(event.expensePreset)
             is Event.ShowExpenseForm -> showExpenseForm(event.selectedPreset)
             is Event.ShowConfirmationDialog -> showPresetDeleteConfirmationDialog(event.expensePresetId)
             is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
             is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
-            is Event.ConfirmDialog -> { 
-                saveExpensePreset(event.category, event.type, event.amount) 
-            }
+            is Event.ConfirmDialog -> saveExpensePreset(event.category, event.type, event.amount)
+            is Event.SelectDateRange -> selectDateRange(event.selectedRange)
         }
     }
 
@@ -211,6 +210,16 @@ class ExpensePresetViewModel(
             _uiState.update { currentState ->
                 currentState.copy(
                     dialogState = DialogState.ConfirmDeleteExpensePreset(expensePresetId)
+                )
+            }
+        }
+    }
+
+    private fun selectDateRange(selectedRange: DateFilter) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    selectedRange = selectedRange
                 )
             }
         }

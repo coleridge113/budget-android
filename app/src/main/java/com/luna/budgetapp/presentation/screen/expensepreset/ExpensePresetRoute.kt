@@ -20,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.luna.budgetapp.presentation.model.DateFilter
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
+import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangeSelector
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -65,8 +67,13 @@ fun MainContent(
     onEvent: (Event) -> Unit,
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        DateRangeSelector(
+            selected = uiState.selectedRange,
+            onSelectedChange = { onEvent(Event.SelectDateRange(it)) }
+        )
         Box(
             modifier = Modifier.fillMaxWidth()
                 .weight(1f)

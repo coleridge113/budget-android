@@ -15,7 +15,7 @@ interface ExpenseRepository {
     fun getExpensesByDateRange(
         start: LocalDateTime,
         end: LocalDateTime
-    ): Flow<Resource<List<Expense>>>
+    ): Flow<List<Expense>>
 
     suspend fun addExpense(expense: Expense)
 

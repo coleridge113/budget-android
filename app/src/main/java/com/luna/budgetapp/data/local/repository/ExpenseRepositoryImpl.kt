@@ -76,27 +76,12 @@ class ExpenseRepositoryImpl(
     override fun getExpensesByDateRange(
         start: LocalDateTime,
         end: LocalDateTime
-    ): Flow<Resource<List<Expense>>> = flow {
-
-        emit(Resource.Loading)
-
-        try {
-            // val remote = api.getExpensesByDateRange(start, end)
-            // dao.insertExpenses(remote.map { it.toEntity() })
-        } catch (e: IOException) {
-            // optionally emit an event, not a state
-        } catch (e: HttpException) {
-            // optionally emit an event
-        }
-
-        emitAll(
-            dao.getExpensesByDateRange(start, end)
-            .map { local ->
-                Resource.Success(local.map { it.toModel() })
+    ): Flow<List<Expense>> =
+        dao.getExpensesByDateRange(start, end)
+            .map { entities ->
+                entities.map { it.toModel() }
             }
-        )
-
-    }.flowOn(Dispatchers.IO)
+            .flowOn(Dispatchers.IO)
 
     override suspend fun addExpense(expense: Expense) {
         return dao.addExpense(expense.toEntity())

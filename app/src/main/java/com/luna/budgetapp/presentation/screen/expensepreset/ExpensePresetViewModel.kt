@@ -13,10 +13,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalTime
 import android.util.Log
+import kotlinx.coroutines.flow.catch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 class ExpensePresetViewModel(
     private val useCases: UseCases,
@@ -25,13 +28,13 @@ class ExpensePresetViewModel(
     private val expenseRepo: ExpenseRepository
 ): ViewModel() {
 
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState = _uiState.asStateFlow()
+
     init {
         observeExpenses()
         observeExpensePresets()
     }
-
-    private val _uiState = MutableStateFlow(UiState())
-    val uiState = _uiState.asStateFlow()
 
     fun onEvent(event: Event) {
         when (event) {
@@ -39,44 +42,46 @@ class ExpensePresetViewModel(
             Event.CycleDateFilter -> {}
             is Event.AddExpense -> addExpense(event.expensePreset)
             is Event.ShowExpenseForm -> showExpenseForm(event.selectedPreset)
+            is Event.ShowConfirmationDialog -> showPresetDeleteConfirmationDialog(event.expensePresetId)
             is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
-            is Event.DeleteExpensePreset -> showPresetDeleteConfirmationDialog(event.expensePresetId)
+            is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
             is Event.ConfirmDialog -> { 
                 saveExpensePreset(event.category, event.type, event.amount) 
             }
         }
     }
 
-    private fun observeExpenses() {
+    private fun observeExpenses(
+        start: LocalDateTime = LocalDate.now().atStartOfDay(),
+        end: LocalDateTime = LocalDate.now().atTime(LocalTime.MAX)
+    ) {
         viewModelScope.launch {
-            expenseRepo.getExpensesByDateRange(
-                start = LocalDate.now().atStartOfDay(),
-                end = LocalDate.now().atTime(LocalTime.MAX)
-            ).collectLatest { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isExpensesLoading = false,
-                                expenses = resource.data,
-                            )
-                        }
-                    }
-
-                    is Resource.Loading -> {
-                        _uiState.update {
-                            it.copy(isExpensesLoading = true)
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        _uiState.update {
-                            it.copy(error = resource.message)
-                        }
+            useCases.getExpensesByDateRangeUseCase(start, end)
+                .onStart {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isExpensesLoading = true
+                        )
                     }
                 }
-            }
+                .catch { 
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isExpensesLoading = false,
+                            error = it.localizedMessage
+                        )
+                    }
+                }
+                .collect {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isExpensesLoading = false,
+                            error = null,
+                            expenses = it
+                        )
+                    }
+                }
         }
     }
 
@@ -184,7 +189,20 @@ class ExpensePresetViewModel(
 
     private fun deleteExpensePreset(expensePresetId: Long) {
         viewModelScope.launch {
-            useCases.deleteExpensePresetUseCase(expensePresetId)
+            try {
+                useCases.deleteExpensePresetUseCase(expensePresetId)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        dialogState = null
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        error = "Failed to delete expense preset..."
+                    )
+                }
+            }
         }
     }
 

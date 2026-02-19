@@ -153,7 +153,6 @@ fun ExpensePresetDialog(
                     ) {
                         Text("Confirm")
                     }
-
                 }
             }
         }

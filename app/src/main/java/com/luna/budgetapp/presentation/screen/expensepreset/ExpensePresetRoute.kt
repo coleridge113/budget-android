@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.luna.budgetapp.presentation.screen.expensepreset.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
@@ -46,7 +47,7 @@ fun ExpensePresetRoute(
         FloatingActionButton(
             modifier = Modifier.align(Alignment.CenterEnd)
                 .padding(end = 16.dp),
-            onClick = { viewModel.onEvent(Event.AddExpensePreset) },
+            onClick = { viewModel.onEvent(Event.ShowExpenseForm()) },
             shape = CircleShape
         ) {
             Icon(
@@ -77,11 +78,12 @@ fun MainContent(
                 style = MaterialTheme.typography.displayMedium
             ) 
         }
+
         ExpenseTable(
             expensePresets = uiState.expensePresets,
-            onClickIcon = { onEvent(Event.AddCustomExpense(it)) },
+            onClickIcon = { onEvent(Event.ShowExpenseForm(it)) },
             onLongClickIcon = { onEvent(Event.DeleteExpensePreset(it)) },
-            onClickItem = { onEvent(Event.AddExpense(it))},
+            onClickItem = { onEvent(Event.AddExpense(it)) },
             modifier = Modifier.weight(3f)
         )
 
@@ -97,7 +99,12 @@ fun MainContent(
                 )
             }
             is DialogState.ConfirmDeleteExpense -> {}
-            is DialogState.ConfirmDeleteExpensePreset -> {}
+            is DialogState.ConfirmDeleteExpensePreset -> {
+                ConfirmationDialog(
+                    onDismiss = { onEvent(Event.DismissDialog) },
+                    onConfirm = { onEvent(Event.DeleteExpensePreset(dialog.expensePresetId)) }
+                )
+            }
             null -> Unit
         }
     }

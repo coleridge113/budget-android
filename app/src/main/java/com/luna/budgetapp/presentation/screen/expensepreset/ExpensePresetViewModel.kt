@@ -35,13 +35,13 @@ class ExpensePresetViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            Event.AddExpensePreset -> showAddPresetDialog()
-            Event.DismissDialog -> dismissPresetDialog()
+            Event.DismissDialog -> dismissDialog()
             Event.CycleDateFilter -> {}
             is Event.AddExpense -> addExpense(event.expensePreset)
-            is Event.AddCustomExpense -> addCustomExpense(event.selectedPreset)
+            is Event.ShowExpenseForm -> showExpenseForm(event.selectedPreset)
+            is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
-            is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
+            is Event.DeleteExpensePreset -> showPresetDeleteConfirmationDialog(event.expensePresetId)
             is Event.ConfirmDialog -> { 
                 saveExpensePreset(event.category, event.type, event.amount) 
             }
@@ -110,18 +110,18 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun showAddPresetDialog() {
+    private fun showExpenseForm(selectedPreset: ExpensePreset?) {
         _uiState.update { currentState ->
             currentState.copy(
                 dialogState = DialogState.ExpenseForm(
-                    selectedPreset = null,
+                    selectedPreset = selectedPreset,
                     isSaving = false
                 )
             )
         }
     }
 
-    private fun dismissPresetDialog() {
+    private fun dismissDialog() {
         _uiState.update { currentState ->
             currentState.copy(
                  dialogState = null
@@ -176,17 +176,6 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun addCustomExpense(selectedPreset: ExpensePreset) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                dialogState = DialogState.ExpenseForm(
-                    selectedPreset = selectedPreset,
-                    isSaving = false
-                )
-            )
-        }
-    }
-
     private fun deleteExpense(expenseId: Long) {
         viewModelScope.launch {
             useCases.deleteExpenseUseCase(expenseId)
@@ -196,6 +185,16 @@ class ExpensePresetViewModel(
     private fun deleteExpensePreset(expensePresetId: Long) {
         viewModelScope.launch {
             useCases.deleteExpensePresetUseCase(expensePresetId)
+        }
+    }
+
+    private fun showPresetDeleteConfirmationDialog(expensePresetId: Long) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = DialogState.ConfirmDeleteExpensePreset(expensePresetId)
+                )
+            }
         }
     }
 }

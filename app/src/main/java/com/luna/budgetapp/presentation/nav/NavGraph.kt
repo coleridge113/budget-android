@@ -24,7 +24,7 @@ fun NavGraphSetup(
     SharedTransitionLayout {
         NavHost(
             navController = navController,
-            startDestination = Routes.AuthRoute,
+            startDestination = Routes.AddExpensesRoute,
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Left,

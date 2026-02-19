@@ -26,9 +26,9 @@ sealed class DialogState {
 }
 
 sealed interface Event {
-    data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data object DismissDialog : Event
     data object CycleDateFilter : Event
+    data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
     data class AddExpense(val expensePreset: ExpensePreset) : Event
     data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event

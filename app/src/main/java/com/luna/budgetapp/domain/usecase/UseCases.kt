@@ -9,15 +9,17 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByDateRangeUseCase
 import com.luna.budgetapp.domain.usecase.auth.GetTokenUseCase
 import com.luna.budgetapp.domain.usecase.expensepreset.AddExpensePresetUseCase
 import com.luna.budgetapp.domain.usecase.expensepreset.DeleteExpensePresetUseCase
+import com.luna.budgetapp.domain.usecase.expensepreset.GetAllExpensePresetsUseCase
 
 data class UseCases(
+    val getTokenUseCase: GetTokenUseCase,
     val addExpenseUseCase: AddExpenseUseCase,
     val deleteExpenseUseCase: DeleteExpenseUseCase,
     val getAllExpensesUseCase: GetAllExpensesUseCase,
     val getExpensesByCategoryUseCase: GetExpensesByCategoryUseCase,
     val getExpensesByDateRangeUseCase: GetExpensesByDateRangeUseCase,
     val getExpensesByTypeUseCase: GetExpensesByTypeUseCase,
-    val getTokenUseCase: GetTokenUseCase,
+    val getAllExpensePresetsUseCase: GetAllExpensePresetsUseCase,
     val addExpensePresetUseCase: AddExpensePresetUseCase,
     val deleteExpensePresetUseCase: DeleteExpensePresetUseCase,
 )

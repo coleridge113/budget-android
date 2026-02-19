@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -21,25 +22,18 @@ class ExpensePresetRepositoryImpl(
     private val api: ExpenseService
 ): ExpensePresetRepository {
     
-    override fun getAllExpensePresets(): Flow<Resource<List<ExpensePreset>>> = flow {
-        emit(Resource.Loading)
-        try {
-            val remote = api.getAllExpensePresets()
-            dao.addExpensePresets(remote.map { it.toEntity() })
-        } catch (e: Exception) {
-            val errorMessage = when(e) {
-                is IOException -> "Network error, showing cached data"
-                is HttpException -> "Server error, showing cached data"
-                else -> "Unknown error occurred"
+    override fun getAllExpensePresets(): Flow<List<ExpensePreset>> =
+        dao.getAllExpensePresets()
+            .map { local ->
+                local.map { it.toModel() }
             }
-
-            emit(Resource.Error(errorMessage))
-        }
-
-        emitAll(dao.getAllExpensePresets().map { local ->
-            Resource.Success(local.map { it.toModel() })
-        })
-    }.flowOn(Dispatchers.IO)
+            .onStart {
+                try {
+                    val remote = api.getAllExpensePresets()
+                    dao.addExpensePresets(remote.map { it.toEntity() })
+                } catch (_: Exception) {}
+            }
+            .flowOn(Dispatchers.IO)
 
     override suspend fun addExpensePresets(expensePresets: List<ExpensePreset>) {
         dao.addExpensePresets(expensePresets.map { it.toEntity() })

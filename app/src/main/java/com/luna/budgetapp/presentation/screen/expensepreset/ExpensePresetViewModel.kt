@@ -87,31 +87,31 @@ private fun observeExpenses() {
 
     private fun observeExpensePresets() {
         viewModelScope.launch {
-            expensePresetRepo.getAllExpensePresets().collectLatest { resource ->
-                when (resource) {
-                    is Resource.Success -> {
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                isPresetsLoading = false,
-                                expensePresets = resource.data
-                            )
-                        }
-                    }
-
-                    is Resource.Loading -> {
-                        _uiState.update {
-                            it.copy(isPresetsLoading = true)
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        Log.e("ExpensePreset", "Failed to get resource: ${resource.message}")
-                        _uiState.update {
-                            it.copy(error = resource.message)
-                        }
+            useCases.getAllExpensePresetsUseCase()
+                .onStart {
+                    _uiState.update {
+                        it.copy(
+                            isPresetsLoading = true,
+                        )
                     }
                 }
-            }
+                .catch { error ->
+                    _uiState.update {
+                        it.copy(
+                            isPresetsLoading = false,
+                            error = error.localizedMessage
+                        )
+                    }
+                }
+                .collect { expensePresets ->
+                    _uiState.update {
+                        it.copy(
+                            isPresetsLoading = false,
+                            error = null,
+                            expensePresets = expensePresets
+                        )
+                    }
+                }
         }
     }
 

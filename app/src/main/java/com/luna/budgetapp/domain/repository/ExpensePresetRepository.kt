@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ExpensePresetRepository {
 
-    fun getAllExpensePresets(): Flow<Resource<List<ExpensePreset>>>
+    fun getAllExpensePresets(): Flow<List<ExpensePreset>>
 
     suspend fun addExpensePresets(expensePresets: List<ExpensePreset>)
 

@@ -23,6 +23,7 @@ import com.luna.budgetapp.domain.usecase.expense.GetExpensesByTypeUseCase
 import com.luna.budgetapp.domain.usecase.expense.UpdateExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expensepreset.AddExpensePresetUseCase
 import com.luna.budgetapp.domain.usecase.expensepreset.DeleteExpensePresetUseCase
+import com.luna.budgetapp.domain.usecase.expensepreset.GetAllExpensePresetsUseCase
 import com.luna.budgetapp.network.AuthService
 import com.luna.budgetapp.network.ExpenseService
 import com.luna.budgetapp.network.interceptors.AuthInterceptor
@@ -104,6 +105,7 @@ val appModule = module {
     factoryOf(::GetExpensesByTypeUseCase)
     factoryOf(::UpdateExpenseUseCase)
     factoryOf(::GetTokenUseCase)
+    factoryOf(::GetAllExpensePresetsUseCase)
     factoryOf(::AddExpensePresetUseCase)
     factoryOf(::DeleteExpensePresetUseCase)
     factoryOf(::UseCases)

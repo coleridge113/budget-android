@@ -82,7 +82,7 @@ fun MainContent(
         ExpenseTable(
             expensePresets = uiState.expensePresets,
             onClickIcon = { onEvent(Event.ShowExpenseForm(it)) },
-            onLongClickIcon = { onEvent(Event.DeleteExpensePreset(it)) },
+            onLongClickIcon = { onEvent(Event.ShowConfirmationDialog(it)) },
             onClickItem = { onEvent(Event.AddExpense(it)) },
             modifier = Modifier.weight(3f)
         )

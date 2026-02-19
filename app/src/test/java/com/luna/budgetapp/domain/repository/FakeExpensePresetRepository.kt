@@ -19,4 +19,8 @@ class FakeExpensePresetRepository : ExpensePresetRepository {
         presets.add(expensePreset)
         flow.value = Resource.Success(presets.toList())
     }
+
+    override suspend fun deleteExpensePreset(expensePresetId: Long) {
+        TODO("Not yet implemented")
+    }
 }

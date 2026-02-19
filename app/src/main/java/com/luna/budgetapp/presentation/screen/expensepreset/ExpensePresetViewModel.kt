@@ -1,5 +1,6 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.common.Resource
@@ -10,24 +11,26 @@ import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.presentation.model.DateFilter
+import com.luna.budgetapp.presentation.model.resolve
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
-import android.util.Log
 import kotlinx.coroutines.flow.catch
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ExpensePresetViewModel(
     private val useCases: UseCases,
     private val pusherManager: PusherManager,
     private val expensePresetRepo: ExpensePresetRepository,
     private val expenseRepo: ExpenseRepository
 ): ViewModel() {
+
+    private val selectedRange = MutableStateFlow(DateFilter.DAILY)
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -51,38 +54,36 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun observeExpenses(
-        start: LocalDateTime = LocalDate.now().atStartOfDay(),
-        end: LocalDateTime = LocalDate.now().atTime(LocalTime.MAX)
-    ) {
-        viewModelScope.launch {
-            useCases.getExpensesByDateRangeUseCase(start, end)
-                .onStart {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isExpensesLoading = true
-                        )
+private fun observeExpenses() {
+    viewModelScope.launch {
+        selectedRange
+            .flatMapLatest { range ->
+                val (start, end) = range.resolve()
+
+                useCases.getExpensesByDateRangeUseCase(start, end)
+                    .onStart {
+                        _uiState.update { it.copy(isExpensesLoading = true) }
                     }
+            }
+            .catch { error ->
+                _uiState.update {
+                    it.copy(
+                        isExpensesLoading = false,
+                        error = error.localizedMessage
+                    )
                 }
-                .catch { 
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isExpensesLoading = false,
-                            error = it.localizedMessage
-                        )
-                    }
+            }
+            .collect { expenses ->
+                _uiState.update {
+                    it.copy(
+                        isExpensesLoading = false,
+                        error = null,
+                        expenses = expenses
+                    )
                 }
-                .collect {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isExpensesLoading = false,
-                            error = null,
-                            expenses = it
-                        )
-                    }
-                }
-        }
+            }
     }
+}
 
     private fun observeExpensePresets() {
         viewModelScope.launch {

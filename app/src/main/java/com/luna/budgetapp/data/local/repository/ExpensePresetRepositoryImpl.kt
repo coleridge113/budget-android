@@ -1,21 +1,16 @@
 package com.luna.budgetapp.data.local.repository
 
-import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.local.dao.ExpensePresetDao
 import com.luna.budgetapp.data.mapper.toEntity
 import com.luna.budgetapp.data.mapper.toModel
-import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.model.ExpensePreset
+import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.network.ExpenseService
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import retrofit2.HttpException
-import java.io.IOException
 
 class ExpensePresetRepositoryImpl(
     private val dao: ExpensePresetDao,

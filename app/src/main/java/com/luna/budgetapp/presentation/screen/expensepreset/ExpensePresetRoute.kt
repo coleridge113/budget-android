@@ -107,7 +107,15 @@ fun MainContent(
                         isSaving = dialog.isSaving
                     )
                 }
-                is DialogState.ConfirmDeleteExpense -> {}
+                is DialogState.ConfirmDeleteExpense -> {
+                    ConfirmationDialog(
+                        message = "Delete the last expense?",
+                        confirmText = "Delete",
+                        isDestructive = true,
+                        onDismiss = { onEvent(Event.DismissDialog) },
+                        onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
+                    )
+                }
                 is DialogState.ConfirmDeleteExpensePreset -> {
                     ConfirmationDialog(
                         message = "Delete this item?",
@@ -147,7 +155,7 @@ fun MainContent(
                 )
             }
             FloatingActionButton(
-                onClick = {},
+                onClick = { onEvent(Event.ShowDeleteConfirmationDialog) },
                 shape = CircleShape
             ) {
                 Icon(

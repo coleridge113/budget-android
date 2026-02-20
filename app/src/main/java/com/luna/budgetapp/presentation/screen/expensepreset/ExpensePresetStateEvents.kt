@@ -25,19 +25,20 @@ sealed interface DialogState {
         val isSaving: Boolean = false
     ) : DialogState
     data class ConfirmDeleteExpensePreset(val expensePresetId: Long) : DialogState
-    data class ConfirmDeleteExpense(val expenseId: Long) : DialogState
+    data class ConfirmDeleteExpense(val expenseId: Long?) : DialogState
 }
 
 sealed interface Event {
     data object DismissDialog : Event
     data object ShowCalendarForm : Event
+    data object ShowDeleteConfirmationDialog : Event
     data class SelectDateRange(val selectedRange: DateFilter) : Event
     data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ShowConfirmationDialog(val expensePresetId: Long) : Event
     data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
     data class AddExpense(val expensePreset: ExpensePreset) : Event
     data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
-    data class DeleteExpense(val expenseId: Long) : Event
+    data class DeleteExpense(val expenseId: Long?) : Event
     data class DeleteExpensePreset(val expensePresetId: Long) : Event
 }
 

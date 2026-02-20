@@ -36,7 +36,7 @@ sealed interface Event {
     data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ShowConfirmationDialog(val expensePresetId: Long) : Event
     data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
-    data class AddExpense(val expensePreset: ExpensePreset) : Event
+    data class AddExpense(val expensePreset: ExpensePreset, val customAmount: Double? = null) : Event
     data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
     data class DeleteExpense(val expenseId: Long?) : Event
     data class DeleteExpensePreset(val expensePresetId: Long) : Event

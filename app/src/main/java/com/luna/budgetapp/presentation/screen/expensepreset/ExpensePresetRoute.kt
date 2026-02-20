@@ -101,7 +101,7 @@ fun MainContent(
                             if (dialog.selectedPreset == null) {
                                 onEvent(Event.ConfirmDialog(category, type, amount))
                             } else {
-                                onEvent(Event.AddExpense(dialog.selectedPreset))
+                                onEvent(Event.AddExpense(dialog.selectedPreset, amount.toDouble()))
                             }
                         },
                         isSaving = dialog.isSaving

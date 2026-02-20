@@ -47,7 +47,7 @@ sealed class DateFilter {
 
     data class Custom(
         val start: Long = 0L,
-        val end: Long = 0L
+        val end: Long? = 0L
     ) : DateFilter() {
 
         override fun resolve(now: LocalDate, locale: Locale): DateRange {
@@ -59,10 +59,18 @@ sealed class DateFilter {
                 .toLocalDate()
                 .atStartOfDay()
 
-            val endDateTime = Instant.ofEpochMilli(end)
-                .atZone(zone)
-                .toLocalDate()
-                .atTime(LocalTime.MAX)
+            val endDateTime = if (end != null) {
+                    Instant.ofEpochMilli(end)
+                        .atZone(zone)
+                        .toLocalDate()
+                        .atTime(LocalTime.MAX)
+                } else {
+                    Instant.ofEpochMilli(start)
+                        .atZone(zone)
+                        .toLocalDate()
+                        .atTime(LocalTime.MAX)
+
+                }
 
             return DateRange(
                 start = startDateTime,

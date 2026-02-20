@@ -48,6 +48,6 @@ fun DateRangePickerDialog(
 fun DateRangePickerDialogPreview() {
     DateRangePickerDialog(
         onDismiss = {},
-        onConfirm = {_, _ ->}
+        onConfirm = { _, _ -> }
     )
 }

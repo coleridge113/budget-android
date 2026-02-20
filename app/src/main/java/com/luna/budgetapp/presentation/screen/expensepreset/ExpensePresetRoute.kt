@@ -130,7 +130,7 @@ fun MainContent(
                     onDismiss = { onEvent(Event.DismissDialog) },
                     onConfirm = { start, end ->
                         when {
-                            start == null || end == null -> {}
+                            start == null -> onEvent(Event.DismissDialog)
                             else -> onEvent(Event.SelectDateRange(DateFilter.Custom(start, end)))
                         }
                     }

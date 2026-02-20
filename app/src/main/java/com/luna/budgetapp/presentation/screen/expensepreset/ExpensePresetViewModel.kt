@@ -54,36 +54,36 @@ class ExpensePresetViewModel(
         }
     }
 
-private fun observeExpenses() {
-    viewModelScope.launch {
-        selectedRange
-            .flatMapLatest { range ->
-                val (start, end) = range.resolve()
+    private fun observeExpenses() {
+        viewModelScope.launch {
+            selectedRange
+                .flatMapLatest { range ->
+                    val (start, end) = range.resolve()
 
-                useCases.getExpensesByDateRangeUseCase(start, end)
-                    .onStart {
-                        _uiState.update { it.copy(isExpensesLoading = true) }
+                    useCases.getExpensesByDateRangeUseCase(start, end)
+                        .onStart {
+                            _uiState.update { it.copy(isExpensesLoading = true) }
+                        }
+                }
+                .catch { error ->
+                    _uiState.update {
+                        it.copy(
+                            isExpensesLoading = false,
+                            error = error.localizedMessage
+                        )
                     }
-            }
-            .catch { error ->
-                _uiState.update {
-                    it.copy(
-                        isExpensesLoading = false,
-                        error = error.localizedMessage
-                    )
                 }
-            }
-            .collect { expenses ->
-                _uiState.update {
-                    it.copy(
-                        isExpensesLoading = false,
-                        error = null,
-                        expenses = expenses
-                    )
+                .collect { expenses ->
+                    _uiState.update {
+                        it.copy(
+                            isExpensesLoading = false,
+                            error = null,
+                            expenses = expenses
+                        )
+                    }
                 }
-            }
+        }
     }
-}
 
     private fun observeExpensePresets() {
         viewModelScope.launch {

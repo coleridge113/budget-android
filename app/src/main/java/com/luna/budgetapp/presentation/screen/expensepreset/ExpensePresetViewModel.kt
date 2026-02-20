@@ -143,7 +143,7 @@ class ExpensePresetViewModel(
         val expensePreset = ExpensePreset(
             amount = amount.toDoubleOrNull() ?: 0.0,
             category = category,
-            type = type.ifEmpty { category }
+            type = type.ifEmpty { category }.trim()
         )
 
         _uiState.update { currentState ->

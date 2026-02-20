@@ -79,7 +79,7 @@ fun ExpensePresetDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Add Expense Preset",
+                    text = if (selectedPreset == null) "Add Expense Preset" else "Add Custom Expense",
                     style = MaterialTheme.typography.headlineSmall
                 )
 

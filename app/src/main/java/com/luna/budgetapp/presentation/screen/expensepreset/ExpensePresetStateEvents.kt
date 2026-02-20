@@ -3,6 +3,7 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.model.DateFilter
+import java.time.LocalDateTime
 
 data class UiState(
     val isExpensesLoading: Boolean = false,
@@ -18,6 +19,7 @@ data class UiState(
 }
 
 sealed class DialogState {
+    data object CalendarForm : DialogState ()
     data class ExpenseForm(
         val selectedPreset: ExpensePreset? = null,
         val isSaving: Boolean = false
@@ -28,7 +30,9 @@ sealed class DialogState {
 
 sealed interface Event {
     data object DismissDialog : Event
+    data object ShowCalendarForm : Event
     data class SelectDateRange(val selectedRange: DateFilter) : Event
+    data class SelectCustomDateRange(val start: LocalDateTime, val end: LocalDateTime) : Event
     data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ShowConfirmationDialog(val expensePresetId: Long) : Event
     data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event

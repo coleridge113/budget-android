@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangeSelectorDropdown
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
@@ -69,7 +70,14 @@ fun MainContent(
     ) {
         DateRangeSelectorDropdown(
             selected = uiState.selectedRange,
-            onSelectedChange = { onEvent(Event.SelectDateRange(it)) }
+            onSelectedChange = { 
+                when (it) {
+                    DateFilter.Daily,
+                    DateFilter.Weekly,
+                    DateFilter.Monthly -> onEvent(Event.SelectDateRange(it))
+                    else -> onEvent(Event.ShowCalendarForm)
+                }
+            }
         )
         Box(
             modifier = Modifier.fillMaxWidth()
@@ -109,11 +117,20 @@ fun MainContent(
             is DialogState.ConfirmDeleteExpense -> {}
             is DialogState.ConfirmDeleteExpensePreset -> {
                 ConfirmationDialog(
+                    message = "Delete this item?",
+                    confirmText = "Delete",
+                    isDestructive = true,
                     onDismiss = { onEvent(Event.DismissDialog) },
                     onConfirm = { onEvent(Event.DeleteExpensePreset(dialog.expensePresetId)) }
                 )
             }
-            null -> Unit
+            DialogState.CalendarForm ->
+                ConfirmationDialog(
+                    message = "Select date range",
+                    onDismiss = { onEvent(Event.DismissDialog) },
+                    onConfirm = {}
+                )
+            else -> {}
         }
     }
 }

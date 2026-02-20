@@ -26,10 +26,10 @@ import androidx.compose.ui.unit.dp
 fun ConfirmationDialog(
     modifier: Modifier = Modifier,
     title: String = "Confirm",
-    message: String = "Delete this item?",
-    confirmText: String = "Delete",
+    message: String,
+    confirmText: String = "Ok",
     dismissText: String = "Cancel",
-    isDestructive: Boolean = true,
+    isDestructive: Boolean = false,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
@@ -85,13 +85,4 @@ fun ConfirmationDialog(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ConfirmationDialogPreview() {
-    ConfirmationDialog(
-        onDismiss = {},
-        onConfirm = {}
-    )
 }

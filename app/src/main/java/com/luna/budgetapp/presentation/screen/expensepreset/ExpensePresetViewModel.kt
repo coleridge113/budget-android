@@ -39,6 +39,7 @@ class ExpensePresetViewModel(
     fun onEvent(event: Event) {
         when (event) {
             Event.DismissDialog -> dismissDialog()
+            Event.ShowCalendarForm -> showCalendarForm()
             is Event.AddExpense -> addExpense(event.expensePreset)
             is Event.ShowExpenseForm -> showExpenseForm(event.selectedPreset)
             is Event.ShowConfirmationDialog -> showPresetDeleteConfirmationDialog(event.expensePresetId)
@@ -47,6 +48,7 @@ class ExpensePresetViewModel(
             is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
             is Event.ConfirmDialog -> saveExpensePreset(event.category, event.type, event.amount)
             is Event.SelectDateRange -> selectDateRange(event.selectedRange)
+            is Event.SelectCustomDateRange -> {}
         }
     }
 
@@ -230,6 +232,16 @@ class ExpensePresetViewModel(
             _uiState.update { currentState ->
                 currentState.copy(
                     selectedRange = selectedRange
+                )
+            }
+        }
+    }
+
+    private fun showCalendarForm() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = DialogState.CalendarForm
                 )
             }
         }

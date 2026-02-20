@@ -38,6 +38,7 @@ fun DateRangePickerDialog(
         DateRangePicker(
             title = {},
             headline = {},
+            showModeToggle = false,
             state = state
         )
     }

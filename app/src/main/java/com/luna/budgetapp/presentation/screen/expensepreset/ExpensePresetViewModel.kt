@@ -79,7 +79,7 @@ class ExpensePresetViewModel(
                         it.copy(
                             isExpensesLoading = false,
                             error = null,
-                            expenses = expenses
+                            expenses = expenses.sortedBy { it.id }
                         )
                     }
                 }

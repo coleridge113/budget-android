@@ -171,6 +171,8 @@ private fun observeExpenses() {
     }
 
     private fun addExpense(expensePreset: ExpensePreset) {
+        val state = uiState.value
+
         viewModelScope.launch {
             val expense = Expense(
                 category = expensePreset.category,
@@ -178,6 +180,14 @@ private fun observeExpenses() {
                 amount = expensePreset.amount
             )
             expenseRepo.addExpense(expense)
+            
+            if (state.dialogState != null) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        dialogState = null
+                    )
+                }
+            }
         }
     }
 

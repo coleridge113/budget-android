@@ -100,7 +100,11 @@ fun MainContent(
                     selectedPreset = dialog.selectedPreset,
                     onDismissRequest = { onEvent(Event.DismissDialog) },
                     onConfirm = { category, type, amount ->
-                        onEvent(Event.ConfirmDialog(category, type, amount))
+                        if (dialog.selectedPreset == null) {
+                            onEvent(Event.ConfirmDialog(category, type, amount))
+                        } else {
+                            onEvent(Event.AddExpense(dialog.selectedPreset))
+                        }
                     },
                     isSaving = dialog.isSaving
                 )

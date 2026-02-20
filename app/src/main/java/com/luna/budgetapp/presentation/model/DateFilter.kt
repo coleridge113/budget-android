@@ -7,9 +7,9 @@ import java.time.temporal.WeekFields
 import java.util.Locale
 
 enum class DateFilter(val value: String) {
-    DAILY("Daily"),
-    WEEKLY("Weekly"),
-    MONTHLY("Monthly")
+    DAILY("Today"),
+    WEEKLY("Week"),
+    MONTHLY("Month")
 }
 
 fun DateFilter.resolve(

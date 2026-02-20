@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -26,6 +28,7 @@ import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePr
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetTable
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangePickerDialog
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
+import com.luna.budgetapp.ui.icons.UndoIcon
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -54,9 +57,9 @@ fun MainContent(
     modifier: Modifier = Modifier,
     onEvent: (Event) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = modifier.fillMaxSize()){
         Column(
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             DateRangeSelectorDropdown(
                 selected = uiState.selectedRange,
@@ -128,16 +131,31 @@ fun MainContent(
             }
         }
 
-        FloatingActionButton(
-            modifier = Modifier.align(Alignment.CenterEnd)
-                .padding(end = 16.dp),
-            onClick = { onEvent(Event.ShowExpenseForm()) },
-            shape = CircleShape
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 120.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
         ) {
-            Icon(
-                imageVector = CirclePlusIcon,
-                contentDescription = null
-            )
+            FloatingActionButton(
+                onClick = { onEvent(Event.ShowExpenseForm()) },
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = CirclePlusIcon,
+                    contentDescription = null
+                )
+            }
+            FloatingActionButton(
+                onClick = {},
+                shape = CircleShape
+            ) {
+                Icon(
+                    imageVector = UndoIcon,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
         }
     }
 }

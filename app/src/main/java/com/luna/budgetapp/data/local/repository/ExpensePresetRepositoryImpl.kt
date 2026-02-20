@@ -28,10 +28,10 @@ class ExpensePresetRepositoryImpl(
                 local.map { it.toModel() }
             }
             .onStart {
-                try {
-                    val remote = api.getAllExpensePresets()
-                    dao.addExpensePresets(remote.map { it.toEntity() })
-                } catch (_: Exception) {}
+                // try {
+                //     val remote = api.getAllExpensePresets()
+                //     dao.addExpensePresets(remote.map { it.toEntity() })
+                // } catch (_: Exception) {}
             }
             .flowOn(Dispatchers.IO)
 

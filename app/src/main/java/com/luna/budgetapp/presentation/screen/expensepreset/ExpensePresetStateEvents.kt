@@ -2,12 +2,7 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
-import com.luna.budgetapp.presentation.model.DateFilter
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.temporal.WeekFields
-import java.util.Locale
+import com.luna.budgetapp.domain.model.DateFilter
 
 data class UiState(
     val isExpensesLoading: Boolean = false,
@@ -16,7 +11,7 @@ data class UiState(
     val expensePresets: List<ExpensePreset> = emptyList(),
     val expenses: List<Expense> = emptyList(),
     val dialogState: DialogState? = null,
-    val selectedRange: DateFilter = DateFilter.entries.first()
+    val selectedRange: DateFilter = DateFilter.Daily
 ) {
     val totalAmount: Double
         get() = expenses.sumOf { it.amount }

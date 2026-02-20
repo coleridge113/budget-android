@@ -25,7 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.luna.budgetapp.presentation.model.DateFilter
+import com.luna.budgetapp.domain.model.DateFilter
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +36,15 @@ fun DateRangeSelectorDropdown(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val selectableDateFilters = listOf(
+        DateFilter.Daily,
+        DateFilter.Weekly,
+        DateFilter.Monthly,
+        DateFilter.Custom(
+            start = LocalDateTime.now(),
+            end = LocalDateTime.now()
+        )
+    )
 
     Box(modifier = modifier.wrapContentSize()) {
 
@@ -49,7 +59,7 @@ fun DateRangeSelectorDropdown(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = selected.value,
+                    text = selected.displayName(),
                     style = MaterialTheme.typography.labelLarge
                 )
 
@@ -66,9 +76,9 @@ fun DateRangeSelectorDropdown(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
-            DateFilter.entries.forEach { option ->
+            selectableDateFilters.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.value) },
+                    text = { Text(option.displayName()) },
                     onClick = {
                         onSelectedChange(option)
                         expanded = false
@@ -83,7 +93,15 @@ fun DateRangeSelectorDropdown(
 @Composable
 fun DateRangeSelectorDropdownPreview() {
     DateRangeSelectorDropdown(
-        selected = DateFilter.DAILY,
+        selected = DateFilter.Daily,
         onSelectedChange = {}
     )
 }
+
+fun DateFilter.displayName() =
+    when (this) {
+        DateFilter.Daily -> "Today"
+        DateFilter.Weekly -> "Week"
+        DateFilter.Monthly -> "Month"
+        is DateFilter.Custom -> "Custom"
+    }

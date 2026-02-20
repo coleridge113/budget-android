@@ -8,8 +8,7 @@ import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
-import com.luna.budgetapp.presentation.model.DateFilter
-import com.luna.budgetapp.presentation.model.resolve
+import com.luna.budgetapp.domain.model.DateFilter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,11 +55,11 @@ class ExpensePresetViewModel(
             _uiState
                 .map { it.selectedRange }
                 .distinctUntilChanged()
-                .flatMapLatest { range ->
+                .flatMapLatest { filter ->
 
-                    val (start, end) = range.resolve()
+                    val range = filter.resolve()
 
-                    useCases.getExpensesByDateRangeUseCase(start, end)
+                    useCases.getExpensesByDateRangeUseCase(range.start, range.end)
                         .onStart {
                             _uiState.update { it.copy(isExpensesLoading = true) }
                         }

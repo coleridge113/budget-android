@@ -36,27 +36,15 @@ fun ExpensePresetRoute(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Box (modifier = Modifier.fillMaxSize()){
-        Scaffold { innerPadding ->
-            MainContent(
-                uiState = state,
-                modifier = Modifier.padding(innerPadding)
-                    .padding(16.dp),
-                onEvent = viewModel::onEvent,
-            )
-        }
-
-        FloatingActionButton(
-            modifier = Modifier.align(Alignment.CenterEnd)
-                .padding(end = 16.dp),
-            onClick = { viewModel.onEvent(Event.ShowExpenseForm()) },
-            shape = CircleShape
-        ) {
-            Icon(
-                imageVector = CirclePlusIcon,
-                contentDescription = null
-            )
-        }
+    Scaffold(
+        modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
+        MainContent(
+            uiState = state,
+            modifier = Modifier.padding(innerPadding)
+                .padding(16.dp),
+            onEvent = viewModel::onEvent,
+        )
     }
 }
 
@@ -66,76 +54,90 @@ fun MainContent(
     modifier: Modifier = Modifier,
     onEvent: (Event) -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        DateRangeSelectorDropdown(
-            selected = uiState.selectedRange,
-            onSelectedChange = {
-                when (it) {
-                    DateFilter.Daily,
-                    DateFilter.Weekly,
-                    DateFilter.Monthly -> onEvent(Event.SelectDateRange(it))
-                    else -> onEvent(Event.ShowCalendarForm)
-                }
-            }
-        )
-        Box(
-            modifier = Modifier.fillMaxWidth()
-                .weight(1f)
-                .clickable {},
-            contentAlignment = Alignment.Center
+    Box(modifier = Modifier.fillMaxSize()){
+        Column(
+            modifier = modifier.fillMaxSize()
         ) {
-            Text(
-                text = if (uiState.totalAmount == 0.0) "-" else "P${uiState.totalAmount}",
-                style = MaterialTheme.typography.displayMedium
-            ) 
+            DateRangeSelectorDropdown(
+                selected = uiState.selectedRange,
+                onSelectedChange = {
+                    when (it) {
+                        DateFilter.Daily,
+                        DateFilter.Weekly,
+                        DateFilter.Monthly -> onEvent(Event.SelectDateRange(it))
+                        else -> onEvent(Event.ShowCalendarForm)
+                    }
+                }
+            )
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .weight(1f)
+                    .clickable {},
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = if (uiState.totalAmount == 0.0) "-" else "P${uiState.totalAmount}",
+                    style = MaterialTheme.typography.displayMedium
+                )
+            }
+
+            ExpensePresetTable(
+                expensePresets = uiState.expensePresets,
+                onClickIcon = { onEvent(Event.ShowExpenseForm(it)) },
+                onLongClickIcon = { onEvent(Event.ShowConfirmationDialog(it)) },
+                onClickItem = { onEvent(Event.AddExpense(it)) },
+                modifier = Modifier.weight(3f)
+            )
+
+            when (val dialog = uiState.dialogState) {
+                is DialogState.ExpenseForm -> {
+                    ExpensePresetDialog(
+                        selectedPreset = dialog.selectedPreset,
+                        onDismissRequest = { onEvent(Event.DismissDialog) },
+                        onConfirm = { category, type, amount ->
+                            if (dialog.selectedPreset == null) {
+                                onEvent(Event.ConfirmDialog(category, type, amount))
+                            } else {
+                                onEvent(Event.AddExpense(dialog.selectedPreset))
+                            }
+                        },
+                        isSaving = dialog.isSaving
+                    )
+                }
+                is DialogState.ConfirmDeleteExpense -> {}
+                is DialogState.ConfirmDeleteExpensePreset -> {
+                    ConfirmationDialog(
+                        message = "Delete this item?",
+                        confirmText = "Delete",
+                        isDestructive = true,
+                        onDismiss = { onEvent(Event.DismissDialog) },
+                        onConfirm = { onEvent(Event.DeleteExpensePreset(dialog.expensePresetId)) }
+                    )
+                }
+                DialogState.CalendarForm ->
+                    DateRangePickerDialog(
+                        onDismiss = { onEvent(Event.DismissDialog) },
+                        onConfirm = { start, end ->
+                            when {
+                                start == null -> onEvent(Event.DismissDialog)
+                                else -> onEvent(Event.SelectDateRange(DateFilter.Custom(start, end)))
+                            }
+                        }
+                    )
+                else -> {}
+            }
         }
 
-        ExpensePresetTable(
-            expensePresets = uiState.expensePresets,
-            onClickIcon = { onEvent(Event.ShowExpenseForm(it)) },
-            onLongClickIcon = { onEvent(Event.ShowConfirmationDialog(it)) },
-            onClickItem = { onEvent(Event.AddExpense(it)) },
-            modifier = Modifier.weight(3f)
-        )
-
-        when (val dialog = uiState.dialogState) {
-            is DialogState.ExpenseForm -> {
-                ExpensePresetDialog(
-                    selectedPreset = dialog.selectedPreset,
-                    onDismissRequest = { onEvent(Event.DismissDialog) },
-                    onConfirm = { category, type, amount ->
-                        if (dialog.selectedPreset == null) {
-                            onEvent(Event.ConfirmDialog(category, type, amount))
-                        } else {
-                            onEvent(Event.AddExpense(dialog.selectedPreset))
-                        }
-                    },
-                    isSaving = dialog.isSaving
-                )
-            }
-            is DialogState.ConfirmDeleteExpense -> {}
-            is DialogState.ConfirmDeleteExpensePreset -> {
-                ConfirmationDialog(
-                    message = "Delete this item?",
-                    confirmText = "Delete",
-                    isDestructive = true,
-                    onDismiss = { onEvent(Event.DismissDialog) },
-                    onConfirm = { onEvent(Event.DeleteExpensePreset(dialog.expensePresetId)) }
-                )
-            }
-            DialogState.CalendarForm ->
-                DateRangePickerDialog(
-                    onDismiss = { onEvent(Event.DismissDialog) },
-                    onConfirm = { start, end ->
-                        when {
-                            start == null -> onEvent(Event.DismissDialog)
-                            else -> onEvent(Event.SelectDateRange(DateFilter.Custom(start, end)))
-                        }
-                    }
-                )
-            else -> {}
+        FloatingActionButton(
+            modifier = Modifier.align(Alignment.CenterEnd)
+                .padding(end = 16.dp),
+            onClick = { onEvent(Event.ShowExpenseForm()) },
+            shape = CircleShape
+        ) {
+            Icon(
+                imageVector = CirclePlusIcon,
+                contentDescription = null
+            )
         }
     }
 }

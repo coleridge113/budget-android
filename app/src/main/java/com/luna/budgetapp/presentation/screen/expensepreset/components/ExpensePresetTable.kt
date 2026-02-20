@@ -32,7 +32,7 @@ import com.luna.budgetapp.ui.icons.CoffeeIcon
 import com.luna.budgetapp.ui.icons.FoodIcon
 
 @Composable
-fun ExpenseTable(
+fun ExpensePresetTable(
     expensePresets: List<ExpensePreset>,
     modifier: Modifier = Modifier,
     onClickIcon: (ExpensePreset) -> Unit,
@@ -47,7 +47,7 @@ fun ExpenseTable(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(expensePresets) { expensePreset ->
-                ExpenseItem(
+                ExpensePresetItem(
                     item = expensePreset,
                     icon = iconSelector(expensePreset.category),
                     onClickIcon = { onClickIcon(expensePreset) },
@@ -60,7 +60,7 @@ fun ExpenseTable(
 }
 
 @Composable
-fun ExpenseItem(
+fun ExpensePresetItem(
     item: ExpensePreset,
     icon: ImageVector,
     onClickIcon: (ExpensePreset) -> Unit,
@@ -100,14 +100,14 @@ fun ExpenseItem(
 
 @Preview(showBackground = true)
 @Composable
-fun ExpenseItemPreview() {
+fun ExpensePresetItemPreview() {
     val item = ExpensePreset(
             id = 1L,
             amount = 4.50,
             category = "Coffee",
             type = "Food & Drink"
         )
-    ExpenseItem(
+    ExpensePresetItem(
         item = item,
         icon = CoffeeIcon,
         onClickIcon = {},
@@ -118,7 +118,7 @@ fun ExpenseItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun ExpenseTablePreview() {
+fun ExpensePresetTablePreview() {
     val expensePresets = listOf(
         ExpensePreset(
             id = 1L,
@@ -139,7 +139,7 @@ fun ExpenseTablePreview() {
             type = "Angkas"
         ),
     )
-    ExpenseTable(
+    ExpensePresetTable(
         expensePresets = expensePresets,
         onClickItem = {},
         onLongClickIcon = {},

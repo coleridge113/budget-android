@@ -23,7 +23,7 @@ import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangeSelectorDropdown
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
-import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
+import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetTable
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangePickerDialog
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import org.koin.compose.viewmodel.koinViewModel
@@ -64,14 +64,14 @@ fun ExpensePresetRoute(
 fun MainContent(
     uiState: UiState,
     modifier: Modifier = Modifier,
-    onEvent: (Event) -> Unit,
+    onEvent: (Event) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         DateRangeSelectorDropdown(
             selected = uiState.selectedRange,
-            onSelectedChange = { 
+            onSelectedChange = {
                 when (it) {
                     DateFilter.Daily,
                     DateFilter.Weekly,
@@ -92,7 +92,7 @@ fun MainContent(
             ) 
         }
 
-        ExpenseTable(
+        ExpensePresetTable(
             expensePresets = uiState.expensePresets,
             onClickIcon = { onEvent(Event.ShowExpenseForm(it)) },
             onLongClickIcon = { onEvent(Event.ShowConfirmationDialog(it)) },

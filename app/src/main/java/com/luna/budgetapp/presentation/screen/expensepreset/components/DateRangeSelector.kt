@@ -40,10 +40,7 @@ fun DateRangeSelectorDropdown(
         DateFilter.Daily,
         DateFilter.Weekly,
         DateFilter.Monthly,
-        DateFilter.Custom(
-            start = LocalDateTime.now(),
-            end = LocalDateTime.now()
-        )
+        DateFilter.Custom()
     )
 
     Box(modifier = modifier.wrapContentSize()) {

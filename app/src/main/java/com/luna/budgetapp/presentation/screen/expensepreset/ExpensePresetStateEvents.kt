@@ -18,21 +18,20 @@ data class UiState(
         get() = expenses.sumOf { it.amount }
 }
 
-sealed class DialogState {
-    data object CalendarForm : DialogState ()
+sealed interface DialogState {
+    data object CalendarForm : DialogState
     data class ExpenseForm(
         val selectedPreset: ExpensePreset? = null,
         val isSaving: Boolean = false
-    ) : DialogState()
-    data class ConfirmDeleteExpensePreset(val expensePresetId: Long) : DialogState()
-    data class ConfirmDeleteExpense(val expenseId: Long) : DialogState()
+    ) : DialogState
+    data class ConfirmDeleteExpensePreset(val expensePresetId: Long) : DialogState
+    data class ConfirmDeleteExpense(val expenseId: Long) : DialogState
 }
 
 sealed interface Event {
     data object DismissDialog : Event
     data object ShowCalendarForm : Event
     data class SelectDateRange(val selectedRange: DateFilter) : Event
-    data class SelectCustomDateRange(val start: LocalDateTime, val end: LocalDateTime) : Event
     data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ShowConfirmationDialog(val expensePresetId: Long) : Event
     data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event

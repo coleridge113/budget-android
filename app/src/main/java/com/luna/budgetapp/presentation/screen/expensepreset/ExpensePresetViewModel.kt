@@ -48,7 +48,6 @@ class ExpensePresetViewModel(
             is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
             is Event.ConfirmDialog -> saveExpensePreset(event.category, event.type, event.amount)
             is Event.SelectDateRange -> selectDateRange(event.selectedRange)
-            is Event.SelectCustomDateRange -> {}
         }
     }
 
@@ -231,7 +230,8 @@ class ExpensePresetViewModel(
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
-                    selectedRange = selectedRange
+                    selectedRange = selectedRange,
+                    dialogState = null
                 )
             }
         }

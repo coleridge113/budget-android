@@ -1,9 +1,11 @@
 package com.luna.budgetapp.domain.model
 
+import java.time.Instant
 import java.time.temporal.WeekFields
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.util.Locale
 
 sealed class DateFilter {
@@ -44,10 +46,28 @@ sealed class DateFilter {
     }
 
     data class Custom(
-        val start: LocalDateTime,
-        val end: LocalDateTime
+        val start: Long = 0L,
+        val end: Long = 0L
     ) : DateFilter() {
-        override fun resolve(now: LocalDate, locale: Locale) =
-            DateRange(start, end)
+
+        override fun resolve(now: LocalDate, locale: Locale): DateRange {
+
+            val zone = ZoneId.systemDefault()
+
+            val startDateTime = Instant.ofEpochMilli(start)
+                .atZone(zone)
+                .toLocalDate()
+                .atStartOfDay()
+
+            val endDateTime = Instant.ofEpochMilli(end)
+                .atZone(zone)
+                .toLocalDate()
+                .atTime(LocalTime.MAX)
+
+            return DateRange(
+                start = startDateTime,
+                end = endDateTime
+            )
+        }
     }
 }

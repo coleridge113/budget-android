@@ -24,6 +24,7 @@ import com.luna.budgetapp.presentation.screen.expensepreset.components.Confirmat
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangeSelectorDropdown
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseTable
+import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangePickerDialog
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -125,10 +126,14 @@ fun MainContent(
                 )
             }
             DialogState.CalendarForm ->
-                ConfirmationDialog(
-                    message = "Select date range",
+                DateRangePickerDialog(
                     onDismiss = { onEvent(Event.DismissDialog) },
-                    onConfirm = {}
+                    onConfirm = { start, end ->
+                        when {
+                            start == null || end == null -> {}
+                            else -> onEvent(Event.SelectDateRange(DateFilter.Custom(start, end)))
+                        }
+                    }
                 )
             else -> {}
         }

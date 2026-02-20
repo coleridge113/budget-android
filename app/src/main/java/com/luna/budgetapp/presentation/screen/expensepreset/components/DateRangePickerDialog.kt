@@ -35,7 +35,11 @@ fun DateRangePickerDialog(
             }
         }
     ) {
-        DateRangePicker(state = state)
+        DateRangePicker(
+            title = {},
+            headline = {},
+            state = state
+        )
     }
 }
 

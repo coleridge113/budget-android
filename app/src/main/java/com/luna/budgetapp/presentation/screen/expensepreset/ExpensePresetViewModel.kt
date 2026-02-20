@@ -1,9 +1,7 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
@@ -16,8 +14,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,8 +28,6 @@ class ExpensePresetViewModel(
     private val expensePresetRepo: ExpensePresetRepository,
     private val expenseRepo: ExpenseRepository
 ): ViewModel() {
-
-    private val selectedRange = MutableStateFlow(DateFilter.DAILY)
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
@@ -56,8 +53,11 @@ class ExpensePresetViewModel(
 
     private fun observeExpenses() {
         viewModelScope.launch {
-            selectedRange
+            _uiState
+                .map { it.selectedRange }
+                .distinctUntilChanged()
                 .flatMapLatest { range ->
+
                     val (start, end) = range.resolve()
 
                     useCases.getExpensesByDateRangeUseCase(start, end)

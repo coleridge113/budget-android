@@ -13,11 +13,13 @@ data class UiState(
 
 sealed interface DialogState {
     data object CalendarForm : DialogState
-    data class ConfirmDeleteExpense(val expenseId: Long?) : DialogState
+    data class ConfirmDeleteExpense(val expenseId: Long) : DialogState
 }
 
 sealed interface Event {
-    data object Foo : Event
+    data object DismissDialog : Event
+    data class ShowDeleteConfirmationDialog(val expenseId: Long) : Event
+    data class DeleteExpense(val expenseId: Long) : Event
 }
 
 sealed interface Navigation {}

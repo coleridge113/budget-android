@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +30,9 @@ import com.luna.budgetapp.presentation.screen.utils.getIconForCategory
 @Composable
 fun ExpenseTable(
     modifier: Modifier = Modifier,
-    expenses: List<Expense>
+    expenses: List<Expense>,
+    onClick: (Expense) -> Unit,
+    onLongClick: (Expense) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -39,7 +42,8 @@ fun ExpenseTable(
             ExpenseItem(
                 item = expense,
                 icon = getIconForCategory(expense.category),
-                onClickItem = {}
+                onClick = onClick,
+                onLongClick = onLongClick
             )
         }
     }
@@ -49,18 +53,23 @@ fun ExpenseTable(
 fun ExpenseItem(
     item: Expense,
     icon: ImageVector,
-    onClickItem: (Expense) -> Unit
+    onClick: (Expense) -> Unit,
+    onLongClick: (Expense) -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+            .combinedClickable(
+                onClick = { onClick(item) },
+                onLongClick = { onLongClick(item) }
+            )
     ) {
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)),
-            contentAlignment = Alignment.Center
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
         ) {
             Icon(imageVector = icon, contentDescription = null)
         }
@@ -123,5 +132,9 @@ fun ExpenseTablePreview() {
             type = "Food"
         ),
     )
-    ExpenseTable(expenses = expenses)
+    ExpenseTable(
+        expenses = expenses,
+        onClick = {},
+        onLongClick = {}
+    )
 }

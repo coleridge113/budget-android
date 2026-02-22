@@ -28,7 +28,9 @@ class ExpenseListViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            Event.Foo -> {}
+            Event.DismissDialog -> dismissDialog()
+            is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
+            is Event.DeleteExpense -> deleteExpense(event.expenseId)
         }
     }
 
@@ -60,6 +62,37 @@ class ExpenseListViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    private fun showDeleteConfirmationDialog(expenseId: Long) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = DialogState.ConfirmDeleteExpense(expenseId)
+                )
+            }
+        }
+    }
+
+    private fun dismissDialog() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = null
+                )
+            }
+        }
+    }
+
+    private fun deleteExpense(expenseId: Long) {
+        viewModelScope.launch {
+            useCases.deleteExpenseUseCase(expenseId)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = null
+                )
+            }
         }
     }
 }

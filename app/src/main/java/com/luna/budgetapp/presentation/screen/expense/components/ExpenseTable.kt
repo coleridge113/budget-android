@@ -1,4 +1,4 @@
-package com.luna.budgetapp.presentation.screen.expensepreset.components
+package com.luna.budgetapp.presentation.screen.expense.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

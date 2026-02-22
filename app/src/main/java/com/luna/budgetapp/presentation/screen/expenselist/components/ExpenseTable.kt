@@ -89,7 +89,7 @@ fun ExpenseItem(
             Text(
                 text = "%,.2f".format(item.amount),
                 modifier = Modifier
-                    .widthIn(min = 48.dp)
+                    .widthIn(min = 64.dp)
                     .wrapContentWidth(Alignment.End)
             )
         }

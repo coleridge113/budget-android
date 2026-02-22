@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.presentation.screen.utils.formatToCurrency
 
 @Composable
@@ -32,18 +33,18 @@ fun ExpenseAmountDisplay(
                 textAlign = TextAlign.Center
             )
             Text(
-                modifier = Modifier.weight(2f),
+                modifier = Modifier.weight(3f),
                 text = displayAmount,
                 style = MaterialTheme.typography.displayMedium,
                 textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }
 
 @Preview(
     showBackground = true,
+    heightDp = 200
 )
 @Composable
 fun ExpenseAmountDisplayPreview() {

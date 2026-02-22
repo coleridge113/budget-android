@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface ExpenseRepository {
-    fun getAllExpenses(): Flow<Resource<List<Expense>>>
+    fun getAllExpenses(): Flow<List<Expense>>
 
     fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>>
 

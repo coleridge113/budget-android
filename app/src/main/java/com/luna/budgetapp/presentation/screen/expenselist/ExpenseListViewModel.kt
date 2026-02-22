@@ -37,11 +37,8 @@ class ExpenseListViewModel(
             _uiState
                 .map { it.selectedRange }
                 .distinctUntilChanged()
-                .flatMapLatest { filter ->
-
-                    val range = filter.resolve()
-
-                    useCases.getExpensesByDateRangeUseCase(range.start, range.end)
+                .flatMapLatest {
+                    useCases.getAllExpensesUseCase()
                         .onStart {
                             _uiState.update { it.copy(isExpensesLoading = true) }
                         }
@@ -59,7 +56,7 @@ class ExpenseListViewModel(
                         currentState.copy(
                             isExpensesLoading = false,
                             error = null,
-                            expenses = expenses.sortedBy { it.id }
+                            expenses = expenses.sortedByDescending { it.id }
                         )
                     }
                 }

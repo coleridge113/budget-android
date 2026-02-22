@@ -23,17 +23,11 @@ class ExpenseRepositoryImpl(
     private val api: ExpenseService
 ) : ExpenseRepository {
 
-    override fun getAllExpenses(): Flow<Resource<List<Expense>>> {
+    override fun getAllExpenses(): Flow<List<Expense>> {
         return dao.getAllExpenses()
-            .map {
-                val resource: Resource<List<Expense>> = Resource.Success(it.map { e -> e.toModel() })
-                resource
-            }.onStart {
-                emit(Resource.Loading)
-                try {
-                    val remote = api.getAllExpenses()
-                    dao.addExpenses(remote.map { it.toEntity() })
-                } catch (e: IOException) { }
+            .map { entities ->
+                entities.map { it.toModel() }
+
             }.flowOn(Dispatchers.IO)
     }
 

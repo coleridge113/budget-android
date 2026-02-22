@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 class GetAllExpensesUseCase(
     private val repository: ExpenseRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<Expense>>> {
+    operator fun invoke(): Flow<List<Expense>> {
         return repository.getAllExpenses()  
     }
 }

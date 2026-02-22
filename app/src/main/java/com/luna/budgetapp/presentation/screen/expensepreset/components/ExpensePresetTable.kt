@@ -1,8 +1,8 @@
 package com.luna.budgetapp.presentation.screen.expensepreset.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,9 +26,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.domain.model.ExpensePreset
-import com.luna.budgetapp.presentation.model.CategoryOptions
+import com.luna.budgetapp.presentation.screen.utils.iconSelector
 import com.luna.budgetapp.ui.icons.CoffeeIcon
-import com.luna.budgetapp.ui.icons.FoodIcon
 
 @Composable
 fun ExpensePresetTable(
@@ -77,7 +75,7 @@ fun ExpensePresetItem(
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4f))
                 .combinedClickable(
-                    onClick = { onClickIcon(item) }.also { Log.d("ExpenseTable", "Item: ${item}") },
+                    onClick = { onClickIcon(item) },
                     onLongClick = { onLongClickIcon(item.id!!) }
                 ),
             contentAlignment = Alignment.Center
@@ -147,9 +145,3 @@ fun ExpensePresetTablePreview() {
     )
 }
 
-private fun iconSelector(category: String): ImageVector {
-    return CategoryOptions.entries
-        .firstOrNull { it.displayName == category }
-        ?.icon
-        ?: FoodIcon
-}

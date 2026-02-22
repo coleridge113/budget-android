@@ -27,6 +27,7 @@ import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRange
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetTable
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangePickerDialog
+import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseAmountDisplay
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import com.luna.budgetapp.ui.icons.UndoIcon
 import org.koin.compose.viewmodel.koinViewModel
@@ -72,17 +73,12 @@ fun MainContent(
                     }
                 }
             )
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .weight(1f)
-                    .clickable {},
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = if (uiState.totalAmount == 0.0) "-" else "P${uiState.totalAmount}",
-                    style = MaterialTheme.typography.displayMedium
-                )
-            }
+            ExpenseAmountDisplay(
+                modifier = Modifier.weight(1f)
+                    .fillMaxWidth()
+                    .clickable { },
+                totalAmount = uiState.totalAmount
+            )
 
             ExpensePresetTable(
                 expensePresets = uiState.expensePresets,

@@ -6,5 +6,5 @@ import androidx.navigation.NavController
 @Composable
 fun ExpenseListRoute(
     navController: NavController,
-    viewModel: ExpenseViewModel
+    viewModel: ExpenseListViewModel
 ) {}

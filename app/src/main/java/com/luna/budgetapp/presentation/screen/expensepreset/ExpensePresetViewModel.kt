@@ -9,7 +9,6 @@ import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.model.DateFilter
-import com.luna.budgetapp.presentation.screen.expensepreset.Navigation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,8 +81,8 @@ class ExpensePresetViewModel(
                     }
                 }
                 .collect { expenses ->
-                    _uiState.update {
-                        it.copy(
+                    _uiState.update { currentState ->
+                        currentState.copy(
                             isExpensesLoading = false,
                             error = null,
                             expenses = expenses.sortedBy { it.id }
@@ -167,7 +166,7 @@ class ExpensePresetViewModel(
                         dialogState = null
                     )
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _uiState.update {
                     it.copy(
                         dialogState = dialog.copy(isSaving = false),
@@ -222,7 +221,7 @@ class ExpensePresetViewModel(
                         dialogState = null
                     )
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
                         error = "Failed to delete expense preset..."

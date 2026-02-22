@@ -14,12 +14,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import com.luna.budgetapp.domain.model.DateFilter
+import com.luna.budgetapp.presentation.nav.Routes
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangePickerDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRangeSelectorDropdown
@@ -29,6 +34,7 @@ import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePr
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import com.luna.budgetapp.ui.icons.UndoIcon
 import org.koin.compose.viewmodel.koinViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ExpensePresetRoute(
@@ -37,6 +43,16 @@ fun ExpensePresetRoute(
 ) {
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigation.collectLatest { navigation ->
+            when (navigation) {
+                is Navigation.GotoExpenseRoute -> {
+                    navController.navigate(Routes.ExpensesRoute)
+                }
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -74,7 +90,7 @@ fun MainContent(
             ExpenseAmountDisplay(
                 modifier = Modifier.weight(1f)
                     .fillMaxWidth()
-                    .clickable { },
+                    .clickable { onEvent(Event.GotoExpenseRoute) },
                 totalAmount = uiState.totalAmount
             )
 

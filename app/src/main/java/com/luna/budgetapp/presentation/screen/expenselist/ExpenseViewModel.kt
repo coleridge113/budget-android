@@ -1,4 +1,4 @@
-package com.luna.budgetapp.presentation.screen.expense
+package com.luna.budgetapp.presentation.screen.expenselist
 
 import androidx.lifecycle.ViewModel
 import com.luna.budgetapp.domain.usecase.UseCases

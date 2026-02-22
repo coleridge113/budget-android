@@ -1,10 +1,10 @@
-package com.luna.budgetapp.presentation.screen.expense
+package com.luna.budgetapp.presentation.screen.expenselist
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun ExpenseRoute(
+fun ExpenseListRoute(
     navController: NavController,
     viewModel: ExpenseViewModel
 ) {}

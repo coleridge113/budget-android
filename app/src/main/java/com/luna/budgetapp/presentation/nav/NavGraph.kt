@@ -10,12 +10,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.luna.budgetapp.presentation.screen.expensepreset.ExpensePresetViewModel
-import com.luna.budgetapp.presentation.screen.expense.ExpenseViewModel
+import com.luna.budgetapp.presentation.screen.expenselist.ExpenseViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import com.luna.budgetapp.presentation.screen.expensepreset.ExpensePresetRoute
 import com.luna.budgetapp.presentation.screen.auth.AuthViewModel
 import com.luna.budgetapp.presentation.screen.auth.AuthRoute
-import com.luna.budgetapp.presentation.screen.expense.ExpenseRoute
+import com.luna.budgetapp.presentation.screen.expenselist.ExpenseListRoute
 
 @ExperimentalMaterial3Api
 @ExperimentalSharedTransitionApi
@@ -68,7 +68,7 @@ fun NavGraphSetup(
             }
             composable<Routes.ExpensesRoute> {
                 val viewModel: ExpenseViewModel = koinViewModel()
-                ExpenseRoute(
+                ExpenseListRoute(
                     navController = navController,
                     viewModel = viewModel
                 )

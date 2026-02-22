@@ -9,6 +9,7 @@ import com.luna.budgetapp.domain.repository.ExpensePresetRepository
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.model.DateFilter
+import com.luna.budgetapp.presentation.screen.expensepreset.Navigation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +20,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExpensePresetViewModel(
@@ -31,6 +34,9 @@ class ExpensePresetViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _navigation = Channel<Navigation>()
+    val navigation = _navigation.receiveAsFlow()
+
     init {
         observeExpenses()
         observeExpensePresets()
@@ -38,6 +44,7 @@ class ExpensePresetViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
+            Event.GotoExpenseRoute -> gotoExpenseRoute()
             Event.DismissDialog -> dismissDialog()
             Event.ShowCalendarForm -> showCalendarForm()
             Event.ShowDeleteConfirmationDialog -> showExpenseDeleteConfirmationDialog()
@@ -264,6 +271,12 @@ class ExpensePresetViewModel(
                     dialogState = DialogState.ConfirmDeleteExpense(latestExpense.id)
                 )
             }
+        }
+    }
+
+    private fun gotoExpenseRoute() {
+        viewModelScope.launch {
+            _navigation.send(Navigation.GotoExpenseRoute)
         }
     }
 }

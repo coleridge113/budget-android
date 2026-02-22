@@ -29,6 +29,7 @@ sealed interface DialogState {
 }
 
 sealed interface Event {
+    data object GotoExpenseRoute : Event
     data object DismissDialog : Event
     data object ShowCalendarForm : Event
     data object ShowDeleteConfirmationDialog : Event
@@ -42,5 +43,6 @@ sealed interface Event {
     data class DeleteExpensePreset(val expensePresetId: Long) : Event
 }
 
-sealed class Navigation {
+sealed interface Navigation {
+    data object GotoExpenseRoute : Navigation
 }

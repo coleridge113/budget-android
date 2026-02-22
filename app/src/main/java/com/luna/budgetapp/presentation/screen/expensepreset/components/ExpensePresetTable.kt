@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.domain.model.ExpensePreset
-import com.luna.budgetapp.presentation.screen.utils.iconSelector
+import com.luna.budgetapp.presentation.screen.utils.getIconForCategory
 import com.luna.budgetapp.ui.icons.CoffeeIcon
 
 @Composable
@@ -47,7 +47,7 @@ fun ExpensePresetTable(
             items(expensePresets) { expensePreset ->
                 ExpensePresetItem(
                     item = expensePreset,
-                    icon = iconSelector(expensePreset.category),
+                    icon = getIconForCategory(expensePreset.category),
                     onClickIcon = { onClickIcon(expensePreset) },
                     onLongClickIcon = { onLongClickIcon(expensePreset.id!!) },
                     onClickItem = { onClickItem(expensePreset) }

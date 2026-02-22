@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.domain.model.Expense
-import com.luna.budgetapp.presentation.screen.utils.iconSelector
+import com.luna.budgetapp.presentation.screen.utils.getIconForCategory
 
 @Composable
 fun ExpenseTable(
@@ -38,7 +38,7 @@ fun ExpenseTable(
         items(expenses) { expense ->
             ExpenseItem(
                 item = expense,
-                icon = iconSelector(expense.category),
+                icon = getIconForCategory(expense.category),
                 onClickItem = {}
             )
         }

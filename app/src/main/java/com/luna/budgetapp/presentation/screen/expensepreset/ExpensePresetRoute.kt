@@ -13,15 +13,12 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation.NavController
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.nav.Routes
@@ -33,8 +30,8 @@ import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePr
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetTable
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import com.luna.budgetapp.ui.icons.UndoIcon
-import org.koin.compose.viewmodel.koinViewModel
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ExpensePresetRoute(
@@ -42,7 +39,7 @@ fun ExpensePresetRoute(
     viewModel: ExpensePresetViewModel = koinViewModel()
 ) {
 
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.navigation.collectLatest { navigation ->
@@ -58,9 +55,8 @@ fun ExpensePresetRoute(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         MainContent(
-            uiState = state,
-            modifier = Modifier.padding(innerPadding)
-                .padding(16.dp),
+            uiState = uiState,
+            modifier = Modifier.padding(innerPadding),
             onEvent = viewModel::onEvent,
         )
     }
@@ -72,7 +68,10 @@ fun MainContent(
     modifier: Modifier = Modifier,
     onEvent: (Event) -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()){
+    Box(
+        modifier = modifier.fillMaxSize()
+            .padding(16.dp)
+    ){
         Column(
             modifier = Modifier.fillMaxSize()
         ) {

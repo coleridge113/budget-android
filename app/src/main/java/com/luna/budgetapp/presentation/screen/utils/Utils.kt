@@ -10,3 +10,7 @@ fun getIconForCategory(category: String): ImageVector {
         ?.icon
         ?: FoodIcon
 }
+
+fun formatToCurrency(amount: Double): String {
+    return "%,.2f".format(amount)
+}

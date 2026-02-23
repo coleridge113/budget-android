@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -107,6 +108,7 @@ fun ExpensePresetDialog(
                                 onClick = {
                                     selectedOption = option
                                     expanded = false
+                                    typeState.clearText()
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                             )

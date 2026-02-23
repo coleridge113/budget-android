@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -149,8 +148,10 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
+
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -167,4 +168,9 @@ dependencies {
 
     // JWT Decode
     implementation(libs.jwt.decode)
+
+    // Pagination
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+    testImplementation(libs.androidx.paging.common)
 }

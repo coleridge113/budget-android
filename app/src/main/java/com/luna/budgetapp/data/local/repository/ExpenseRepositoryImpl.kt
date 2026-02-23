@@ -1,5 +1,9 @@
 package com.luna.budgetapp.data.local.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.luna.budgetapp.common.Resource
 import com.luna.budgetapp.data.local.dao.ExpenseDao
 import com.luna.budgetapp.data.mapper.toEntity
@@ -23,12 +27,17 @@ class ExpenseRepositoryImpl(
     private val api: ExpenseService
 ) : ExpenseRepository {
 
-    override fun getAllExpenses(): Flow<List<Expense>> {
-        return dao.getAllExpenses()
-            .map { entities ->
-                entities.map { it.toModel() }
-
-            }.flowOn(Dispatchers.IO)
+    override fun getAllExpenses(): Flow<PagingData<Expense>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { dao.getAllExpenses() }
+        ).flow
+            .map { pagingData ->
+                pagingData.map { it.toModel() }
+            }
     }
 
     override fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>> {

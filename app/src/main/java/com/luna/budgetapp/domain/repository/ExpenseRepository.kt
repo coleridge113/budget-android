@@ -1,12 +1,13 @@
 package com.luna.budgetapp.domain.repository
 
+import androidx.paging.PagingData
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.common.Resource
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
 interface ExpenseRepository {
-    fun getAllExpenses(): Flow<List<Expense>>
+    fun getAllExpenses(): Flow<PagingData<Expense>>
 
     fun getExpensesByCategory(category: String): Flow<Resource<List<Expense>>>
 

@@ -7,31 +7,66 @@ import com.luna.budgetapp.presentation.model.CategoryOptions
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.font.FontWeight
 
 @Composable
 fun ExpenseChart(
     modifier: Modifier = Modifier,
+    totalAmount: Double,
     chartData: List<ChartData>
 ) {
-    Canvas(
-        modifier = modifier.aspectRatio(1f)
+    Box(
+        modifier = modifier.aspectRatio(1f),
+        contentAlignment = Alignment.Center
     ) {
-        val total = chartData.sumOf { it.value }
-        var startAngle = -90f
 
-        chartData.forEach { slice ->
-            val sweepAngle = ((slice.value / total) * 360.0).toFloat()
+        Canvas(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val total = chartData.sumOf { it.value }
 
-            drawArc(
-                color = slice.color,
-                startAngle = startAngle,
-                sweepAngle = sweepAngle,
-                useCenter = false,
-                style = Stroke(width = 80f)
+            if (total == 0.0) return@Canvas
+
+            var startAngle = -90f
+
+            chartData.forEach { slice ->
+                val sweepAngle =
+                    ((slice.value / total) * 360.0).toFloat()
+
+                drawArc(
+                    color = slice.color,
+                    startAngle = startAngle,
+                    sweepAngle = sweepAngle,
+                    useCenter = false,
+                    style = Stroke(width = 80f)
+                )
+
+                startAngle += sweepAngle
+            }
+        }
+
+        // 🔥 Center Content
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Total",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            startAngle += sweepAngle
+            Text(
+                text = "₱%,.2f".format(totalAmount),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -50,6 +85,7 @@ fun ExpenseChartPreview() {
         )
     )
     ExpenseChart(
+        totalAmount = 240.0,
         chartData = chartData 
     )
 }

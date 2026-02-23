@@ -81,8 +81,9 @@ fun MainContent(
         ) {
             ExpenseChart(
                 chartData = uiState.chartData,
-                modifier = Modifier.weight(1f)
-                    .padding(bottom = 24.dp)
+                totalAmount = uiState.totalAmount,
+                modifier = Modifier.weight(2f)
+                    .padding(bottom = 48.dp)
             )
             ExpenseTable(
                 modifier = Modifier.weight(3f),

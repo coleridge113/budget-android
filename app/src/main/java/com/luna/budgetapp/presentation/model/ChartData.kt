@@ -1,6 +1,6 @@
 package com.luna.budgetapp.presentation.model
 
-import androidx.compose.ui.graphics.Color
+import com.luna.budgetapp.ui.theme.OthersChartColor
 
 data class ChartData(
     val category: String,
@@ -9,5 +9,5 @@ data class ChartData(
     val color = CategoryOptions.entries
         .find { it.displayName == category }
         ?.chartColor
-        ?: Color.Gray
+        ?: OthersChartColor
 }

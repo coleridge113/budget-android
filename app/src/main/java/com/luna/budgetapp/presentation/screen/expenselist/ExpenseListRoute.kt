@@ -11,14 +11,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseTable
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +56,8 @@ fun ExpenseListRoute(
         MainContent(
             modifier = Modifier.padding(innerPadding),
             uiState = uiState,
-            onEvent = viewModel::onEvent
+            onEvent = viewModel::onEvent,
+            expensesPagingFlow = viewModel.expensesPagingFlow
         )
     }
 }
@@ -62,11 +66,12 @@ fun ExpenseListRoute(
 fun MainContent(
     modifier: Modifier,
     uiState: UiState,
-    onEvent: (Event) -> Unit
+    onEvent: (Event) -> Unit,
+    expensesPagingFlow: Flow<PagingData<Expense>>
 ) {
     Box(modifier = modifier.padding(16.dp)){
         ExpenseTable(
-            expenses = uiState.expenses,
+            expenses = expensesPagingFlow.collectAsLazyPagingItems(),
             onClick = {},
             onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
         )

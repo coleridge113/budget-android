@@ -1,5 +1,6 @@
 package com.luna.budgetapp.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -8,14 +9,13 @@ import androidx.room.Query
 import androidx.room.Update
 import com.luna.budgetapp.data.local.entity.ExpenseEntity
 import kotlinx.coroutines.flow.Flow
-import com.luna.budgetapp.common.Resource
 import java.time.LocalDateTime
 
 @Dao
 interface ExpenseDao {
 
-    @Query("SELECT * FROM expenses")
-    fun getAllExpenses(): Flow<List<ExpenseEntity>>
+    @Query("SELECT * FROM expenses ORDER BY date DESC")
+    fun getAllExpenses(): PagingSource<Int, ExpenseEntity>
 
     @Query("SELECT * FROM expenses WHERE category = :category")
     fun getExpensesByCategory(category: String): Flow<List<ExpenseEntity>>

@@ -2,8 +2,11 @@ package com.luna.budgetapp.presentation.screen.expenselist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -22,46 +25,13 @@ class ExpenseListViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    init {
-        observeExpenses()
-    }
+    val expensesPagingFlow: Flow<PagingData<Expense>> = useCases.getAllExpensesUseCase()
 
     fun onEvent(event: Event) {
         when (event) {
             Event.DismissDialog -> dismissDialog()
             is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
-        }
-    }
-
-    private fun observeExpenses() {
-        viewModelScope.launch {
-            _uiState
-                .map { it.selectedRange }
-                .distinctUntilChanged()
-                .flatMapLatest {
-                    useCases.getAllExpensesUseCase()
-                        .onStart {
-                            _uiState.update { it.copy(isExpensesLoading = true) }
-                        }
-                }
-                .catch { error ->
-                    _uiState.update {
-                        it.copy(
-                            isExpensesLoading = false,
-                            error = error.localizedMessage
-                        )
-                    }
-                }
-                .collect { expenses ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isExpensesLoading = false,
-                            error = null,
-                            expenses = expenses.sortedByDescending { it.id }
-                        )
-                    }
-                }
         }
     }
 

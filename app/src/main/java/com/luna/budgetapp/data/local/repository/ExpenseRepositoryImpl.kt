@@ -86,6 +86,14 @@ class ExpenseRepositoryImpl(
             }
             .flowOn(Dispatchers.IO)
 
+    
+    override fun getTotalAmountByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<Double> =
+        dao.getTotalAmountByDateRange(start, end)
+            .flowOn(Dispatchers.IO)
+
     override suspend fun addExpense(expense: Expense) {
         return dao.addExpense(expense.toEntity())
     }

@@ -33,6 +33,16 @@ interface ExpenseDao {
         end: LocalDateTime
     ): Flow<List<ExpenseEntity>>
 
+    @Query("""
+        SELECT SUM(amount)
+        FROM expenses
+        WHERE date BETWEEN :start AND :end
+    """)
+    fun getTotalAmountByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<Double>
+
     @Insert
     suspend fun addExpense(expense: ExpenseEntity)
 

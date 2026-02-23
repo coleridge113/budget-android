@@ -3,6 +3,9 @@ package com.luna.budgetapp.presentation.screen.utils
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.luna.budgetapp.presentation.model.CategoryOptions
 import com.luna.budgetapp.ui.icons.FoodIcon
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun getIconForCategory(category: String): ImageVector {
     return CategoryOptions.entries
@@ -11,6 +14,14 @@ fun getIconForCategory(category: String): ImageVector {
         ?: FoodIcon
 }
 
-fun formatToCurrency(amount: Double): String {
-    return "%,.2f".format(amount)
+fun Double.formatToCurrency(): String {
+    return "%,.2f".format(this)
+}
+
+fun LocalDateTime.formatToDisplay(): String {
+    val formatter = DateTimeFormatter.ofPattern(
+        "dd MMMM yyyy",
+        Locale.getDefault()
+    )
+    return this.format(formatter)
 }

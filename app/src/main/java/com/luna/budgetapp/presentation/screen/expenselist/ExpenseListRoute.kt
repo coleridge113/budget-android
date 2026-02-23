@@ -74,7 +74,7 @@ fun MainContent(
         when (val dialog = uiState.dialogState) {
             is DialogState.ConfirmDeleteExpense -> {
                 ConfirmationDialog(
-                    message = "Delete the last expense?",
+                    message = "Delete this expense?",
                     confirmText = "Delete",
                     isDestructive = true,
                     onDismiss = { onEvent(Event.DismissDialog) },

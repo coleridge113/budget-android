@@ -19,7 +19,7 @@ fun ExpenseAmountDisplay(
     modifier: Modifier = Modifier,
     totalAmount: Double,
 ) {
-    val displayAmount = if (totalAmount == 0.0) "-" else formatToCurrency(totalAmount)
+    val displayAmount = if (totalAmount == 0.0) "-" else totalAmount.formatToCurrency()
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center

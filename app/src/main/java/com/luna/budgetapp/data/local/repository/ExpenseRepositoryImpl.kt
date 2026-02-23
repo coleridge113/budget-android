@@ -9,6 +9,7 @@ import com.luna.budgetapp.data.local.dao.ExpenseDao
 import com.luna.budgetapp.data.mapper.toEntity
 import com.luna.budgetapp.data.mapper.toModel
 import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.domain.model.CategoryTotalProjection
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.network.ExpenseService
 import kotlinx.coroutines.Dispatchers
@@ -93,6 +94,12 @@ class ExpenseRepositoryImpl(
     ): Flow<Double> =
         dao.getTotalAmountByDateRange(start, end)
             .flowOn(Dispatchers.IO)
+
+    override fun getCategoryTotalsByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<CategoryTotalProjection>> =
+        dao.getCategoryTotalsByDateRange(start, end)
 
     override suspend fun addExpense(expense: Expense) {
         return dao.addExpense(expense.toEntity())

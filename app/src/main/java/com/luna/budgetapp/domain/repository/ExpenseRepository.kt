@@ -2,6 +2,7 @@ package com.luna.budgetapp.domain.repository
 
 import androidx.paging.PagingData
 import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.domain.model.CategoryTotalProjection
 import com.luna.budgetapp.common.Resource
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
@@ -22,6 +23,11 @@ interface ExpenseRepository {
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double>
+
+    fun getCategoryTotalsByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<CategoryTotalProjection>>
 
     suspend fun addExpense(expense: Expense)
 

@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import androidx.room.Update
 import com.luna.budgetapp.data.local.entity.ExpenseEntity
+import com.luna.budgetapp.domain.model.CategoryTotalProjection
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 
@@ -42,6 +43,17 @@ interface ExpenseDao {
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double>
+
+    @Query("""
+        SELECT category, SUM(amount) AS total
+        FROM expenses
+        WHERE date BETWEEN :start AND :end
+        GROUP BY category
+    """)
+    fun getCategoryTotalsByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<CategoryTotalProjection>>
 
     @Insert
     suspend fun addExpense(expense: ExpenseEntity)

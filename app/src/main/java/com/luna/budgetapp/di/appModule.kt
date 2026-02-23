@@ -17,6 +17,7 @@ import com.luna.budgetapp.domain.usecase.auth.GetTokenUseCase
 import com.luna.budgetapp.domain.usecase.expense.AddExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.DeleteExpenseUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetAllExpensesUseCase
+import com.luna.budgetapp.domain.usecase.expense.GetCategoryTotalsByDateRange
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByCategoryUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetTotalAmountByDateRangeUseCase
 import com.luna.budgetapp.domain.usecase.expense.GetExpensesByDateRangeUseCase
@@ -109,6 +110,7 @@ val appModule = module {
     factoryOf(::UpdateExpenseUseCase)
     factoryOf(::GetTokenUseCase)
     factoryOf(::GetAllExpensePresetsUseCase)
+    factoryOf(::GetCategoryTotalsByDateRange)
     factoryOf(::AddExpensePresetUseCase)
     factoryOf(::DeleteExpensePresetUseCase)
     factoryOf(::UseCases)

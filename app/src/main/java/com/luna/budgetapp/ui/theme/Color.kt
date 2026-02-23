@@ -6,6 +6,20 @@ val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
+val Purple40 = Color(0xFF6650A4)
+val PurpleGrey40 = Color(0xFF625B71)
 val Pink40 = Color(0xFF7D5260)
+
+
+
+/* ---------------------------------------------------
+   Expense Category Chart Colors
+   --------------------------------------------------- */
+
+val FoodChartColor = Color(0xFFE57373)        // Soft Red
+val BeverageChartColor = Color(0xFF64B5F6)    // Soft Blue
+val DateChartColor = Color(0xFFF06292)        // Soft Pink
+val HouseChartColor = Color(0xFF81C784)       // Soft Green
+val CommuteChartColor = Color(0xFFFFB74D)     // Soft Orange
+val BillsChartColor = Color(0xFFBA68C8)       // Muted Purple
+val OthersChartColor = Color.LightGray

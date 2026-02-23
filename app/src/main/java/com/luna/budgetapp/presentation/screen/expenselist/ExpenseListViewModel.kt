@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.presentation.model.ChartData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,11 +28,46 @@ class ExpenseListViewModel(
 
     val expensesPagingFlow: Flow<PagingData<Expense>> = useCases.getAllExpensesUseCase()
 
+    init {
+        observeExpenses()
+        computeChartData()
+    }
+
     fun onEvent(event: Event) {
         when (event) {
             Event.DismissDialog -> dismissDialog()
             is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
+        }
+    }
+
+    private fun observeExpenses() {
+        viewModelScope.launch {
+            _uiState
+                .map { it.selectedRange }
+                .distinctUntilChanged()
+                .flatMapLatest { filter ->
+                    val range = filter.resolve()
+
+                    useCases.getTotalAmountByDateRangeUseCase(range.start, range.end)
+                }
+                .catch { error ->
+                    _uiState.update {
+                        it.copy(
+                            isExpensesLoading = false,
+                            error = error.localizedMessage
+                        )
+                    }
+                }
+                .collect { totalAmount ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isExpensesLoading = false,
+                            error = null,
+                            totalAmount = totalAmount
+                        )
+                    }
+                }
         }
     }
 
@@ -63,6 +99,42 @@ class ExpenseListViewModel(
                     dialogState = null
                 )
             }
+        }
+    }
+
+    private fun computeChartData() {
+        viewModelScope.launch {
+            _uiState                         
+                .map { it.selectedRange }
+                .distinctUntilChanged()
+                .flatMapLatest { filter ->
+                    val range = filter.resolve()
+                    
+                    useCases.getCategoryTotalsByDateRange(range.start, range.end)
+                }
+                .catch { error ->
+                    _uiState.update {
+                        it.copy(
+                            isExpensesLoading = false,
+                            error = error.localizedMessage
+                        )
+                    }
+                }
+                .collect { categoryAmounts ->
+                    val chartData = categoryAmounts.map { 
+                        ChartData(
+                            category = it.category,
+                            value = it.total
+                        )
+                    }
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isExpensesLoading = false,
+                            error = null,
+                            chartData = chartData
+                        )
+                    }
+                }
         }
     }
 }

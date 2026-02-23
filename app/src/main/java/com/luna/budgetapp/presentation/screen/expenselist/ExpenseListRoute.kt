@@ -3,6 +3,7 @@ package com.luna.budgetapp.presentation.screen.expenselist
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -20,6 +22,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
+import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChart
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseTable
 import kotlinx.coroutines.flow.Flow
 
@@ -69,25 +72,38 @@ fun MainContent(
     onEvent: (Event) -> Unit,
     expensesPagingFlow: Flow<PagingData<Expense>>
 ) {
-    Box(modifier = modifier.padding(16.dp)){
-        ExpenseTable(
-            expenses = expensesPagingFlow.collectAsLazyPagingItems(),
-            onClick = {},
-            onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
-        )
+    Box(
+        modifier = modifier.padding(16.dp)
+    ){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ExpenseChart(
+                chartData = uiState.chartData,
+                modifier = Modifier.weight(1f)
+                    .padding(bottom = 24.dp)
+            )
+            ExpenseTable(
+                modifier = Modifier.weight(3f),
+                expenses = expensesPagingFlow.collectAsLazyPagingItems(),
+                onClick = {},
+                onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
+            )
 
-        when (val dialog = uiState.dialogState) {
-            is DialogState.ConfirmDeleteExpense -> {
-                ConfirmationDialog(
-                    message = "Delete this expense?",
-                    confirmText = "Delete",
-                    isDestructive = true,
-                    onDismiss = { onEvent(Event.DismissDialog) },
-                    onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
-                )
+            when (val dialog = uiState.dialogState) {
+                is DialogState.ConfirmDeleteExpense -> {
+                    ConfirmationDialog(
+                        message = "Delete this expense?",
+                        confirmText = "Delete",
+                        isDestructive = true,
+                        onDismiss = { onEvent(Event.DismissDialog) },
+                        onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
+                    )
 
+                }
+                else -> {}
             }
-            else -> {}
         }
     }
 }

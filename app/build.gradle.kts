@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -167,4 +166,9 @@ dependencies {
 
     // JWT Decode
     implementation(libs.jwt.decode)
+
+    // Pagination
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+    testImplementation(libs.androidx.paging.common)
 }

@@ -34,7 +34,7 @@ class AuthViewModel(
     private fun fetchToken() {
         viewModelScope.launch {
             try {
-                useCases.getTokenUseCase()
+                useCases.getToken()
                 _state.update { curr ->
                     curr.copy(
                         isLoading = false,

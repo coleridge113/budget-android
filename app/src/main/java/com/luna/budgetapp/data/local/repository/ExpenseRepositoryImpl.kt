@@ -89,6 +89,25 @@ class ExpenseRepositoryImpl(
             }
             .flowOn(Dispatchers.IO)
 
+    override fun getPagingExpensesByDateRange(
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<PagingData<Expense>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                initialLoadSize = 10,
+                prefetchDistance = 1,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { 
+                dao.getPagingExpensesByDateRange(start, end)
+            }
+        ).flow
+            .map { pagingData ->
+                pagingData.map { it.toModel() }
+            }
+    }
     
     override fun getTotalAmountByDateRange(
         start: LocalDateTime,

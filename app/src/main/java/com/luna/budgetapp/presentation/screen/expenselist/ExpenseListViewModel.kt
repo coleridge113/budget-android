@@ -3,6 +3,7 @@ package com.luna.budgetapp.presentation.screen.expenselist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.model.DateFilter
@@ -26,7 +27,16 @@ class ExpenseListViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    val expensesPagingFlow: Flow<PagingData<Expense>> = useCases.getAllExpensesUseCase()
+    val expensesPagingFlow: Flow<PagingData<Expense>> = 
+        _uiState
+            .map { it.selectedRange }
+            .distinctUntilChanged()
+            .flatMapLatest { filter ->
+                val range = filter.resolve()
+
+                useCases.getPagingExpensesByDateRange(range.start, range.end)
+            }
+            .cachedIn(viewModelScope)
 
     init {
         observeExpenses()
@@ -51,7 +61,7 @@ class ExpenseListViewModel(
                 .flatMapLatest { filter ->
                     val range = filter.resolve()
 
-                    useCases.getTotalAmountByDateRangeUseCase(range.start, range.end)
+                    useCases.getTotalAmountByDateRange(range.start, range.end)
                 }
                 .catch { error ->
                     _uiState.update {
@@ -95,7 +105,7 @@ class ExpenseListViewModel(
 
     private fun deleteExpense(expenseId: Long) {
         viewModelScope.launch {
-            useCases.deleteExpenseUseCase(expenseId)
+            useCases.deleteExpense(expenseId)
             _uiState.update { currentState ->
                 currentState.copy(
                     dialogState = null

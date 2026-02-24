@@ -67,7 +67,7 @@ class ExpensePresetViewModel(
 
                     val range = filter.resolve()
 
-                    useCases.getExpensesByDateRangeUseCase(range.start, range.end)
+                    useCases.getExpensesByDateRange(range.start, range.end)
                         .onStart {
                             _uiState.update { it.copy(isExpensesLoading = true) }
                         }
@@ -94,7 +94,7 @@ class ExpensePresetViewModel(
 
     private fun observeExpensePresets() {
         viewModelScope.launch {
-            useCases.getAllExpensePresetsUseCase()
+            useCases.getAllExpensePresets()
                 .onStart {
                     _uiState.update {
                         it.copy(
@@ -160,7 +160,7 @@ class ExpensePresetViewModel(
 
         viewModelScope.launch {
             try {
-                useCases.addExpensePresetUseCase(expensePreset)
+                useCases.addExpensePreset(expensePreset)
                 _uiState.update {
                     it.copy(
                         dialogState = null
@@ -202,7 +202,7 @@ class ExpensePresetViewModel(
     private fun deleteExpense(expenseId: Long?) {
         expenseId?.let {
             viewModelScope.launch {
-                useCases.deleteExpenseUseCase(it)
+                useCases.deleteExpense(it)
             }
         }
         _uiState.update { currentState ->
@@ -215,7 +215,7 @@ class ExpensePresetViewModel(
     private fun deleteExpensePreset(expensePresetId: Long) {
         viewModelScope.launch {
             try {
-                useCases.deleteExpensePresetUseCase(expensePresetId)
+                useCases.deleteExpensePreset(expensePresetId)
                 _uiState.update { currentState ->
                     currentState.copy(
                         dialogState = null

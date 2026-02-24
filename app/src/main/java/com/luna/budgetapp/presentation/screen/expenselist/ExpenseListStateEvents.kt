@@ -9,7 +9,7 @@ data class UiState(
     val error: String? = null,
     val expenses: List<Expense> = emptyList(),
     val dialogState: DialogState? = null,
-    val selectedRange: DateFilter = DateFilter.Monthly,
+    val selectedRange: DateFilter = DateFilter.Daily,
     val chartDataList: List<ChartData> = emptyList(),
     val totalAmount: Double = 0.0
 ) 

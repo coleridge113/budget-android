@@ -4,9 +4,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,44 +82,42 @@ fun MainContent(
     onEvent: (Event) -> Unit,
     expensesPagingFlow: Flow<PagingData<Expense>>
 ) {
-    Box(
-        modifier = modifier.padding(16.dp)
-    ){
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ExpenseChart(
-                chartDataList = uiState.chartDataList,
-                totalAmount = uiState.totalAmount,
-                modifier = Modifier.weight(2f)
-                    .padding(bottom = 48.dp)
-            )
-            ExpenseChartLegends(
-                chartDataList = uiState.chartDataList,
-                totalAmount = uiState.totalAmount,
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            ExpenseTable(
-                modifier = Modifier.weight(3f),
-                expenses = expensesPagingFlow.collectAsLazyPagingItems(),
-                onClick = {},
-                onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
-            )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxSize()
+            .padding(16.dp)
+    ) {
+        ExpenseChart(
+            chartDataList = uiState.chartDataList,
+            totalAmount = uiState.totalAmount,
+            modifier = Modifier.fillMaxWidth(0.6f)
+                .offset(x = (-32).dp)
+        )
+        ExpenseChartLegends(
+            chartDataList = uiState.chartDataList,
+            totalAmount = uiState.totalAmount,
+            modifier = Modifier.align(Alignment.End)
+                .offset(y = (-32).dp)
+        )
+        ExpenseTable(
+            modifier = Modifier,
+            expenses = expensesPagingFlow.collectAsLazyPagingItems(),
+            onClick = {},
+            onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
+        )
 
-            when (val dialog = uiState.dialogState) {
-                is DialogState.ConfirmDeleteExpense -> {
-                    ConfirmationDialog(
-                        message = "Delete this expense?",
-                        confirmText = "Delete",
-                        isDestructive = true,
-                        onDismiss = { onEvent(Event.DismissDialog) },
-                        onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
-                    )
+        when (val dialog = uiState.dialogState) {
+            is DialogState.ConfirmDeleteExpense -> {
+                ConfirmationDialog(
+                    message = "Delete this expense?",
+                    confirmText = "Delete",
+                    isDestructive = true,
+                    onDismiss = { onEvent(Event.DismissDialog) },
+                    onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
+                )
 
-                }
-                else -> {}
             }
+            else -> {}
         }
     }
 }

@@ -80,7 +80,7 @@ fun MainContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ExpenseChart(
-                chartData = uiState.chartData,
+                chartDataList = uiState.chartDataList,
                 totalAmount = uiState.totalAmount,
                 modifier = Modifier.weight(2f)
                     .padding(bottom = 48.dp)

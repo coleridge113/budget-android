@@ -10,10 +10,9 @@ data class UiState(
     val expenses: List<Expense> = emptyList(),
     val dialogState: DialogState? = null,
     val selectedRange: DateFilter = DateFilter.Monthly,
-    val chartData: List<ChartData> = emptyList(),
+    val chartDataList: List<ChartData> = emptyList(),
     val totalAmount: Double = 0.0
-) {
-}
+) 
 
 sealed interface DialogState {
     data object CalendarForm : DialogState

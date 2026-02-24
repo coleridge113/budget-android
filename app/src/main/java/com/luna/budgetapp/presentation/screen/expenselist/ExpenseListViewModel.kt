@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -131,7 +130,7 @@ class ExpenseListViewModel(
                         currentState.copy(
                             isExpensesLoading = false,
                             error = null,
-                            chartData = chartData
+                            chartDataList = chartData
                         )
                     }
                 }

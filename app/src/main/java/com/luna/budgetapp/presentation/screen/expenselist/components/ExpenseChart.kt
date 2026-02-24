@@ -3,7 +3,6 @@ package com.luna.budgetapp.presentation.screen.expenselist.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.luna.budgetapp.presentation.model.ChartData
-import com.luna.budgetapp.presentation.model.CategoryOptions
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.Canvas
@@ -20,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 fun ExpenseChart(
     modifier: Modifier = Modifier,
     totalAmount: Double,
-    chartData: List<ChartData>
+    chartDataList: List<ChartData>
 ) {
     Box(
         modifier = modifier.aspectRatio(1f),
@@ -30,13 +29,13 @@ fun ExpenseChart(
         Canvas(
             modifier = Modifier.fillMaxSize()
         ) {
-            val total = chartData.sumOf { it.value }
+            val total = chartDataList.sumOf { it.value }
 
             if (total == 0.0) return@Canvas
 
             var startAngle = -90f
 
-            chartData.forEach { slice ->
+            chartDataList.forEach { slice ->
                 val sweepAngle =
                     ((slice.value / total) * 360.0).toFloat()
 
@@ -52,7 +51,6 @@ fun ExpenseChart(
             }
         }
 
-        // 🔥 Center Content
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -71,6 +69,11 @@ fun ExpenseChart(
     }
 }
 
+@Composable
+fun ExpenseChartLegends(
+    chartDataList: List<ChartData>
+) {}
+
 @Preview
 @Composable
 fun ExpenseChartPreview() {
@@ -86,6 +89,6 @@ fun ExpenseChartPreview() {
     )
     ExpenseChart(
         totalAmount = 240.0,
-        chartData = chartData 
+        chartDataList = chartData
     )
 }

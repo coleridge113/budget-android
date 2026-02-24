@@ -93,7 +93,7 @@ fun ExpensePresetDialog(
                         value = selectedOption.displayName,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Select category")},
+                        label = if (!isLocked) {{ Text("Select category") }} else null,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         colors = ExposedDropdownMenuDefaults.textFieldColors(),
                         modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, true)

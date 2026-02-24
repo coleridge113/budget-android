@@ -20,9 +20,11 @@ sealed interface DialogState {
 }
 
 sealed interface Event {
+    data object ShowCalendarForm : Event
     data object DismissDialog : Event
     data class ShowDeleteConfirmationDialog(val expenseId: Long) : Event
     data class DeleteExpense(val expenseId: Long) : Event
+    data class SelectDateRange(val selectedRange: DateFilter) : Event
 }
 
 sealed interface Navigation {}

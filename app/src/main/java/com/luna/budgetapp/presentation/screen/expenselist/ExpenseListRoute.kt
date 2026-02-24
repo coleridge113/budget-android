@@ -21,8 +21,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
+import com.luna.budgetapp.presentation.screen.components.DateRangePickerDialog
+import com.luna.budgetapp.presentation.screen.components.DateRangeSelectorDropdown
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChart
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseTable
 import kotlinx.coroutines.flow.Flow
@@ -53,6 +56,19 @@ fun ExpenseListRoute(
                             contentDescription = null
                         )
                     }
+                },
+                actions = {
+                    DateRangeSelectorDropdown(
+                        selected = uiState.selectedRange,
+                        onSelectedChange = {
+                            when (it) {
+                                DateFilter.Daily,
+                                DateFilter.Weekly,
+                                DateFilter.Monthly -> viewModel.onEvent(Event.SelectDateRange(it))
+                                else -> viewModel.onEvent(Event.ShowCalendarForm)
+                            }
+                        }
+                    )
                 }
             )
         }
@@ -91,6 +107,16 @@ fun MainContent(
         )
 
         when (val dialog = uiState.dialogState) {
+            DialogState.CalendarForm ->
+                DateRangePickerDialog(
+                    onDismiss = { onEvent(Event.DismissDialog) },
+                    onConfirm = { start, end ->
+                        when {
+                            start == null -> onEvent(Event.DismissDialog)
+                            else -> onEvent(Event.SelectDateRange(DateFilter.Custom(start, end)))
+                        }
+                    }
+                )
             is DialogState.ConfirmDeleteExpense -> {
                 ConfirmationDialog(
                     message = "Delete this expense?",

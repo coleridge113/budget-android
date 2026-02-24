@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
+import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.model.ChartData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -35,8 +36,10 @@ class ExpenseListViewModel(
     fun onEvent(event: Event) {
         when (event) {
             Event.DismissDialog -> dismissDialog()
+            Event.ShowCalendarForm -> showCalendarForm()
             is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
+            is Event.SelectDateRange -> selectDateRange(event.selectedRange)
         }
     }
 
@@ -134,6 +137,27 @@ class ExpenseListViewModel(
                         )
                     }
                 }
+        }
+    }
+
+    private fun showCalendarForm() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = DialogState.CalendarForm
+                )
+            }
+        }
+    }
+
+    private fun selectDateRange(selectedRange: DateFilter) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    selectedRange = selectedRange,
+                    dialogState = null
+                )
+            }
         }
     }
 }

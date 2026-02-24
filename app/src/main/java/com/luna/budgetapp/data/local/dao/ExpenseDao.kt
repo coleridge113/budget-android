@@ -49,6 +49,7 @@ interface ExpenseDao {
         FROM expenses
         WHERE date BETWEEN :start AND :end
         GROUP BY category
+        ORDER BY total DESC
     """)
     fun getCategoryTotalsByDateRange(
         start: LocalDateTime,

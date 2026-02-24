@@ -31,7 +31,9 @@ class ExpenseRepositoryImpl(
     override fun getAllExpenses(): Flow<PagingData<Expense>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 15,
+                pageSize = 10,
+                initialLoadSize = 10,
+                prefetchDistance = 1,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { dao.getAllExpenses() }

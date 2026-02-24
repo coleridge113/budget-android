@@ -1,5 +1,6 @@
 package com.luna.budgetapp.presentation.screen.expenselist
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -87,18 +88,22 @@ fun MainContent(
         modifier = modifier.fillMaxSize()
             .padding(16.dp)
     ) {
-        ExpenseChart(
-            chartDataList = uiState.chartDataList,
-            totalAmount = uiState.totalAmount,
-            modifier = Modifier.fillMaxWidth(0.6f)
-                .offset(x = (-32).dp)
-        )
-        ExpenseChartLegends(
-            chartDataList = uiState.chartDataList,
-            totalAmount = uiState.totalAmount,
-            modifier = Modifier.align(Alignment.End)
-                .offset(y = (-32).dp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ExpenseChart(
+                chartDataList = uiState.chartDataList,
+                totalAmount = uiState.totalAmount,
+                modifier = Modifier.fillMaxWidth(0.6f)
+                    .offset(x = 16.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            ExpenseChartLegends(
+                chartDataList = uiState.chartDataList,
+                totalAmount = uiState.totalAmount
+            )
+        }
+        Spacer(modifier = Modifier.height(48.dp))
         ExpenseTable(
             modifier = Modifier,
             expenses = expensesPagingFlow.collectAsLazyPagingItems(),

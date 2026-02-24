@@ -8,10 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +30,30 @@ import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
 
 @Composable
 fun ExpenseChart(
+    modifier: Modifier = Modifier,
+    chartDataList: List<ChartData>,
+    totalAmount: Double
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ExpenseDonutChart(
+            chartDataList = chartDataList,
+            totalAmount = totalAmount,
+            modifier = Modifier.fillMaxWidth(0.6f)
+                .offset(x = 16.dp)
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        ExpenseChartLegends(
+            chartDataList = chartDataList,
+            totalAmount = totalAmount
+        )
+    }
+
+}
+
+@Composable
+fun ExpenseDonutChart(
     modifier: Modifier = Modifier,
     totalAmount: Double,
     chartDataList: List<ChartData>
@@ -119,7 +142,7 @@ fun ExpenseChartLegends(
 
 @Preview
 @Composable
-fun ExpenseChartPreview() {
+fun ExpenseDonutChartPreview() {
     val totalAmount = 240.0
     val chartDataList = listOf(
         ChartData(
@@ -142,7 +165,7 @@ fun ExpenseChartPreview() {
     Column(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
-        ExpenseChart(
+        ExpenseDonutChart(
             totalAmount = totalAmount,
             chartDataList = chartDataList
         )

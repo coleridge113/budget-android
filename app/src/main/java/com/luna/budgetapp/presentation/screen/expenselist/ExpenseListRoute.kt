@@ -1,40 +1,30 @@
 package com.luna.budgetapp.presentation.screen.expenselist
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChart
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseTable
-import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChartLegends
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -88,21 +78,10 @@ fun MainContent(
         modifier = modifier.fillMaxSize()
             .padding(16.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ExpenseChart(
-                chartDataList = uiState.chartDataList,
-                totalAmount = uiState.totalAmount,
-                modifier = Modifier.fillMaxWidth(0.6f)
-                    .offset(x = 16.dp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            ExpenseChartLegends(
-                chartDataList = uiState.chartDataList,
-                totalAmount = uiState.totalAmount
-            )
-        }
+        ExpenseChart(
+            chartDataList = uiState.chartDataList,
+            totalAmount = uiState.totalAmount
+        )
         Spacer(modifier = Modifier.height(48.dp))
         ExpenseTable(
             modifier = Modifier,

@@ -28,6 +28,7 @@ import com.luna.budgetapp.presentation.screen.expensepreset.components.DateRange
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpenseAmountDisplay
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetDialog
 import com.luna.budgetapp.presentation.screen.expensepreset.components.ExpensePresetTable
+import com.luna.budgetapp.presentation.screen.utils.singleClick
 import com.luna.budgetapp.ui.icons.CirclePlusIcon
 import com.luna.budgetapp.ui.icons.UndoIcon
 import kotlinx.coroutines.flow.collectLatest
@@ -89,10 +90,10 @@ fun MainContent(
                 }
             )
             ExpenseAmountDisplay(
+                totalAmount = uiState.totalAmount,
                 modifier = Modifier.weight(1f)
                     .fillMaxWidth()
-                    .clickable { onEvent(Event.GotoExpenseRoute) },
-                totalAmount = uiState.totalAmount
+                    .singleClick { onEvent(Event.GotoExpenseRoute) }
             )
 
             ExpensePresetTable(

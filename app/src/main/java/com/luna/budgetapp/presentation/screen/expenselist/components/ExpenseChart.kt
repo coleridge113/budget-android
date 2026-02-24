@@ -3,17 +3,26 @@ package com.luna.budgetapp.presentation.screen.expenselist.components
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.luna.budgetapp.presentation.model.ChartData
+import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices.PIXEL_7
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ExpenseChart(
@@ -71,13 +80,35 @@ fun ExpenseChart(
 
 @Composable
 fun ExpenseChartLegends(
-    chartDataList: List<ChartData>
-) {}
+    modifier: Modifier = Modifier,
+    chartDataList: List<ChartData>,
+    totalAmount: Double
+) {
+    LazyVerticalGrid(
+        modifier = modifier.fillMaxWidth(),
+        columns = GridCells.Fixed(3),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(chartDataList) { item ->
+            val portion = item.value / totalAmount
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "${portion.formatToPercentage()} ${item.category}",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+    }
+}
 
 @Preview
 @Composable
 fun ExpenseChartPreview() {
-    val chartData = listOf(
+    val totalAmount = 240.0
+    val chartDataList = listOf(
         ChartData(
             category = "Food",
             value = 100.0
@@ -85,10 +116,23 @@ fun ExpenseChartPreview() {
         ChartData(
             category = "Beverage",
             value = 140.0
+        ),
+        ChartData(
+            category = "Commute",
+            value = 140.0
         )
     )
-    ExpenseChart(
-        totalAmount = 240.0,
-        chartDataList = chartData
-    )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+    ) {
+        ExpenseChart(
+            totalAmount = totalAmount,
+            chartDataList = chartDataList
+        )
+
+        ExpenseChartLegends(
+            totalAmount = totalAmount,
+            chartDataList = chartDataList
+        )
+    }
 }

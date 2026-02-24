@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +27,7 @@ import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChart
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseTable
+import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChartLegends
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,6 +89,11 @@ fun MainContent(
                 modifier = Modifier.weight(2f)
                     .padding(bottom = 48.dp)
             )
+            ExpenseChartLegends(
+                chartDataList = uiState.chartDataList,
+                totalAmount = uiState.totalAmount,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
             ExpenseTable(
                 modifier = Modifier.weight(3f),
                 expenses = expensesPagingFlow.collectAsLazyPagingItems(),

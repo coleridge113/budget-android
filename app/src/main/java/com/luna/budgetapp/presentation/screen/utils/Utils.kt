@@ -6,6 +6,7 @@ import com.luna.budgetapp.ui.icons.FoodIcon
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.roundToInt
 
 fun getIconForCategory(category: String): ImageVector {
     return CategoryOptions.entries
@@ -16,6 +17,11 @@ fun getIconForCategory(category: String): ImageVector {
 
 fun Double.formatToCurrency(): String {
     return "%,.2f".format(this)
+}
+
+fun Double.formatToPercentage(): String {
+    val percent = (this * 100).roundToInt()
+    return "${percent.coerceAtLeast(0)}%"
 }
 
 fun LocalDateTime.formatToDisplay(): String {

@@ -61,6 +61,7 @@ fun ExpensePresetDialog(
         var selectedOption by remember { mutableStateOf(options.first()) }
         val typeState = rememberTextFieldState(selectedPreset?.type ?: "")
         val amountState = rememberTextFieldState("")
+        val isLocked = selectedPreset != null
 
         LaunchedEffect(selectedPreset) {
             selectedPreset?.let {
@@ -86,7 +87,7 @@ fun ExpensePresetDialog(
 
                 ExposedDropdownMenuBox(
                     expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
+                    onExpandedChange = { if (!isLocked) expanded = !expanded }
                 ) {
                     TextField(
                         value = selectedOption.displayName,

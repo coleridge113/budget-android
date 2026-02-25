@@ -19,11 +19,11 @@ data class UiState(
 sealed interface DialogState {
     data object CalendarForm : DialogState
     data object ConfirmDeleteExpense : DialogState
+    data class ConfirmDeleteExpensePreset(val expensePresetId: Long) : DialogState
     data class ExpenseForm(
         val selectedPreset: ExpensePreset? = null,
         val isSaving: Boolean = false
     ) : DialogState
-    data class ConfirmDeleteExpensePreset(val expensePresetId: Long) : DialogState
 }
 
 sealed interface Event {

@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Expense
@@ -39,6 +40,7 @@ fun ExpenseListRoute(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val expenses = viewModel.expensesPagingFlow.collectAsLazyPagingItems()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,7 +80,7 @@ fun ExpenseListRoute(
             modifier = Modifier.padding(innerPadding),
             uiState = uiState,
             onEvent = viewModel::onEvent,
-            expensesPagingFlow = viewModel.expensesPagingFlow
+            expenses = expenses
         )
     }
 }
@@ -88,7 +90,7 @@ fun MainContent(
     modifier: Modifier,
     uiState: UiState,
     onEvent: (Event) -> Unit,
-    expensesPagingFlow: Flow<PagingData<Expense>>
+    expenses: LazyPagingItems<Expense>
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -100,14 +102,14 @@ fun MainContent(
             totalAmount = uiState.totalAmount
         )
         Spacer(modifier = Modifier.height(48.dp))
-        if (uiState.totalAmount <= 0) {
+        if (expenses.itemCount <= 0) {
             Text(
                 text = "No expenses for the filtered range!"
             )
         } else {
             ExpenseTable(
                 modifier = Modifier,
-                expenses = expensesPagingFlow.collectAsLazyPagingItems(),
+                expenses = expenses,
                 onClick = {},
                 onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
             )

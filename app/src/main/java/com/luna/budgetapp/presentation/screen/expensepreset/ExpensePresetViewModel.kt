@@ -64,13 +64,9 @@ class ExpensePresetViewModel(
                 .map { it.selectedRange }
                 .distinctUntilChanged()
                 .flatMapLatest { filter ->
-
                     val range = filter.resolve()
 
-                    useCases.getExpensesByDateRange(range.start, range.end)
-                        .onStart {
-                            _uiState.update { it.copy(isExpensesLoading = true) }
-                        }
+                    useCases.getTotalAmountByDateRange(range.start, range.end)
                 }
                 .catch { error ->
                     _uiState.update {
@@ -80,12 +76,12 @@ class ExpensePresetViewModel(
                         )
                     }
                 }
-                .collect { expenses ->
+                .collect { totalAmount ->
                     _uiState.update { currentState ->
                         currentState.copy(
                             isExpensesLoading = false,
                             error = null,
-                            expenses = expenses.sortedBy { it.id }
+                            totalAmount = totalAmount
                         )
                     }
                 }

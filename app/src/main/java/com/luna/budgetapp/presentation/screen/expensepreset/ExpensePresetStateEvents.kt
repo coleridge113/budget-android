@@ -12,11 +12,9 @@ data class UiState(
     val expensePresets: List<ExpensePreset> = emptyList(),
     val expenses: List<Expense> = emptyList(),
     val dialogState: DialogState? = null,
-    val selectedRange: DateFilter = DateFilter.Daily
-) {
-    val totalAmount: Double
-        get() = expenses.sumOf { it.amount }
-}
+    val selectedRange: DateFilter = DateFilter.Daily,
+    val totalAmount: Double = 0.0
+)
 
 sealed interface DialogState {
     data object CalendarForm : DialogState

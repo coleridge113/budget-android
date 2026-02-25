@@ -1,5 +1,9 @@
 package com.luna.budgetapp.presentation.screen.expenselist.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +23,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -58,6 +65,21 @@ fun ExpenseDonutChart(
     totalAmount: Double,
     chartDataList: List<ChartData>
 ) {
+    val animationProgress = remember(chartDataList) {
+        Animatable(0f)
+    }
+
+    LaunchedEffect(chartDataList) {
+        animationProgress.snapTo(0f)
+        animationProgress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 900,
+                easing = FastOutSlowInEasing
+            )
+        )
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier.aspectRatio(1f)
@@ -72,7 +94,7 @@ fun ExpenseDonutChart(
 
             chartDataList.forEach { slice ->
                 val sweepAngle =
-                    ((slice.value / totalAmount) * 360.0).toFloat()
+                    ((slice.value / totalAmount) * 360f * animationProgress.value).toFloat()
 
                 drawArc(
                     color = slice.color,

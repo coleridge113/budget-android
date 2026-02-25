@@ -20,9 +20,7 @@ Yes, it's using very basic UI right now. That will be improved at a later date :
   <img src="screenshots/calnedar-view.jpg" width="220" />
 </p>
 
-<p align="center">
-  <video src="screenshots/demo.mp4" width="300" controls autoplay loop muted></video>
-</p>
+https://github.com/user-attachments/assets/79174a91-9598-4930-85fc-0fde5828e196
 
 
 ---

@@ -11,6 +11,7 @@ data class UiState(
     val dialogState: DialogState? = null,
     val selectedRange: DateFilter = DateFilter.Daily,
     val chartDataList: List<ChartData> = emptyList(),
+    val filteredCategories: List<String>? = null,
     val totalAmount: Double = 0.0
 ) 
 

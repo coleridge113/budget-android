@@ -8,9 +8,14 @@ class GetTotalAmountByDateRangeUseCase(
     private val repository: ExpenseRepository
 ) {
     operator fun invoke(
+        categories: List<String>? = null,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double> {
-        return repository.getTotalAmountByDateRange(start, end)
+        return if (categories == null) {
+            repository.getTotalAmountByDateRange(start, end)
+        } else {
+            repository.getTotalAmountByCategories(categories, start, end)
+        }
     }
 }

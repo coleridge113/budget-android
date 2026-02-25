@@ -66,7 +66,10 @@ class ExpensePresetViewModel(
                 .flatMapLatest { filter ->
                     val range = filter.resolve()
 
-                    useCases.getTotalAmountByDateRange(range.start, range.end)
+                    useCases.getTotalAmountByDateRange(
+                        start = range.start,
+                        end = range.end
+                    )
                 }
                 .catch { error ->
                     _uiState.update {

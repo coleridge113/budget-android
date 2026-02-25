@@ -116,6 +116,14 @@ class ExpenseRepositoryImpl(
         dao.getTotalAmountByDateRange(start, end)
             .flowOn(Dispatchers.IO)
 
+    override fun getTotalAmountByCategories(
+        categories: List<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<Double> =
+        dao.getTotalAmountByCategories(categories, start, end)
+            .flowOn(Dispatchers.IO)
+
     override fun getCategoryTotalsByDateRange(
         start: LocalDateTime,
         end: LocalDateTime

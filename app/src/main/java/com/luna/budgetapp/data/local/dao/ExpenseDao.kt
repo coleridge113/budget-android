@@ -55,6 +55,18 @@ interface ExpenseDao {
     ): Flow<Double>
 
     @Query("""
+        SELECT COALESCE(SUM(amount), 0)
+        FROM expenses
+        WHERE date BETWEEN :start AND :end
+        AND (category IN (:categories))
+    """)
+    fun getTotalAmountByCategories(
+        categories: List<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<Double>
+
+    @Query("""
         SELECT category, SUM(amount) AS total
         FROM expenses
         WHERE date BETWEEN :start AND :end

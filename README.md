@@ -87,6 +87,7 @@ The goal is to make logging expenses as easy as sending a chat message.
 
 ## 📦 Future Improvements
 
+- Beautify UI
 - Backend reconnection (Spring Boot API)
 - Multi-device sync
 - Authentication

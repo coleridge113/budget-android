@@ -104,8 +104,13 @@ The goal is to make logging expenses as easy as sending a chat message.
 
 ## 📸 Screenshots
 
-![Home Screen](screenshots/expense-preset.jpg)
-![Expense List](screenshots/expense-list-today.jpg)
-![Filter View](screenshots/expenses-filter-view.jpg)
-![Calendar View](screenshots/calnedar-view.jpg)
+<p align="center">
+  <img src="screenshots/expense-preset.jpg" width="220" />
+  &nbsp;
+  <img src="screenshots/expense-list-today.jpg" width="220" />
+  &nbsp;
+  <img src="screenshots/expenses-filter-view.jpg" width="220" />
+  &nbsp;
+  <img src="screenshots/calnedar-view.jpg" width="220" />
+</p>
 

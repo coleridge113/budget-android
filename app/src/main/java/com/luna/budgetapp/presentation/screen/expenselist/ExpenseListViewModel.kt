@@ -57,12 +57,18 @@ class ExpenseListViewModel(
     private fun observeTotalAmount() {
         viewModelScope.launch {
             _uiState
-                .map { it.selectedRange }
+                .map { state ->
+                    state.selectedRange to state.filteredCategories
+                }
                 .distinctUntilChanged()
-                .flatMapLatest { filter ->
-                    val range = filter.resolve()
+                .flatMapLatest { (dateFilter, categories) ->
 
-                    useCases.getTotalAmountByDateRange(range.start, range.end)
+                    val range = dateFilter.resolve()
+
+                    useCases.getTotalAmountByDateRange(
+                        start = range.start,
+                        end = range.end,
+                    )
                 }
                 .catch { error ->
                     _uiState.update {

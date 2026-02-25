@@ -6,6 +6,21 @@ The app introduces **Expense Presets** — reusable expense buttons for recurrin
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/expense-preset.jpg" width="220" />
+  &nbsp;
+  <img src="screenshots/expense-list-today.jpg" width="220" />
+  &nbsp;
+  <img src="screenshots/expenses-filter-view.jpg" width="220" />
+  &nbsp;
+  <img src="screenshots/calnedar-view.jpg" width="220" />
+</p>
+
+
+---
+
 ## ✨ Features
 
 ### 🔘 Expense Presets
@@ -94,18 +109,3 @@ The goal is to make logging expenses as easy as sending a chat message.
 - Analytics dashboard
 - Charts & insights
 - Export to CSV
-
----
-
-## 📸 Screenshots
-
-<p align="center">
-  <img src="screenshots/expense-preset.jpg" width="220" />
-  &nbsp;
-  <img src="screenshots/expense-list-today.jpg" width="220" />
-  &nbsp;
-  <img src="screenshots/expenses-filter-view.jpg" width="220" />
-  &nbsp;
-  <img src="screenshots/calnedar-view.jpg" width="220" />
-</p>
-

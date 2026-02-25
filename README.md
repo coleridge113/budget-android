@@ -8,6 +8,8 @@ The app introduces **Expense Presets** — reusable expense buttons for recurrin
 
 ## 📸 Screenshots
 
+Yes, it's using very basic UI right now. That will be improved at a later date :D
+
 <p align="center">
   <img src="screenshots/expense-preset.jpg" width="220" />
   &nbsp;

@@ -20,7 +20,7 @@ Yes, it's using very basic UI right now. That will be improved at a later date :
   <img src="screenshots/calnedar-view.jpg" width="220" />
 </p>
 
-https://github.com/user-attachments/assets/79174a91-9598-4930-85fc-0fde5828e196
+https://github.com/user-attachments/assets/8d750410-9fed-48bf-9888-48696160627a
 
 
 ---

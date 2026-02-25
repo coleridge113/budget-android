@@ -9,6 +9,7 @@ import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.model.ChartData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,7 +40,7 @@ class ExpenseListViewModel(
             .cachedIn(viewModelScope)
 
     init {
-        observeExpenses()
+        observeTotalAmount()
         computeChartData()
     }
 
@@ -47,13 +48,13 @@ class ExpenseListViewModel(
         when (event) {
             Event.DismissDialog -> dismissDialog()
             Event.ShowCalendarForm -> showCalendarForm()
-            is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
             is Event.SelectDateRange -> selectDateRange(event.selectedRange)
+            is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
         }
     }
 
-    private fun observeExpenses() {
+    private fun observeTotalAmount() {
         viewModelScope.launch {
             _uiState
                 .map { it.selectedRange }

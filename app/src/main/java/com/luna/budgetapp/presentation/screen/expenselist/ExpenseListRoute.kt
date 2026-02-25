@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -102,17 +103,17 @@ fun MainContent(
             totalAmount = uiState.totalAmount
         )
         Spacer(modifier = Modifier.height(48.dp))
-        if (expenses.itemCount <= 0) {
-            Text(
-                text = "No expenses for the filtered range!"
-            )
-        } else {
-            ExpenseTable(
-                modifier = Modifier,
-                expenses = expenses,
-                onClick = {},
-                onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
-            )
+        when {
+            uiState.isExpensesLoading -> CircularProgressIndicator()
+            expenses.itemCount <= 0 -> Text(text = "No expenses for the filtered range!")
+            else -> {
+                ExpenseTable(
+                    modifier = Modifier,
+                    expenses = expenses,
+                    onClick = {},
+                    onLongClick = { onEvent(Event.ShowDeleteConfirmationDialog(it.id!!)) }
+                )
+            }
         }
 
         when (val dialog = uiState.dialogState) {

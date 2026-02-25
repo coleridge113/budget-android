@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.presentation.model.ChartData
 import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
+import com.luna.budgetapp.ui.theme.OthersChartColor
 
 @Composable
 fun ExpenseChart(
@@ -88,9 +89,20 @@ fun ExpenseDonutChart(
         Canvas(
             modifier = Modifier.fillMaxSize()
         ) {
-            if (totalAmount == 0.0) return@Canvas
-
             var startAngle = -90f
+
+            if (totalAmount == 0.0) {
+                val sweepAngle =
+                    (360f * animationProgress.value)
+                drawArc(
+                    color = OthersChartColor,
+                    startAngle = startAngle,
+                    sweepAngle = sweepAngle,
+                    useCenter = false,
+                    style = Stroke(width = 80f)
+                )
+                return@Canvas
+            }
 
             chartDataList.forEach { slice ->
                 val sweepAngle =

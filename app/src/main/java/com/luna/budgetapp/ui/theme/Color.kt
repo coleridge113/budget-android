@@ -23,4 +23,4 @@ val HouseChartColor = Color(0xFF81C784)       // Soft Green
 val CommuteChartColor = Color(0xFFFFB74D)     // Soft Orange
 val BillsChartColor = Color(0xFFBA68C8)       // Muted Purple
 val GroceryChartColor = Color(0xFF4CAF50)     // Fresh Green
-val OthersChartColor = Color.LightGray
+val OthersChartColor = Color(0xFF616161)

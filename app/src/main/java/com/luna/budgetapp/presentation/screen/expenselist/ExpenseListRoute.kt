@@ -1,9 +1,12 @@
 package com.luna.budgetapp.presentation.screen.expenselist
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -105,7 +108,17 @@ fun MainContent(
         Spacer(modifier = Modifier.height(48.dp))
         when {
             uiState.isExpensesLoading -> CircularProgressIndicator()
-            expenses.itemCount <= 0 -> Text(text = "No expenses for the filtered range!")
+            expenses.itemCount <= 0 -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    Text(
+                        text = "No expenses for the filtered range!",
+                        modifier = Modifier.padding(top = 48.dp)
+                    )
+                }
+            }
             else -> {
                 ExpenseTable(
                     modifier = Modifier,

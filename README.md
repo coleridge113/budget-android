@@ -6,7 +6,7 @@ The app introduces **Expense Presets** — reusable expense buttons for recurrin
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots & Demo
 
 Yes, it's using very basic UI right now. That will be improved at a later date :D
 
@@ -18,6 +18,10 @@ Yes, it's using very basic UI right now. That will be improved at a later date :
   <img src="screenshots/expenses-filter-view.jpg" width="220" />
   &nbsp;
   <img src="screenshots/calnedar-view.jpg" width="220" />
+</p>
+
+<p align="center">
+  <img src="screenshots/demo.gif" width="300"/>
 </p>
 
 

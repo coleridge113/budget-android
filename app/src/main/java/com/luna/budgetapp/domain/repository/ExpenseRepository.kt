@@ -40,5 +40,7 @@ interface ExpenseRepository {
 
     suspend fun updateExpense(expense: Expense)
 
-    suspend fun deleteExpense(expenseId: Long)
+    suspend fun deleteExpenseById(expenseId: Long)
+
+    suspend fun deleteLatestExpense()
 }

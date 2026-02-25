@@ -104,6 +104,15 @@ fun MainContent(
             )
 
             when (val dialog = uiState.dialogState) {
+                DialogState.ConfirmDeleteExpense -> {
+                    ConfirmationDialog(
+                        message = "Delete the last expense?",
+                        confirmText = "Delete",
+                        isDestructive = true,
+                        onDismiss = { onEvent(Event.DismissDialog) },
+                        onConfirm = { onEvent(Event.DeleteLatestExpense) }
+                    )
+                }
                 is DialogState.ExpenseForm -> {
                     ExpensePresetDialog(
                         selectedPreset = dialog.selectedPreset,
@@ -116,15 +125,6 @@ fun MainContent(
                             }
                         },
                         isSaving = dialog.isSaving
-                    )
-                }
-                is DialogState.ConfirmDeleteExpense -> {
-                    ConfirmationDialog(
-                        message = "Delete the last expense?",
-                        confirmText = "Delete",
-                        isDestructive = true,
-                        onDismiss = { onEvent(Event.DismissDialog) },
-                        onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
                     )
                 }
                 is DialogState.ConfirmDeleteExpensePreset -> {

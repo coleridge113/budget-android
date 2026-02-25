@@ -76,7 +76,13 @@ interface ExpenseDao {
     suspend fun updateExpense(expense: ExpenseEntity)
 
     @Query("DELETE FROM expenses WHERE id = :expenseId")
-    suspend fun deleteExpense(expenseId: Long)
+    suspend fun deleteExpenseById(expenseId: Long)
+
+    @Query("""
+        DELETE FROM expenses
+        WHERE id = (SELECT MAX(id) FROM expenses)
+    """)
+    suspend fun deleteLatestExpense()
 
     @Delete
     suspend fun deleteExpenses(expenses: List<ExpenseEntity>)

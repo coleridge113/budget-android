@@ -47,11 +47,11 @@ class ExpensePresetViewModel(
             Event.DismissDialog -> dismissDialog()
             Event.ShowCalendarForm -> showCalendarForm()
             Event.ShowDeleteConfirmationDialog -> showExpenseDeleteConfirmationDialog()
+            Event.DeleteLatestExpense -> deleteLatestExpense()
             is Event.AddExpense -> addExpense(event.expensePreset, event.customAmount)
             is Event.ShowExpenseForm -> showExpenseForm(event.selectedPreset)
             is Event.ShowConfirmationDialog -> showPresetDeleteConfirmationDialog(event.expensePresetId)
             is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset)
-            is Event.DeleteExpense -> deleteExpense(event.expenseId)
             is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
             is Event.ConfirmDialog -> saveExpensePreset(event.category, event.type, event.amount)
             is Event.SelectDateRange -> selectDateRange(event.selectedRange)
@@ -195,16 +195,14 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun deleteExpense(expenseId: Long?) {
-        expenseId?.let {
-            viewModelScope.launch {
-                useCases.deleteExpense(it)
-            }
-        }
+    private fun deleteLatestExpense() {
         _uiState.update { currentState ->
             currentState.copy(
                 dialogState = null
             )
+        }
+        viewModelScope.launch {
+            useCases.deleteLatestExpense()
         }
     }
 
@@ -261,9 +259,8 @@ class ExpensePresetViewModel(
     private fun showExpenseDeleteConfirmationDialog() {
         viewModelScope.launch {
             _uiState.update { currentState ->
-                val latestExpense = currentState.expenses.last()
                 currentState.copy(
-                    dialogState = DialogState.ConfirmDeleteExpense(latestExpense.id)
+                    dialogState = DialogState.ConfirmDeleteExpense
                 )
             }
         }

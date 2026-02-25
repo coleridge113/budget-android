@@ -2,10 +2,10 @@ package com.luna.budgetapp.domain.usecase.expense
 
 import com.luna.budgetapp.domain.repository.ExpenseRepository
 
-class DeleteExpenseUseCase(
+class DeleteLatestExpenseUseCase(
     private val repository: ExpenseRepository
 ) {
-    suspend operator fun invoke(expenseId: Long) {
-        repository.deleteExpenseById(expenseId)
+    suspend operator fun invoke() {
+        repository.deleteLatestExpense()
     }
 }

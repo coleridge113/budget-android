@@ -69,12 +69,6 @@ A Spring Boot backend exists but is temporarily disconnected to focus on complet
 - Repository pattern
 - Local persistence with Room
 
-High-level flow:
-UI (Compose) ->
-    ViewModel (State + Events) ->
-        Repository ->
-            Room Database
-
 ---
 
 ## 🚀 Why Expense Presets?

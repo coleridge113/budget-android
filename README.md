@@ -1,4 +1,4 @@
-# 💰 Budget App
+# 💰 Lazy Wallet
 
 A modern Android budgeting app built with **Kotlin** and **Jetpack Compose** that makes tracking daily expenses fast and frictionless.
 

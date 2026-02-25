@@ -21,7 +21,7 @@ Yes, it's using very basic UI right now. That will be improved at a later date :
 </p>
 
 <p align="center">
-  <img src="screenshots/demo.gif" width="300"/>
+  <video src="screenshots/demo.mp4" width="300" controls autoplay loop muted></video>
 </p>
 
 

@@ -14,9 +14,14 @@ data class UiState(
     val chartDataList: List<ChartData> = emptyList(),
     val totalAmount: Double = 0.0,
     val selectedCategoryMap: Map<String, Boolean> = 
-        CategoryOptions.entries.associate {
-            it.displayName to true
-        }
+        CategoryOptions.entries
+            .associate {
+                if (it.displayName in listOf("Food", "Beverage", "Date", "Commute", "Others")) {
+                    it.displayName to true
+                } else {
+                    it.displayName to false
+                }
+            }
 ) 
 
 sealed interface DialogState {

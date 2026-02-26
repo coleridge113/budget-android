@@ -229,43 +229,35 @@ class ExpensePresetViewModel(
     }
 
     private fun showPresetDeleteConfirmationDialog(expensePresetId: Long) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = DialogState.ConfirmDeleteExpensePreset(expensePresetId)
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = DialogState.ConfirmDeleteExpensePreset(expensePresetId)
+            )
         }
     }
 
     private fun selectDateRange(selectedRange: DateFilter) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    selectedRange = selectedRange,
-                    dialogState = null
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedRange = selectedRange,
+                dialogState = null
+            )
         }
     }
 
     private fun showCalendarForm() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = DialogState.CalendarForm
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = DialogState.CalendarForm
+            )
         }
     }
 
     private fun showExpenseDeleteConfirmationDialog() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = DialogState.ConfirmDeleteExpense
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = DialogState.ConfirmDeleteExpense
+            )
         }
     }
 

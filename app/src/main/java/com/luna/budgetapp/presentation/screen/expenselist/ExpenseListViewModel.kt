@@ -28,11 +28,6 @@ class ExpenseListViewModel(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val filterFlow =
-        _uiState
-            .map { it.selectedRange to it.selectedCategoryMap }
-            .distinctUntilChanged()
-
     val expensesPagingFlow: Flow<PagingData<Expense>> = 
         _uiState
             .map { it.selectedRange }
@@ -63,7 +58,9 @@ class ExpenseListViewModel(
 
     private fun observeTotalAmount() {
         viewModelScope.launch {
-            filterFlow
+            _uiState
+                .map { it.selectedRange to it.selectedCategoryMap }
+                .distinctUntilChanged()
                 .flatMapLatest { (dateFilter, categoryMap) ->
 
                     val range = dateFilter.resolve()

@@ -1,5 +1,6 @@
 package com.luna.budgetapp.presentation.screen.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
@@ -100,10 +101,13 @@ fun CategoryFilter(
         items(CategoryOptions.entries) { item ->
 
             val isChecked =
-                selectedCategoryMap[item.displayName] ?: false
+                selectedCategoryMap[item.displayName]!!
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.clickable {
+                    onCheckedChange(item.displayName, !isChecked)                    
+                }
             ) {
                 Checkbox(
                     checked = isChecked,

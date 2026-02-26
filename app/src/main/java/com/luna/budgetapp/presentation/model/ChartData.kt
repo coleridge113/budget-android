@@ -4,7 +4,7 @@ import com.luna.budgetapp.ui.theme.OthersChartColor
 
 data class ChartData(
     val category: String,
-    val value: Double,
+    val subtotal: Double,
 ) {
     val color = CategoryOptions.entries
         .find { it.displayName == category }

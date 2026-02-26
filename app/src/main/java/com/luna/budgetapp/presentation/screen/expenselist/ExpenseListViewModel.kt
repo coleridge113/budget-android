@@ -130,7 +130,7 @@ class ExpenseListViewModel(
                     val chartData = categoryAmounts.map { 
                         ChartData(
                             category = it.category,
-                            value = it.total
+                            subtotal = it.total
                         )
                     }
                     _uiState.update { currentState ->

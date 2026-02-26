@@ -2,7 +2,6 @@ package com.luna.budgetapp.presentation.screen.expenselist.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -25,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.presentation.model.ChartData
 import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
-import com.luna.budgetapp.presentation.screen.components.CategoryFilterDialog
 import com.luna.budgetapp.ui.theme.OthersChartColor
 
 @Composable
@@ -111,7 +108,7 @@ fun ExpenseDonutChart(
 
             chartDataList.forEach { slice ->
                 val sweepAngle =
-                    ((slice.value / totalAmount) * 360f * animationProgress.value).toFloat()
+                    ((slice.subtotal / totalAmount) * 360f * animationProgress.value).toFloat()
 
                 drawArc(
                     color = slice.color,
@@ -155,7 +152,7 @@ fun ExpenseChartLegends(
         modifier = modifier.clickable { showDialog() }
     ) {
         items(chartDataList) { item ->
-            val portion = item.value / totalAmount
+            val portion = item.subtotal / totalAmount
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -187,19 +184,19 @@ fun ExpenseDonutChartPreview() {
     val chartDataList = listOf(
         ChartData(
             category = "Food",
-            value = 100.0
+            subtotal = 100.0
         ),
         ChartData(
             category = "Beverage",
-            value = 140.0
+            subtotal = 140.0
         ),
         ChartData(
             category = "Commute",
-            value = 140.0
+            subtotal = 140.0
         ),
         ChartData(
             category = "Grocery",
-            value = 140.0
+            subtotal = 140.0
         ),
     )
     Column(

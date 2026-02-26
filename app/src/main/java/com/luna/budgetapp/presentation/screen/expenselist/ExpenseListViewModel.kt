@@ -30,12 +30,16 @@ class ExpenseListViewModel(
 
     val expensesPagingFlow: Flow<PagingData<Expense>> = 
         _uiState
-            .map { it.selectedRange }
+            .map { it.selectedRange to it.selectedCategoryMap }
             .distinctUntilChanged()
-            .flatMapLatest { filter ->
-                val range = filter.resolve()
+            .flatMapLatest { (dateFilter, categoryMap) ->
+                val range = dateFilter.resolve()
+                val selectedCategories =
+                    categoryMap
+                        .filterValues { it }
+                        .keys
 
-                useCases.getPagingExpensesByDateRange(range.start, range.end)
+                useCases.getPagingExpensesByDateRange(selectedCategories, range.start, range.end)
             }
             .cachedIn(viewModelScope)
 

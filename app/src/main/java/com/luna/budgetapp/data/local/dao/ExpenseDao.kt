@@ -45,6 +45,18 @@ interface ExpenseDao {
     ): PagingSource<Int, ExpenseEntity>
 
     @Query("""
+        SELECT * FROM expenses
+        WHERE date BETWEEN :start AND :end
+        AND (category IN (:categories))
+        ORDER BY date DESC
+    """)
+    fun getPagingExpensesByCategories(
+        categories: Set<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): PagingSource<Int, ExpenseEntity>
+
+    @Query("""
         SELECT SUM(amount)
         FROM expenses
         WHERE date BETWEEN :start AND :end

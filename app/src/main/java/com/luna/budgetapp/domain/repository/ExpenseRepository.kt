@@ -24,6 +24,12 @@ interface ExpenseRepository {
         end: LocalDateTime
     ): Flow<PagingData<Expense>>
 
+    fun getPagingExpensesByCategories(
+        categories: Set<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<PagingData<Expense>>
+
     fun getTotalAmountByDateRange(
         start: LocalDateTime,
         end: LocalDateTime

@@ -40,7 +40,8 @@ fun ExpenseChart(
     modifier: Modifier = Modifier,
     chartDataList: List<ChartData>,
     totalAmount: Double,
-    showDialog: () -> Unit
+    showDialog: () -> Unit,
+    onClickCenter: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -49,6 +50,7 @@ fun ExpenseChart(
         ExpenseDonutChart(
             chartDataList = chartDataList,
             totalAmount = totalAmount,
+            onClickCenter = onClickCenter,
             modifier = Modifier.fillMaxWidth(0.6f)
                 .offset(x = 16.dp)
         )
@@ -66,7 +68,8 @@ fun ExpenseChart(
 fun ExpenseDonutChart(
     modifier: Modifier = Modifier,
     totalAmount: Double,
-    chartDataList: List<ChartData>
+    chartDataList: List<ChartData>,
+    onClickCenter: () -> Unit
 ) {
     val animationProgress = remember(chartDataList) {
         Animatable(0f)
@@ -123,7 +126,8 @@ fun ExpenseDonutChart(
         }
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.clickable { onClickCenter() }
         ) {
             Text(
                 text = "Total",
@@ -204,7 +208,8 @@ fun ExpenseDonutChartPreview() {
     ) {
         ExpenseDonutChart(
             totalAmount = totalAmount,
-            chartDataList = chartDataList
+            chartDataList = chartDataList,
+            onClickCenter = {}
         )
 
         ExpenseChartLegends(

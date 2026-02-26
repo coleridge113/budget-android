@@ -105,7 +105,8 @@ fun MainContent(
         ExpenseChart(
             chartDataList = uiState.chartDataList,
             totalAmount = uiState.totalAmount,
-            showDialog = { onEvent(Event.ShowCategoryFilterDialog) }
+            showDialog = { onEvent(Event.ShowCategoryFilterDialog) },
+            onClickCenter = { onEvent(Event.ResetCategoryFilters) }
         )
         Spacer(modifier = Modifier.height(48.dp))
         when {

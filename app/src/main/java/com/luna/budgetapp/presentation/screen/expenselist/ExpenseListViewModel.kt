@@ -8,6 +8,7 @@ import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
 import com.luna.budgetapp.presentation.model.ChartData
+import com.luna.budgetapp.presentation.model.CategoryOptions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +54,7 @@ class ExpenseListViewModel(
             Event.DismissDialog -> dismissDialog()
             Event.ShowCategoryFilterDialog -> showCategoryFilterDialog()
             Event.ShowCalendarForm -> showCalendarForm()
+            Event.ResetCategoryFilters -> resetCategoryFilters()
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
             is Event.SelectDateRange -> selectDateRange(event.selectedRange)
             is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
@@ -146,22 +148,18 @@ class ExpenseListViewModel(
 
 
     private fun showDeleteConfirmationDialog(expenseId: Long) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = DialogState.ConfirmDeleteExpense(expenseId)
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = DialogState.ConfirmDeleteExpense(expenseId)
+            )
         }
     }
 
     private fun dismissDialog() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = null
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = null
+            )
         }
     }
 
@@ -177,47 +175,50 @@ class ExpenseListViewModel(
     }
 
     private fun showCalendarForm() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = DialogState.CalendarForm
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = DialogState.CalendarForm
+            )
         }
     }
 
     private fun selectDateRange(selectedRange: DateFilter) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    selectedRange = selectedRange,
-                    dialogState = null
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedRange = selectedRange,
+                dialogState = null
+            )
         }
     }
 
     private fun showCategoryFilterDialog() {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    dialogState = 
-                        DialogState.CategoryFilterForm(
-                            currentState.selectedCategoryMap
-                    )
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialogState = 
+                    DialogState.CategoryFilterForm(
+                        currentState.selectedCategoryMap
                 )
-            }
+            )
         }
     }
 
     private fun selectCategoryFilter(filters: Map<String, Boolean>) {
-        viewModelScope.launch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    selectedCategoryMap = filters,
-                    dialogState = null
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedCategoryMap = filters,
+                dialogState = null
+            )
+        }
+    }
+
+    private fun resetCategoryFilters() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedCategoryMap = 
+                    CategoryOptions.entries.associate {
+                        it.displayName to true
+                    }
+            )
         }
     }
 }

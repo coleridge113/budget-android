@@ -159,7 +159,7 @@ class ExpenseRepositoryImpl(
         dao.getCategoryTotalsByCategory(categories, start, end)
 
     override suspend fun addExpense(expense: Expense) {
-        return dao.addExpense(expense.toEntity())
+        dao.addExpense(expense.toEntity())
     }
 
     override suspend fun addExpenses(expenses: List<Expense>) {

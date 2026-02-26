@@ -2,14 +2,11 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.luna.budgetapp.data.utils.PusherManager
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
-import com.luna.budgetapp.domain.repository.ExpensePresetRepository
-import com.luna.budgetapp.domain.repository.ExpenseRepository
 import com.luna.budgetapp.domain.usecase.UseCases
-import com.luna.budgetapp.domain.model.DateFilter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -17,17 +14,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExpensePresetViewModel(
     private val useCases: UseCases,
-    private val pusherManager: PusherManager,
-    private val expensePresetRepo: ExpensePresetRepository,
-    private val expenseRepo: ExpenseRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
@@ -45,7 +38,6 @@ class ExpensePresetViewModel(
         when (event) {
             Event.GotoExpenseRoute -> gotoExpenseRoute()
             Event.DismissDialog -> dismissDialog()
-            Event.ShowCalendarForm -> showCalendarForm()
             Event.ShowDeleteConfirmationDialog -> showExpenseDeleteConfirmationDialog()
             Event.DeleteLatestExpense -> deleteLatestExpense()
             is Event.AddExpense -> addExpense(event.expensePreset, event.customAmount)
@@ -54,7 +46,6 @@ class ExpensePresetViewModel(
             is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset)
             is Event.DeleteExpensePreset -> deleteExpensePreset(event.expensePresetId)
             is Event.ConfirmDialog -> saveExpensePreset(event.category, event.type, event.amount)
-            is Event.SelectDateRange -> selectDateRange(event.selectedRange)
         }
     }
 
@@ -178,7 +169,7 @@ class ExpensePresetViewModel(
 
     private fun addExpense(
         expensePreset: ExpensePreset, customAmount: Double?) {
-        val state = uiState.value
+        val state = _uiState.value
 
         viewModelScope.launch {
             val expense = Expense(
@@ -186,8 +177,8 @@ class ExpensePresetViewModel(
                 type = expensePreset.type,
                 amount = customAmount ?: expensePreset.amount
             )
-            expenseRepo.addExpense(expense)
-            
+            useCases.addExpense(expense)
+
             if (state.dialogState != null) {
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -232,23 +223,6 @@ class ExpensePresetViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 dialogState = DialogState.ConfirmDeleteExpensePreset(expensePresetId)
-            )
-        }
-    }
-
-    private fun selectDateRange(selectedRange: DateFilter) {
-        _uiState.update { currentState ->
-            currentState.copy(
-                selectedRange = selectedRange,
-                dialogState = null
-            )
-        }
-    }
-
-    private fun showCalendarForm() {
-        _uiState.update { currentState ->
-            currentState.copy(
-                dialogState = DialogState.CalendarForm
             )
         }
     }

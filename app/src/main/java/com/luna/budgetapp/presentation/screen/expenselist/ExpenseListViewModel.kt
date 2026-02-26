@@ -68,7 +68,6 @@ class ExpenseListViewModel(
                 .map { it.selectedRange to it.selectedCategoryMap }
                 .distinctUntilChanged()
                 .flatMapLatest { (dateFilter, categoryMap) ->
-
                     val range = dateFilter.resolve()
 
                     val selectedCategories =

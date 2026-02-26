@@ -77,17 +77,6 @@ fun MainContent(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            DateRangeSelectorDropdown(
-                selected = uiState.selectedRange,
-                onSelectedChange = {
-                    when (it) {
-                        DateFilter.Daily,
-                        DateFilter.Weekly,
-                        DateFilter.Monthly -> onEvent(Event.SelectDateRange(it))
-                        else -> onEvent(Event.ShowCalendarForm)
-                    }
-                }
-            )
             ExpenseAmountDisplay(
                 totalAmount = uiState.totalAmount,
                 modifier = Modifier.weight(1f)
@@ -136,16 +125,6 @@ fun MainContent(
                         onConfirm = { onEvent(Event.DeleteExpensePreset(dialog.expensePresetId)) }
                     )
                 }
-                DialogState.CalendarForm ->
-                    DateRangePickerDialog(
-                        onDismiss = { onEvent(Event.DismissDialog) },
-                        onConfirm = { start, end ->
-                            when {
-                                start == null -> onEvent(Event.DismissDialog)
-                                else -> onEvent(Event.SelectDateRange(DateFilter.Custom(start, end)))
-                            }
-                        }
-                    )
                 else -> {}
             }
         }

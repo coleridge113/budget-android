@@ -32,6 +32,7 @@ import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
 import com.luna.budgetapp.presentation.screen.components.DateRangePickerDialog
 import com.luna.budgetapp.presentation.screen.components.DateRangeSelectorDropdown
+import com.luna.budgetapp.presentation.screen.components.CategoryFilterDialog
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseChart
 import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseTable
 import kotlinx.coroutines.flow.Flow
@@ -103,7 +104,8 @@ fun MainContent(
     ) {
         ExpenseChart(
             chartDataList = uiState.chartDataList,
-            totalAmount = uiState.totalAmount
+            totalAmount = uiState.totalAmount,
+            showDialog = { onEvent(Event.ShowCategoryFilterDialog) }
         )
         Spacer(modifier = Modifier.height(48.dp))
         when {
@@ -140,6 +142,16 @@ fun MainContent(
                         }
                     }
                 )
+            is DialogState.CategoryFilterForm -> {
+                CategoryFilterDialog(
+                    selectedCategoryMap = dialog.filteredCategories,
+                    onDismiss = { onEvent(Event.DismissDialog) },
+                    onConfirm = { filters ->
+                        onEvent(Event.SelectCategoryFilter(filters))
+                    }
+                )
+            }
+
             is DialogState.ConfirmDeleteExpense -> {
                 ConfirmationDialog(
                     message = "Delete this expense?",

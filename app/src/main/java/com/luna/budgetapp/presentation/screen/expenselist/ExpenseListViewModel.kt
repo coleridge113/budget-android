@@ -4,12 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
-import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.model.ChartData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -27,6 +27,11 @@ class ExpenseListViewModel(
     
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
+
+    private val filterFlow =
+        uiState
+            .map { it.selectedRange to it.selectedCategoryMap }
+            .distinctUntilChanged()
 
     val expensesPagingFlow: Flow<PagingData<Expense>> = 
         _uiState
@@ -47,28 +52,35 @@ class ExpenseListViewModel(
     fun onEvent(event: Event) {
         when (event) {
             Event.DismissDialog -> dismissDialog()
+            Event.ShowCategoryFilterDialog -> showCategoryFilterDialog()
             Event.ShowCalendarForm -> showCalendarForm()
             is Event.DeleteExpense -> deleteExpense(event.expenseId)
             is Event.SelectDateRange -> selectDateRange(event.selectedRange)
             is Event.ShowDeleteConfirmationDialog -> showDeleteConfirmationDialog(event.expenseId)
+            is Event.SelectCategoryFilter -> selectCategoryFilter(event.selectedCategoryMap)
         }
     }
 
     private fun observeTotalAmount() {
         viewModelScope.launch {
-            _uiState
-                .map { state ->
-                    state.selectedRange to state.filteredCategories
-                }
-                .distinctUntilChanged()
-                .flatMapLatest { (dateFilter, categories) ->
+            filterFlow
+                .flatMapLatest { (dateFilter, categoryMap) ->
 
                     val range = dateFilter.resolve()
+
+                    val selectedCategories =
+                        categoryMap
+                            .filterValues { it }
+                            .keys
 
                     useCases.getTotalAmountByDateRange(
                         start = range.start,
                         end = range.end,
+                        categories = selectedCategories
                     )
+                }
+                .onStart {
+                    _uiState.update { it.copy(isExpensesLoading = true) }
                 }
                 .catch { error ->
                     _uiState.update {
@@ -79,8 +91,8 @@ class ExpenseListViewModel(
                     }
                 }
                 .collect { totalAmount ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
+                    _uiState.update {
+                        it.copy(
                             isExpensesLoading = false,
                             error = null,
                             totalAmount = totalAmount
@@ -172,6 +184,30 @@ class ExpenseListViewModel(
             _uiState.update { currentState ->
                 currentState.copy(
                     selectedRange = selectedRange,
+                    dialogState = null
+                )
+            }
+        }
+    }
+
+    private fun showCategoryFilterDialog() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    dialogState = 
+                        DialogState.CategoryFilterForm(
+                            currentState.selectedCategoryMap
+                    )
+                )
+            }
+        }
+    }
+
+    private fun selectCategoryFilter(filters: Map<String, Boolean>) {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    selectedCategoryMap = filters,
                     dialogState = null
                 )
             }

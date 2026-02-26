@@ -43,7 +43,6 @@ fun DateRangeSelectorDropdown(
     )
 
     Box(modifier = modifier.wrapContentSize()) {
-
         Surface(
             color = Color.Transparent,
             tonalElevation = 0.dp,

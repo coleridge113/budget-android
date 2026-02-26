@@ -117,7 +117,7 @@ class ExpenseRepositoryImpl(
             .flowOn(Dispatchers.IO)
 
     override fun getTotalAmountByCategories(
-        categories: List<String>,
+        categories: Set<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double> =

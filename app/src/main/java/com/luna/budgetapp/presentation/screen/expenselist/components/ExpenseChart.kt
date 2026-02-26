@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,15 +35,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.luna.budgetapp.presentation.model.ChartData
 import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
+import com.luna.budgetapp.presentation.screen.components.CategoryFilterDialog
 import com.luna.budgetapp.ui.theme.OthersChartColor
 
 @Composable
 fun ExpenseChart(
     modifier: Modifier = Modifier,
     chartDataList: List<ChartData>,
-    totalAmount: Double
+    totalAmount: Double,
+    showDialog: () -> Unit
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         ExpenseDonutChart(
@@ -54,7 +58,8 @@ fun ExpenseChart(
         Spacer(modifier = Modifier.weight(1f))
         ExpenseChartLegends(
             chartDataList = chartDataList,
-            totalAmount = totalAmount
+            totalAmount = totalAmount,
+            showDialog = showDialog
         )
     }
 
@@ -142,11 +147,12 @@ fun ExpenseDonutChart(
 fun ExpenseChartLegends(
     modifier: Modifier = Modifier,
     chartDataList: List<ChartData>,
-    totalAmount: Double
+    totalAmount: Double,
+    showDialog: () -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = modifier
+        modifier = modifier.clickable { showDialog() }
     ) {
         items(chartDataList) { item ->
             val portion = item.value / totalAmount
@@ -206,7 +212,8 @@ fun ExpenseDonutChartPreview() {
 
         ExpenseChartLegends(
             totalAmount = totalAmount,
-            chartDataList = chartDataList
+            chartDataList = chartDataList,
+            showDialog = {}
         )
     }
 }

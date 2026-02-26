@@ -61,7 +61,7 @@ interface ExpenseDao {
         AND (category IN (:categories))
     """)
     fun getTotalAmountByCategories(
-        categories: List<String>,
+        categories: Set<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double>

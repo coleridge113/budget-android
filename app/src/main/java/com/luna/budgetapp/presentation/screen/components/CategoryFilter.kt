@@ -1,8 +1,10 @@
 package com.luna.budgetapp.presentation.screen.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -32,10 +34,12 @@ import com.luna.budgetapp.ui.theme.MaterialBlue
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryFilterDialog(
+    modifier: Modifier = Modifier,
     selectedCategoryMap: Map<String, Boolean>,
     onDismiss: () -> Unit,
     onConfirm: (Map<String, Boolean>) -> Unit,
-    modifier: Modifier = Modifier
+    dismissText: String = "Cancel",
+    confirmText: String = "Apply"
 ) {
     var tempMap by remember(selectedCategoryMap) {
         mutableStateOf(selectedCategoryMap)
@@ -48,7 +52,10 @@ fun CategoryFilterDialog(
         Surface(
             shape = RoundedCornerShape(16.dp)
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(16.dp)
+            ) {
 
                 CategoryFilter(
                     selectedCategoryMap = tempMap,
@@ -59,10 +66,22 @@ fun CategoryFilterDialog(
 
                 Spacer(Modifier.height(16.dp))
 
-                TextButton(
-                    onClick = { onConfirm(tempMap) }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    Text("Apply", color = MaterialBlue)
+                    TextButton(onClick = onDismiss) {
+                        Text(dismissText)
+                    }
+                    TextButton(
+                        onClick = { onConfirm(tempMap) }
+                    ) {
+                        Text(
+                            text = confirmText,
+                            color = MaterialBlue
+                        )
+                    }
+
                 }
             }
         }
@@ -75,7 +94,8 @@ fun CategoryFilter(
     onCheckedChange: (String, Boolean) -> Unit
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2)
+        columns = GridCells.Fixed(2),
+        horizontalArrangement = Arrangement.Center
     ) {
         items(CategoryOptions.entries) { item ->
 
@@ -120,6 +140,10 @@ fun CategoryFilterPreview() {
     Surface(
         color = Color.White
     ) {
-        CategoryFilter(selectedCategoryMap) {_, _ -> }
+        CategoryFilterDialog(
+            selectedCategoryMap = selectedCategoryMap,
+            onDismiss = {},
+            onConfirm = { _ -> }
+        )
     }
 }

@@ -29,7 +29,7 @@ class ExpenseListViewModel(
     val uiState = _uiState.asStateFlow()
 
     private val filterFlow =
-        uiState
+        _uiState
             .map { it.selectedRange to it.selectedCategoryMap }
             .distinctUntilChanged()
 

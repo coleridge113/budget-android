@@ -26,11 +26,11 @@ enum class CategoryOptions(
     val chartColor: Color
 ) {
     FOOD("Food", FoodIcon, FoodChartColor),
-    BEVERAGE("Beverage", CoffeeIcon, BeverageChartColor),
     DATE("Date", HeartIcon, DateChartColor),
+    BEVERAGE("Beverage", CoffeeIcon, BeverageChartColor),
     HOUSE("House", HouseIcon, HouseChartColor),
     COMMUTE("Commute", MotorcycleIcon, CommuteChartColor),
     BILLS("Bills", BillsIcon, BillsChartColor),
-    GROCERY("Grocery", GroceryIcon, GroceryChartColor),
-    OTHERS("Others", Icons.Default.Money, OthersChartColor)
+    OTHERS("Others", Icons.Default.Money, OthersChartColor),
+    GROCERY("Grocery", GroceryIcon, GroceryChartColor)
 }

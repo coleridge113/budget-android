@@ -90,6 +90,20 @@ interface ExpenseDao {
         end: LocalDateTime
     ): Flow<List<CategoryTotalProjection>>
 
+    @Query("""
+        SELECT category, SUM(amount) AS total
+        FROM expenses
+        WHERE date BETWEEN :start AND :end
+        AND (category IN (:categories))
+        GROUP BY category
+        ORDER BY total DESC
+    """)
+    fun getCategoryTotalsByCategory(
+        categories: Set<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<CategoryTotalProjection>>
+
     @Insert
     suspend fun addExpense(expense: ExpenseEntity)
 

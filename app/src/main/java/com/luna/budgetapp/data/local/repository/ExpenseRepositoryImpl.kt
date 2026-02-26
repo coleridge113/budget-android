@@ -151,6 +151,13 @@ class ExpenseRepositoryImpl(
     ): Flow<List<CategoryTotalProjection>> =
         dao.getCategoryTotalsByDateRange(start, end)
 
+    override fun getCategoryTotalsByCategory(
+        categories: Set<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<CategoryTotalProjection>> =
+        dao.getCategoryTotalsByCategory(categories, start, end)
+
     override suspend fun addExpense(expense: Expense) {
         return dao.addExpense(expense.toEntity())
     }

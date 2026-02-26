@@ -40,6 +40,12 @@ interface ExpenseRepository {
         end: LocalDateTime
     ): Flow<List<CategoryTotalProjection>>
 
+    fun getCategoryTotalsByCategory(
+        categories: Set<String>,
+        start: LocalDateTime,
+        end: LocalDateTime
+    ): Flow<List<CategoryTotalProjection>>
+
     fun getTotalAmountByCategories(
         categories: Set<String>,
         start: LocalDateTime,

@@ -103,6 +103,48 @@ class ExpenseListViewModel(
         }
     }
 
+    private fun computeChartData() {
+        viewModelScope.launch {
+            _uiState                         
+                .map { it.selectedRange to it.selectedCategoryMap }
+                .distinctUntilChanged()
+                .flatMapLatest { (dateFilter, categoryMap) ->
+
+                    val range = dateFilter.resolve()
+
+                    val selectedCategories =
+                        categoryMap
+                            .filterValues { it }
+                            .keys
+                    useCases.getCategoryTotalsByDateRange(selectedCategories, range.start, range.end)
+                }
+                .catch { error ->
+                    _uiState.update {
+                        it.copy(
+                            isExpensesLoading = false,
+                            error = error.localizedMessage
+                        )
+                    }
+                }
+                .collect { categoryAmounts ->
+                    val chartData = categoryAmounts.map { 
+                        ChartData(
+                            category = it.category,
+                            value = it.total
+                        )
+                    }
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isExpensesLoading = false,
+                            error = null,
+                            chartDataList = chartData
+                        )
+                    }
+                }
+        }
+    }
+
+
     private fun showDeleteConfirmationDialog(expenseId: Long) {
         viewModelScope.launch {
             _uiState.update { currentState ->
@@ -131,42 +173,6 @@ class ExpenseListViewModel(
                     dialogState = null
                 )
             }
-        }
-    }
-
-    private fun computeChartData() {
-        viewModelScope.launch {
-            _uiState                         
-                .map { it.selectedRange }
-                .distinctUntilChanged()
-                .flatMapLatest { filter ->
-                    val range = filter.resolve()
-                    
-                    useCases.getCategoryTotalsByDateRange(range.start, range.end)
-                }
-                .catch { error ->
-                    _uiState.update {
-                        it.copy(
-                            isExpensesLoading = false,
-                            error = error.localizedMessage
-                        )
-                    }
-                }
-                .collect { categoryAmounts ->
-                    val chartData = categoryAmounts.map { 
-                        ChartData(
-                            category = it.category,
-                            value = it.total
-                        )
-                    }
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isExpensesLoading = false,
-                            error = null,
-                            chartDataList = chartData
-                        )
-                    }
-                }
         }
     }
 

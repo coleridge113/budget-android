@@ -9,9 +9,14 @@ class GetCategoryTotalsByDateRange(
     private val repository: ExpenseRepository
 ) {
     operator fun invoke(
+        categories: Set<String>? = null,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<List<CategoryTotalProjection>> {
-        return repository.getCategoryTotalsByDateRange(start, end)
+        return if (categories == null) {
+            repository.getCategoryTotalsByDateRange(start, end)
+        } else {
+            repository.getCategoryTotalsByCategory(categories, start, end)
+        }
     }
 }

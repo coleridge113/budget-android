@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.usecase.UseCases
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -141,15 +142,15 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun saveExpensePreset(category: String, type: String, amount: String) {
+    private fun saveExpensePreset(category: Category, type: String, amount: String) {
         val dialog = _uiState.value.dialogState
 
         if (dialog !is DialogState.ExpenseForm || dialog.isSaving) return 
 
         val expensePreset = ExpensePreset(
             amount = amount.toDoubleOrNull() ?: 0.0,
-            category = category,
-            type = type.ifEmpty { category }.trim()
+            category = category.name,
+            type = type.ifEmpty { category.displayName }.trim()
         )
 
         _uiState.update { currentState ->

@@ -1,9 +1,17 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.model.DateFilter
-import java.time.LocalDateTime
+
+val defaultCategories = listOf(
+    Category.FOOD,
+    Category.DATE,
+    Category.BEVERAGE,
+    Category.COMMUTE,
+    Category.OTHERS
+)
 
 data class UiState(
     val isExpensesLoading: Boolean = false,
@@ -13,7 +21,16 @@ data class UiState(
     val expenses: List<Expense> = emptyList(),
     val dialogState: DialogState? = null,
     val selectedRange: DateFilter = DateFilter.Daily,
-    val totalAmount: Double = 0.0
+    val totalAmount: Double = 0.0,
+    val selectedCategoryMap: Map<Category, Boolean> =
+        Category.entries
+            .associate {
+                if (it in defaultCategories) {
+                    it to true
+                } else {
+                    it to false
+                }
+            }
 )
 
 sealed interface DialogState {
@@ -32,7 +49,7 @@ sealed interface Event {
     data object DeleteLatestExpense : Event
     data class ShowExpenseForm(val selectedPreset: ExpensePreset? = null) : Event
     data class ShowConfirmationDialog(val expensePresetId: Long) : Event
-    data class ConfirmDialog(val category: String, val type: String, val amount: String) : Event
+    data class ConfirmDialog(val category: Category, val type: String, val amount: String) : Event
     data class AddExpense(val expensePreset: ExpensePreset, val customAmount: Double? = null) : Event
     data class AddCustomExpense(val selectedPreset: ExpensePreset) : Event
     data class DeleteExpensePreset(val expensePresetId: Long) : Event

@@ -1,9 +1,11 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.usecase.UseCases
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
@@ -30,7 +32,7 @@ class ExpensePresetViewModel(
     val navigation = _navigation.receiveAsFlow()
 
     init {
-        observeExpenses()
+        observeTotalAmount()
         observeExpensePresets()
     }
 
@@ -49,17 +51,26 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun observeExpenses() {
+    private fun observeTotalAmount() {
         viewModelScope.launch {
             _uiState
-                .map { it.selectedRange }
+                .map { it.selectedRange to it.selectedCategoryMap }
                 .distinctUntilChanged()
-                .flatMapLatest { filter ->
+                .flatMapLatest { (filter, categoryMap) ->
                     val range = filter.resolve()
+
+                    val selectedCategories =
+                        categoryMap
+                            .filterValues { it }
+                            .keys
+                            .map { it.name }
+
+                    Log.d("ExpensePreset", "selected categories: $selectedCategories")
 
                     useCases.getTotalAmountByDateRange(
                         start = range.start,
-                        end = range.end
+                        end = range.end,
+                        categories = selectedCategories
                     )
                 }
                 .catch { error ->
@@ -131,15 +142,15 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun saveExpensePreset(category: String, type: String, amount: String) {
+    private fun saveExpensePreset(category: Category, type: String, amount: String) {
         val dialog = _uiState.value.dialogState
 
         if (dialog !is DialogState.ExpenseForm || dialog.isSaving) return 
 
         val expensePreset = ExpensePreset(
             amount = amount.toDoubleOrNull() ?: 0.0,
-            category = category,
-            type = type.ifEmpty { category }.trim()
+            category = category.name,
+            type = type.ifEmpty { category.displayName }.trim()
         )
 
         _uiState.update { currentState ->

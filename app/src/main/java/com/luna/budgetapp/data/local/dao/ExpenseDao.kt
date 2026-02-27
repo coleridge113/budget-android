@@ -51,7 +51,7 @@ interface ExpenseDao {
         ORDER BY date DESC
     """)
     fun getPagingExpensesByCategories(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): PagingSource<Int, ExpenseEntity>
@@ -73,7 +73,7 @@ interface ExpenseDao {
         AND (category IN (:categories))
     """)
     fun getTotalAmountByCategories(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double>
@@ -99,7 +99,7 @@ interface ExpenseDao {
         ORDER BY total DESC
     """)
     fun getCategoryTotalsByCategory(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<List<CategoryTotalProjection>>

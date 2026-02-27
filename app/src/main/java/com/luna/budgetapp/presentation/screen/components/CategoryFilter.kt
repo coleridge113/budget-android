@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.presentation.model.CategoryOptions
 import com.luna.budgetapp.ui.theme.MaterialBlue
 
@@ -36,9 +37,9 @@ import com.luna.budgetapp.ui.theme.MaterialBlue
 @Composable
 fun CategoryFilterDialog(
     modifier: Modifier = Modifier,
-    selectedCategoryMap: Map<String, Boolean>,
+    selectedCategoryMap: Map<Category, Boolean>,
     onDismiss: () -> Unit,
-    onConfirm: (Map<String, Boolean>) -> Unit,
+    onConfirm: (Map<Category, Boolean>) -> Unit,
     dismissText: String = "Cancel",
     confirmText: String = "Apply"
 ) {
@@ -91,28 +92,28 @@ fun CategoryFilterDialog(
 
 @Composable
 fun CategoryFilter(
-    selectedCategoryMap: Map<String, Boolean>,
-    onCheckedChange: (String, Boolean) -> Unit
+    selectedCategoryMap: Map<Category, Boolean>,
+    onCheckedChange: (Category, Boolean) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.Center
     ) {
-        items(CategoryOptions.entries) { item ->
+        items(Category.entries) { item ->
 
             val isChecked =
-                selectedCategoryMap[item.displayName]!!
+                selectedCategoryMap[item]!!
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.clickable {
-                    onCheckedChange(item.displayName, !isChecked)                    
+                    onCheckedChange(item, !isChecked)                    
                 }
             ) {
                 Checkbox(
                     checked = isChecked,
                     onCheckedChange = { checked ->
-                        onCheckedChange(item.displayName, checked)
+                        onCheckedChange(item, checked)
                     },
                     colors = CheckboxDefaults.colors(
                         checkedColor = MaterialBlue
@@ -125,29 +126,29 @@ fun CategoryFilter(
     }
 }
 
-@Preview(
-    showBackground = true
-)
-@Composable
-fun CategoryFilterPreview() {
-    val selectedCategoryMap = mapOf(
-        "Food" to true,
-        "Beverage" to true,
-        "Date" to false,
-        "House" to false,
-        "Commute" to true,
-        "Bills" to false,
-        "Grocery" to false,
-        "Others" to true
-    )
-
-    Surface(
-        color = Color.White
-    ) {
-        CategoryFilterDialog(
-            selectedCategoryMap = selectedCategoryMap,
-            onDismiss = {},
-            onConfirm = { _ -> }
-        )
-    }
-}
+// @Preview(
+//     showBackground = true
+// )
+// @Composable
+// fun CategoryFilterPreview() {
+//     val selectedCategoryMap = mapOf(
+//         "Food" to true,
+//         "Beverage" to true,
+//         "Date" to false,
+//         "House" to false,
+//         "Commute" to true,
+//         "Bills" to false,
+//         "Grocery" to false,
+//         "Others" to true
+//     )
+//
+//     Surface(
+//         color = Color.White
+//     ) {
+//         CategoryFilterDialog(
+//             selectedCategoryMap = selectedCategoryMap,
+//             onDismiss = {},
+//             onConfirm = { _ -> }
+//         )
+//     }
+// }

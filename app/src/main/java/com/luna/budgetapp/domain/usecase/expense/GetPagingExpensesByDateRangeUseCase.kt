@@ -10,7 +10,7 @@ class GetPagingExpensesByDateRangeUseCase(
         private val repository: ExpenseRepository
 ) {
     operator fun invoke(
-        categories: Set<String>? = null,
+        categories: List<String>? = null,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<PagingData<Expense>> {

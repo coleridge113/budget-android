@@ -1,5 +1,6 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.domain.model.Expense
@@ -30,7 +31,7 @@ class ExpensePresetViewModel(
     val navigation = _navigation.receiveAsFlow()
 
     init {
-        observeExpenses()
+        observeTotalAmount()
         observeExpensePresets()
     }
 
@@ -49,17 +50,25 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun observeExpenses() {
+    private fun observeTotalAmount() {
         viewModelScope.launch {
             _uiState
-                .map { it.selectedRange }
+                .map { it.selectedRange to it.selectedCategoryMap }
                 .distinctUntilChanged()
-                .flatMapLatest { filter ->
+                .flatMapLatest { (filter, categoryMap) ->
                     val range = filter.resolve()
+
+                    val selectedCategories =
+                        categoryMap
+                            .filterValues { it }
+                            .keys
+
+                    Log.d("ExpensePreset", "selected categories: $selectedCategories")
 
                     useCases.getTotalAmountByDateRange(
                         start = range.start,
-                        end = range.end
+                        end = range.end,
+                        categories = selectedCategories
                     )
                 }
                 .catch { error ->

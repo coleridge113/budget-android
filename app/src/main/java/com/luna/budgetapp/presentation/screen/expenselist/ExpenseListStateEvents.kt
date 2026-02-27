@@ -4,6 +4,15 @@ import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.presentation.model.CategoryOptions
 import com.luna.budgetapp.presentation.model.ChartData
+import com.luna.budgetapp.domain.model.Category
+
+val defaultCategories = listOf(
+    Category.FOOD,
+    Category.DATE,
+    Category.BEVERAGE,
+    Category.COMMUTE,
+    Category.OTHERS
+)
 
 data class UiState(
     val isExpensesLoading: Boolean = false,

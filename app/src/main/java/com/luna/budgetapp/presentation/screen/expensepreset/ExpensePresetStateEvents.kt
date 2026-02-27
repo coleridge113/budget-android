@@ -1,9 +1,17 @@
 package com.luna.budgetapp.presentation.screen.expensepreset
 
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.domain.model.DateFilter
-import java.time.LocalDateTime
+
+val defaultCategories = listOf(
+    Category.FOOD,
+    Category.DATE,
+    Category.BEVERAGE,
+    Category.COMMUTE,
+    Category.OTHERS
+)
 
 data class UiState(
     val isExpensesLoading: Boolean = false,
@@ -13,7 +21,16 @@ data class UiState(
     val expenses: List<Expense> = emptyList(),
     val dialogState: DialogState? = null,
     val selectedRange: DateFilter = DateFilter.Daily,
-    val totalAmount: Double = 0.0
+    val totalAmount: Double = 0.0,
+    val selectedCategoryMap: Map<String, Boolean> = 
+        Category.entries
+            .associate {
+                if (it in defaultCategories) {
+                    it.displayName to true
+                } else {
+                    it.displayName to false
+                }
+            }
 )
 
 sealed interface DialogState {

@@ -74,7 +74,8 @@ fun DateRangeSelectorDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            offset = DpOffset(x = (-32).dp, y = 0.dp)
+            offset = DpOffset(x = (-11).dp, y = 0.dp),
+            modifier = Modifier.width(90.dp)
         ) {
             selectableDateFilters.forEach { option ->
                 DropdownMenuItem(

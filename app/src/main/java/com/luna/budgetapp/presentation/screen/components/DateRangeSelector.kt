@@ -3,9 +3,11 @@ package com.luna.budgetapp.presentation.screen.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
@@ -23,8 +25,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.DpOffset
 import com.luna.budgetapp.domain.model.DateFilter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,11 +73,20 @@ fun DateRangeSelectorDropdown(
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            offset = DpOffset(x = (-32).dp, y = 0.dp)
         ) {
             selectableDateFilters.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option.displayName()) },
+                    text = {
+                        Box(
+                            contentAlignment = Alignment.CenterEnd,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(end = 12.dp)
+                        ) {
+                            Text(text = option.displayName())
+                        }
+                    },
                     onClick = {
                         onSelectedChange(option)
                         expanded = false

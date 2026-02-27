@@ -6,11 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.luna.budgetapp.presentation.nav.NavGraphSetup
-import com.luna.budgetapp.ui.theme.BudgetAppTheme
+import com.luna.budgetapp.ui.theme.LazyWalletTheme
 
 @ExperimentalMaterial3Api
 @ExperimentalSharedTransitionApi
@@ -19,7 +17,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BudgetAppTheme {
+            LazyWalletTheme {
                 val navController = rememberNavController()
                 NavGraphSetup(navController = navController)
             }

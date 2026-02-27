@@ -25,7 +25,7 @@ interface ExpenseRepository {
     ): Flow<PagingData<Expense>>
 
     fun getPagingExpensesByCategories(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<PagingData<Expense>>
@@ -41,13 +41,13 @@ interface ExpenseRepository {
     ): Flow<List<CategoryTotalProjection>>
 
     fun getCategoryTotalsByCategory(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<List<CategoryTotalProjection>>
 
     fun getTotalAmountByCategories(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double>

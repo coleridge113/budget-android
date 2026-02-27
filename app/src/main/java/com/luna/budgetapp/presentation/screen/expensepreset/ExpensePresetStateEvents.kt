@@ -22,13 +22,13 @@ data class UiState(
     val dialogState: DialogState? = null,
     val selectedRange: DateFilter = DateFilter.Daily,
     val totalAmount: Double = 0.0,
-    val selectedCategoryMap: Map<String, Boolean> = 
+    val selectedCategoryMap: Map<Category, Boolean> =
         Category.entries
             .associate {
                 if (it in defaultCategories) {
-                    it.displayName to true
+                    it to true
                 } else {
-                    it.displayName to false
+                    it to false
                 }
             }
 )

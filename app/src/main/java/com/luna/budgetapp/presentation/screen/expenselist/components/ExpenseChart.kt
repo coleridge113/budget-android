@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.presentation.model.ChartData
 import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
 import com.luna.budgetapp.ui.theme.OthersChartColor
@@ -172,7 +173,7 @@ fun ExpenseChartLegends(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = "${portion.formatToPercentage()} ${item.category}",
+                    text = "${portion.formatToPercentage()} ${item.category.displayName}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -184,38 +185,38 @@ fun ExpenseChartLegends(
 @Preview
 @Composable
 fun ExpenseDonutChartPreview() {
-    val totalAmount = 240.0
-    val chartDataList = listOf(
-        ChartData(
-            category = "Food",
-            subtotal = 100.0
-        ),
-        ChartData(
-            category = "Beverage",
-            subtotal = 140.0
-        ),
-        ChartData(
-            category = "Commute",
-            subtotal = 140.0
-        ),
-        ChartData(
-            category = "Grocery",
-            subtotal = 140.0
-        ),
-    )
-    Column(
-        verticalArrangement = Arrangement.spacedBy(32.dp),
-    ) {
-        ExpenseDonutChart(
-            totalAmount = totalAmount,
-            chartDataList = chartDataList,
-            onClickCenter = {}
-        )
+   val totalAmount = 240.0
+   val chartDataList = listOf(
+       ChartData(
+           category = Category.FOOD,
+           subtotal = 100.0
+       ),
+       ChartData(
+           category = Category.BEVERAGE,
+           subtotal = 140.0
+       ),
+       ChartData(
+           category = Category.COMMUTE,
+           subtotal = 140.0
+       ),
+       ChartData(
+           category = Category.BILLS,
+           subtotal = 140.0
+       ),
+   )
+   Column(
+       verticalArrangement = Arrangement.spacedBy(32.dp),
+   ) {
+       ExpenseDonutChart(
+           totalAmount = totalAmount,
+           chartDataList = chartDataList,
+           onClickCenter = {}
+       )
 
-        ExpenseChartLegends(
-            totalAmount = totalAmount,
-            chartDataList = chartDataList,
-            showDialog = {}
-        )
-    }
+       ExpenseChartLegends(
+           totalAmount = totalAmount,
+           chartDataList = chartDataList,
+           showDialog = {}
+       )
+   }
 }

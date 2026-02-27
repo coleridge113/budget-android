@@ -110,7 +110,7 @@ class ExpenseRepositoryImpl(
     }
 
     override fun getPagingExpensesByCategories(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<PagingData<Expense>> {
@@ -138,7 +138,7 @@ class ExpenseRepositoryImpl(
             .flowOn(Dispatchers.IO)
 
     override fun getTotalAmountByCategories(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<Double> =
@@ -152,7 +152,7 @@ class ExpenseRepositoryImpl(
         dao.getCategoryTotalsByDateRange(start, end)
 
     override fun getCategoryTotalsByCategory(
-        categories: Set<String>,
+        categories: List<String>,
         start: LocalDateTime,
         end: LocalDateTime
     ): Flow<List<CategoryTotalProjection>> =

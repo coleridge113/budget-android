@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.UseCases
@@ -39,6 +40,7 @@ class ExpenseListViewModel(
                     categoryMap
                         .filterValues { it }
                         .keys
+                        .map { it.name }
 
                 useCases.getPagingExpensesByDateRange(selectedCategories, range.start, range.end)
             }
@@ -74,6 +76,7 @@ class ExpenseListViewModel(
                         categoryMap
                             .filterValues { it }
                             .keys
+                            .map { it.name }
 
                     useCases.getTotalAmountByDateRange(
                         start = range.start,
@@ -117,6 +120,8 @@ class ExpenseListViewModel(
                         categoryMap
                             .filterValues { it }
                             .keys
+                            .map { it.name }
+
                     useCases.getCategoryTotalsByDateRange(selectedCategories, range.start, range.end)
                 }
                 .catch { error ->
@@ -201,7 +206,7 @@ class ExpenseListViewModel(
         }
     }
 
-    private fun selectCategoryFilter(filters: Map<String, Boolean>) {
+    private fun selectCategoryFilter(filters: Map<Category, Boolean>) {
         _uiState.update { currentState ->
             currentState.copy(
                 selectedCategoryMap = filters,
@@ -213,10 +218,8 @@ class ExpenseListViewModel(
     private fun resetCategoryFilters() {
         _uiState.update { currentState ->
             currentState.copy(
-                selectedCategoryMap = 
-                    CategoryOptions.entries.associate {
-                        it.displayName to true
-                    }
+                selectedCategoryMap =
+                    Category.entries.associateWith { true }
             )
         }
     }

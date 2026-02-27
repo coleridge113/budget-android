@@ -62,6 +62,7 @@ class ExpensePresetViewModel(
                         categoryMap
                             .filterValues { it }
                             .keys
+                            .map { it.name }
 
                     Log.d("ExpensePreset", "selected categories: $selectedCategories")
 

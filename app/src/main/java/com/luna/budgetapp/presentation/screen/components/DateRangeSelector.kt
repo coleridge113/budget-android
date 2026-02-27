@@ -1,5 +1,6 @@
 package com.luna.budgetapp.presentation.screen.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
@@ -38,6 +40,7 @@ fun DateRangeSelectorDropdown(
     onSelectedChange: (DateFilter) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     var expanded by remember { mutableStateOf(false) }
     val selectableDateFilters = listOf(
         DateFilter.Daily,
@@ -51,7 +54,12 @@ fun DateRangeSelectorDropdown(
             color = Color.Transparent,
             tonalElevation = 0.dp,
             shadowElevation = 0.dp,
-            onClick = { expanded = true }
+            modifier = Modifier.clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                expanded = true
+            }
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),

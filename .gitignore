@@ -17,3 +17,4 @@ local.properties
 kls_database.db
 kls_database.db
 .kotlin/
+backup/

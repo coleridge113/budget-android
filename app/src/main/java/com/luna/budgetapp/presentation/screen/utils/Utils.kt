@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 
 fun getIconForCategory(category: String): ImageVector {
     return CategoryOptions.entries
-        .firstOrNull { it.displayName == category }
+        .firstOrNull { it.name == category }
         ?.icon
         ?: FoodIcon
 }

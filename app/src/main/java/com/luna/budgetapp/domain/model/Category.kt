@@ -8,5 +8,6 @@ enum class Category(val displayName: String) {
     COMMUTE("Commute"),
     BILLS("Bills"),
     OTHERS("Others"),
-    GROCERY("Grocery")
+    GROCERY("Grocery"),
+    FITNESS("Fitness"),
 }

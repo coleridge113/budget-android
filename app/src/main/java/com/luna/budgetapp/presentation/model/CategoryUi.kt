@@ -1,6 +1,7 @@
 package com.luna.budgetapp.presentation.model
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Money
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.Color
@@ -19,6 +20,7 @@ import com.luna.budgetapp.ui.theme.FoodChartColor
 import com.luna.budgetapp.ui.theme.GroceryChartColor
 import com.luna.budgetapp.ui.theme.HouseChartColor
 import com.luna.budgetapp.ui.theme.OthersChartColor
+import com.luna.budgetapp.ui.theme.FitnessChartColor
 
 enum class CategoryOptions(
     val displayName: String,
@@ -31,6 +33,7 @@ enum class CategoryOptions(
     HOUSE("House", HouseIcon, HouseChartColor),
     COMMUTE("Commute", MotorcycleIcon, CommuteChartColor),
     BILLS("Bills", BillsIcon, BillsChartColor),
-    OTHERS("Others", Icons.Default.Money, OthersChartColor),
-    GROCERY("Grocery", GroceryIcon, GroceryChartColor)
+    GROCERY("Grocery", GroceryIcon, GroceryChartColor),
+    FITNESS("Fitness", Icons.Default.FitnessCenter, FitnessChartColor),
+    OTHERS("Others", Icons.Default.Money, OthersChartColor)
 }

@@ -10,7 +10,8 @@ val defaultCategories = listOf(
     Category.DATE,
     Category.BEVERAGE,
     Category.COMMUTE,
-    Category.OTHERS
+    Category.OTHERS,
+    Category.FITNESS
 )
 
 data class UiState(

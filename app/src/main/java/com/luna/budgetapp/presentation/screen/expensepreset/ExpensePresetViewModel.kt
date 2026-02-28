@@ -42,7 +42,7 @@ class ExpensePresetViewModel(
             Event.DismissDialog -> dismissDialog()
             Event.ShowDeleteConfirmationDialog -> showExpenseDeleteConfirmationDialog()
             Event.DeleteLatestExpense -> deleteLatestExpense()
-            is Event.AddExpense -> addExpense(event.expensePreset, event.customAmount)
+            is Event.AddExpense -> addExpense(event.expensePreset, event.customAmount, event.customType)
             is Event.ShowExpenseForm -> showExpenseForm(event.selectedPreset)
             is Event.ShowConfirmationDialog -> showPresetDeleteConfirmationDialog(event.expensePresetId)
             is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset)
@@ -179,13 +179,16 @@ class ExpensePresetViewModel(
     }
 
     private fun addExpense(
-        expensePreset: ExpensePreset, customAmount: Double?) {
+        expensePreset: ExpensePreset, 
+        customAmount: Double?,
+        customType: String?
+    ) {
         val state = _uiState.value
 
         viewModelScope.launch {
             val expense = Expense(
                 category = expensePreset.category,
-                type = expensePreset.type,
+                type = customType ?: expensePreset.type,
                 amount = customAmount ?: expensePreset.amount
             )
             useCases.addExpense(expense)

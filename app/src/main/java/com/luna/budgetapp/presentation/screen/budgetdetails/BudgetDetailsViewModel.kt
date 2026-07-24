@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.DateRange
+import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.usecase.BudgetUseCases
 import com.luna.budgetapp.domain.usecase.ExpenseUseCases
+import com.luna.budgetapp.domain.utils.parseAmountExpression
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +17,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
 import kotlin.time.Duration.Companion.milliseconds
@@ -69,6 +73,13 @@ class BudgetDetailsViewModel(
             is Event.ClickCalendar -> showCalendarForm(event.type)
             is Event.ConfirmDate -> updateDateRange(event.date)
             is Event.ConfirmYearMonth -> updateDateRange(event.yearMonth)
+            is Event.ShowExpenseForm -> showExpenseForm(event.selectedExpense)
+            is Event.DeleteExpense -> deleteExpense(event.expenseId)
+            is Event.ShowDeleteConfirmationDialog -> 
+                showDeleteConfirmationDialog(event.expenseId)
+            is Event.EditExpense -> 
+                editExpense(event.expenseId, event.type, event.amount, event.date)
+
         }
     }
 
@@ -106,6 +117,36 @@ class BudgetDetailsViewModel(
             )
         }
         dismissDialog()
+    }
+
+    private fun showExpenseForm(selectedExpense: Expense) {
+        _dialogState.update {
+            DialogState.ExpenseForm(selectedExpense)
+        }
+    }
+
+    private fun editExpense(expenseId: Long, type: String, amount: String, date: LocalDateTime) {
+        viewModelScope.launch {
+            expenseUseCases.editExpense(
+                id = expenseId,
+                type = type,
+                amount = parseAmountExpression(amount),
+                date = date
+            )
+        }
+
+        dismissDialog()
+    }
+
+    private fun showDeleteConfirmationDialog(expenseId: Long) {
+        _dialogState.update { DialogState.DeleteConfirmation(expenseId) }
+    }
+
+    private fun deleteExpense(expenseId: Long) {
+        viewModelScope.launch {
+            expenseUseCases.deleteExpense(expenseId)
+            dismissDialog()
+        }
     }
 
     private fun dismissDialog() {

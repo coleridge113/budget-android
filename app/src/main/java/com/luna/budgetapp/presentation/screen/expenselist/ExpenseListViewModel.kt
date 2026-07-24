@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExpenseListViewModel(
@@ -260,7 +261,7 @@ class ExpenseListViewModel(
         }
     }
 
-    private fun editExpense(expenseId: Long, type: String, amount: String, date: java.time.LocalDateTime) {
+    private fun editExpense(expenseId: Long, type: String, amount: String, date: LocalDateTime) {
         viewModelScope.launch {
             expenseUseCases.editExpense(
                 id = expenseId,

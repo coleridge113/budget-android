@@ -34,19 +34,24 @@ import com.luna.budgetapp.presentation.screen.utils.getIconForCategory
 @Composable
 fun ExpenseTable(
     modifier: Modifier = Modifier,
-    expenses: List<Expense>
+    expenses: List<Expense>,
+    onEdit: (Expense) -> Unit = {},
+    onDelete: (Long) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(expenses) { expense ->
-            ExpenseItem(
-                item = expense,
-                icon = getIconForCategory(expense.category),
-                onClick = {},
-                onLongClick = {}
-            )
+            SwipeableTableItem(
+                onClickEdit = { onEdit(expense) },
+                onClickDelete = { onDelete(expense.id!!) }
+            ) {
+                ExpenseItem(
+                    item = expense,
+                    icon = getIconForCategory(expense.category)
+                )
+            }
         }
     }
 }
@@ -54,17 +59,11 @@ fun ExpenseTable(
 @Composable
 fun ExpenseItem(
     item: Expense,
-    icon: ImageVector,
-    onClick: (Expense) -> Unit,
-    onLongClick: (Expense) -> Unit
+    icon: ImageVector
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
-            .combinedClickable(
-                onClick = { onClick(item) },
-                onLongClick = { onLongClick(item) }
-            )
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -115,9 +114,6 @@ fun ExpenseItemPreview() {
     )
     ExpenseItem(
         item = expense,
-        icon = Icons.Default.AttachMoney,
-        onClick = {},
-        onLongClick = {}
+        icon = Icons.Default.AttachMoney
     )
 }
-

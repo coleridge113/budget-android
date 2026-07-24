@@ -1,5 +1,10 @@
 package com.luna.budgetapp.presentation.screen.budgetdetails
 
+import com.luna.budgetapp.presentation.screen.budgetdetails.components.BudgetDetailsCard
+import com.luna.budgetapp.presentation.screen.budgetdetails.components.MonthYearPickerDialog
+import com.luna.budgetapp.presentation.screen.components.ExpenseTable
+import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
+import com.luna.budgetapp.presentation.screen.expenselist.components.ExpenseForm
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -28,9 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.luna.budgetapp.presentation.screen.budgetdetails.components.BudgetDetailsCard
-import com.luna.budgetapp.presentation.screen.budgetdetails.components.MonthYearPickerDialog
-import com.luna.budgetapp.presentation.screen.components.ExpenseTable
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -126,7 +128,9 @@ private fun MainContent(
             HorizontalDivider(Modifier.padding(vertical = 24.dp))
             ExpenseTable(
                 modifier = Modifier,
-                expenses = expenses
+                expenses = expenses,
+                onEdit = { onEvent(Event.ShowExpenseForm(it)) },
+                onDelete = { onEvent(Event.ShowDeleteConfirmationDialog(it)) }
             )
         }
 
@@ -175,6 +179,23 @@ private fun MainContent(
                     onDismiss = { onEvent(Event.DismissDialog) }
                 )
             }
+            is DialogState.ExpenseForm ->
+                ExpenseForm(
+                    selectedExpense = dialog.selectedExpense,
+                    onDismissRequest = { onEvent(Event.DismissDialog) },
+                    onConfirm = { expenseId, type, amount, date ->
+                        onEvent(Event.EditExpense(expenseId, type, amount, date))
+                    },
+                    isSaving = dialog.isSaving
+                )
+            is DialogState.DeleteConfirmation ->
+                ConfirmationDialog(
+                    message = "Delete this expense?",
+                    confirmText = "Delete",
+                    isDestructive = true,
+                    onDismiss = { onEvent(Event.DismissDialog) },
+                    onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }
+                )
             else -> {}
         }
     }

@@ -3,7 +3,6 @@ package com.luna.budgetapp.presentation.screen.budgetdetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.luna.budgetapp.domain.model.Budget
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.DateRange
 import com.luna.budgetapp.domain.usecase.BudgetUseCases
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.YearMonth
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -68,6 +68,7 @@ class BudgetDetailsViewModel(
             Event.DismissDialog -> dismissDialog()
             is Event.ClickCalendar -> showCalendarForm(event.type)
             is Event.ConfirmDate -> updateDateRange(event.date)
+            is Event.ConfirmYearMonth -> updateDateRange(event.yearMonth)
         }
     }
 
@@ -78,7 +79,11 @@ class BudgetDetailsViewModel(
                     DialogState.DatePicker
                 }
             }
-            DateFilter.Monthly -> {}
+            DateFilter.Monthly -> {
+                _dialogState.update {
+                    DialogState.YearMonthPicker
+                }
+            }
             else -> {}
         }
     }
@@ -88,6 +93,16 @@ class BudgetDetailsViewModel(
             DateRange(
                 start = date.atStartOfDay(),
                 end = date.atTime(LocalTime.MAX)
+            )
+        }
+        dismissDialog()
+    }
+
+    private fun updateDateRange(yearMonth: YearMonth) {
+        _dateFlow.update {
+            DateRange(
+                start = yearMonth.atDay(1).atStartOfDay(),
+                end = yearMonth.atEndOfMonth().atTime(LocalTime.MAX)
             )
         }
         dismissDialog()

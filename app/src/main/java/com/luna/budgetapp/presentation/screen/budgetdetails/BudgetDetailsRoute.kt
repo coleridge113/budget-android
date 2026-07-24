@@ -1,11 +1,8 @@
 package com.luna.budgetapp.presentation.screen.budgetdetails
 
-import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -32,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.luna.budgetapp.presentation.screen.budgetdetails.components.BudgetDetailsCard
+import com.luna.budgetapp.presentation.screen.budgetdetails.components.MonthYearPickerDialog
 import com.luna.budgetapp.presentation.screen.components.ExpenseTable
-import com.luna.budgetapp.presentation.screen.utils.singleClick
 import org.koin.compose.viewmodel.koinViewModel
 import java.time.Instant
 import java.time.LocalDate
@@ -136,6 +133,7 @@ private fun MainContent(
         when (dialog) {
             DialogState.DatePicker -> {
                 val datePickerState = rememberDatePickerState()
+
                 DatePickerDialog(
                     onDismissRequest = { onEvent(Event.DismissDialog) },
                     confirmButton = {
@@ -170,6 +168,12 @@ private fun MainContent(
                         headline = null
                     )
                 }
+            }
+            DialogState.YearMonthPicker -> {
+                MonthYearPickerDialog(
+                    onMonthYearSelected = { onEvent(Event.ConfirmYearMonth(it)) },
+                    onDismiss = { onEvent(Event.DismissDialog) }
+                )
             }
             else -> {}
         }

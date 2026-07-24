@@ -1,9 +1,11 @@
 package com.luna.budgetapp.presentation.screen.budgetdetails.components
 
 import java.time.YearMonth
+import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -37,7 +39,7 @@ fun MonthYearPickerDialog(
 
     val months = remember {
         (1..12).map { monthIndex ->
-            java.time.Month.of(monthIndex)
+            Month.of(monthIndex)
                 .getDisplayName(TextStyle.SHORT, Locale.getDefault())
         }
     }
@@ -50,16 +52,26 @@ fun MonthYearPickerDialog(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { selectedYear-- }) {
-                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "Previous Year")
+                IconButton(
+                    onClick = { selectedYear-- }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
+                        contentDescription = "Previous Year"
+                    )
                 }
                 Text(
                     text = "$selectedYear",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                IconButton(onClick = { selectedYear++ }) {
-                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "Next Year")
+                IconButton(
+                    onClick = { selectedYear++ }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "Next Year"
+                    )
                 }
             }
         },
@@ -72,23 +84,40 @@ fun MonthYearPickerDialog(
             ) {
                 itemsIndexed(months) { index, monthName ->
                     val monthNumber = index + 1
+                    val isCurrentMonth =
+                        monthNumber == initialYearMonth.monthValue &&
+                        selectedYear == initialYearMonth.year
                     val isSelected = monthNumber == selectedMonth
+                    val shape = RoundedCornerShape(8.dp)
+                    val borderColor =
+                        if (isCurrentMonth)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            Color.Transparent
+                    val textColor =
+                        if (isSelected)
+                            MaterialTheme.colorScheme.onPrimary
+                        else if (isCurrentMonth)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurface
+
 
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .height(48.dp)
-                            .clip(RoundedCornerShape(8.dp))
+                            .border(1.dp, borderColor, shape)
+                            .clip(shape)
                             .background(
-                                if (isSelected) MaterialTheme.colorScheme.primary 
+                                if (isSelected) MaterialTheme.colorScheme.primary
                                 else Color.Transparent
                             )
                             .clickable { selectedMonth = monthNumber }
                     ) {
                         Text(
                             text = monthName,
-                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary 
-                                    else MaterialTheme.colorScheme.onSurface,
+                            color = textColor,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                         )

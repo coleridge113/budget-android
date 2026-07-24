@@ -22,4 +22,7 @@ sealed interface Routes {
 
     @Serializable
     data object BudgetRoute : Routes
+
+    @Serializable
+    data class BudgetDetailsRoute(val budgetId: Long) : Routes
 }

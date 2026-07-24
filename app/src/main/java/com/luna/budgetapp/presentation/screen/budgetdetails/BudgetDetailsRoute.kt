@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -17,7 +20,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,6 +35,9 @@ import com.luna.budgetapp.presentation.screen.budgetdetails.components.BudgetDet
 import com.luna.budgetapp.presentation.screen.components.ExpenseTable
 import com.luna.budgetapp.presentation.screen.utils.singleClick
 import org.koin.compose.viewmodel.koinViewModel
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +46,7 @@ fun BudgetDetailsRoute(
     viewModel: BudgetDetailsViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val onEvent = viewModel::onEvent
 
     when (val state = uiState) {
         UiState.Loading -> {}
@@ -55,6 +64,18 @@ fun BudgetDetailsRoute(
                             ) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(
+                                onClick = {
+                                    onEvent(Event.ClickCalendar(state.budget.frequency))
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CalendarMonth,
                                     contentDescription = null
                                 )
                             }
@@ -78,7 +99,8 @@ fun BudgetDetailsRoute(
             ) { innerPadding ->
                 MainContent(
                     modifier = Modifier.padding(innerPadding),
-                    state = state
+                    state = state,
+                    onEvent = viewModel::onEvent
                 )
             }
         }
@@ -88,9 +110,10 @@ fun BudgetDetailsRoute(
 @Composable
 private fun MainContent(
     modifier: Modifier,
-    state: UiState.Success
+    state: UiState.Success,
+    onEvent: (Event) -> Unit
 ) {
-    val (budget, expenses) = state
+    val (budget, expenses, dialog) = state
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
@@ -108,6 +131,47 @@ private fun MainContent(
                 modifier = Modifier,
                 expenses = expenses
             )
+        }
+
+        when (dialog) {
+            DialogState.DatePicker -> {
+                val datePickerState = rememberDatePickerState()
+                DatePickerDialog(
+                    onDismissRequest = { onEvent(Event.DismissDialog) },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                onEvent(
+                                    Event.ConfirmDate(
+                                        datePickerState.selectedDateMillis?.let {
+                                            Instant.ofEpochMilli(it)
+                                                .atZone(ZoneId.systemDefault())
+                                                .toLocalDate()
+                                        } ?: LocalDate.now()
+                                    )
+                                )
+                            }
+                        ) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = { onEvent(Event.DismissDialog) }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(
+                        state = datePickerState,
+                        showModeToggle = false,
+                        title = null,
+                        headline = null
+                    )
+                }
+            }
+            else -> {}
         }
     }
 }

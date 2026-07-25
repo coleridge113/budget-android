@@ -4,9 +4,40 @@
     # Button Texts
     <string name="btn_apply_and_save">Apply &amp; Save</string>
     <string name="btn_apply">Apply</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_confirm">Confirm</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_save">Save</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_yes">Yes</string>
+
+    # Forms
+    <string name="edit_expense_preset">Edit Expense Preset</string>
+    <string name="add_expense_preset">Add Expense Preset</string>
+    <string name="add_custom_expense">Add Custom Expense</string>
+    <string name="select_category">Select category</string>
+    <string name="form_type">Type</string>
+    <string name="form_amount">Amount</string>
+    <string name="form_amount_placeholder">500.00</string>
+    <string name="form_date">Date</string>
+    <string name="select_date">Select Date</string>
+    <string name="profile_name">Profile Name</string>
+    <string name="form_name">Name</string>
+    <string name="form_name_placeholder">My Daily Budget</string>
+    <string name="select_frequency">Select frequency</string>
+    <string name="create_budget">Create Budget</string>
+    <string name="form_scope">Scope</string>
+
+    # Dialogs
+    <string name="confirm_sign_out">Are you sure you want to sign out?</string>
+    <string name="confirm_delete_last_expense">Delete the last expense?</string>
+    <string name="confirm_delete_item">Delete this item?</string>
+    <string name="confirm_delete_expense">Delete this expense?</string>
+    <string name="confirm_delete_budget">Are you sure you want to delete this budget?</string>
+
+    # Charts
+    <string name="chart_total">Total</string>
 
     <string name="title_custom">Custom</string>
 </resources>

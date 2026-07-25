@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.luna.budgetapp.R
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.presentation.nav.Routes
@@ -102,9 +104,7 @@ fun MainContent(
     onEvent: (Event) -> Unit
 ) {
     val expensePresets = uiState.expensesState.expensePresets
-    val expenses = uiState.expensesState.expenses
     val totalAmount = uiState.expensesState.totalAmount
-
     var isMenuExpanded by remember { mutableStateOf(false) }
 
     Box(
@@ -146,8 +146,8 @@ fun MainContent(
             when (val dialog = uiState.dialogState) {
                 DialogState.ConfirmLogout -> {
                     ConfirmationDialog(
-                        message = "Are you sure you want to sign out?",
-                        confirmText = "Yes",
+                        message = stringResource(R.string.confirm_sign_out),
+                        confirmText = stringResource(R.string.btn_yes),
                         isDestructive = true,
                         onDismiss = { onEvent(Event.DismissDialog) },
                         onConfirm = { onEvent(Event.SignOut) }
@@ -155,8 +155,8 @@ fun MainContent(
                 }
                 DialogState.ConfirmDeleteExpense -> {
                     ConfirmationDialog(
-                        message = "Delete the last expense?",
-                        confirmText = "Delete",
+                        message = stringResource(R.string.confirm_delete_last_expense),
+                        confirmText = stringResource(R.string.btn_delete),
                         isDestructive = true,
                         onDismiss = { onEvent(Event.DismissDialog) },
                         onConfirm = { onEvent(Event.DeleteLatestExpense) }
@@ -190,8 +190,8 @@ fun MainContent(
                 }
                 is DialogState.ConfirmDeleteExpensePreset -> {
                     ConfirmationDialog(
-                        message = "Delete this item?",
-                        confirmText = "Delete",
+                        message = stringResource(R.string.confirm_delete_item),
+                        confirmText = stringResource(R.string.btn_delete),
                         isDestructive = true,
                         onDismiss = { onEvent(Event.DismissDialog) },
                         onConfirm = { onEvent(Event.DeleteExpensePreset(dialog.expensePresetId)) }

@@ -19,9 +19,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.luna.budgetapp.R
 import com.luna.budgetapp.presentation.nav.Routes
 import com.luna.budgetapp.presentation.screen.budget.components.BudgetCard2
 import com.luna.budgetapp.presentation.screen.budget.components.BudgetDialog
@@ -75,7 +77,7 @@ fun MainContent(
         when (val dialog = dialog) {
             is DialogState.DeleteDialog -> {
                 ConfirmationDialog(
-                    message = "Are you sure you want to delete?",
+                    message = stringResource(R.string.confirm_delete_budget),
                     isDestructive = true,
                     onDismiss = { onEvent(Event.DismissDialog) },
                     onConfirm = { onEvent(Event.ConfirmDeleteBudget(dialog.budget)) }

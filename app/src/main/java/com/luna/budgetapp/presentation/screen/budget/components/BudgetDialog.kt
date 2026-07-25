@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
@@ -36,11 +37,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_7
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.R
+import com.luna.budgetapp.common.Constants
 import com.luna.budgetapp.domain.model.Budget
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Category
@@ -48,6 +52,8 @@ import com.luna.budgetapp.presentation.screen.components.CategoryFilter
 import com.luna.budgetapp.ui.theme.LazyWalletTheme
 
 private typealias SaveAction = (Long, String, String, DateFilter, Map<Category, Boolean>) -> Unit
+private const val DEFAULT_BUDGET_NAME = "Budget"
+private const val DEFAULT_AMOUNT = "0.00"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,9 +63,9 @@ fun BudgetDialog(
     onDismissRequest: () -> Unit,
     onSave: SaveAction,
 ) {
-    val nameState = rememberTextFieldState(budget?.name ?: "")
+    val nameState = rememberTextFieldState(budget?.name ?: Constants.EMPTY)
     val amountState = rememberTextFieldState(
-        budget?.limit?.let { "%.2f".format(it / 100.0) } ?: ""
+        budget?.limit?.let { "%.2f".format(it / 100.0) } ?: Constants.EMPTY
     )
     val frequencyOptions = DateFilter.budgetFrequencies
     var selectedOption by remember {
@@ -84,14 +90,15 @@ fun BudgetDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = "Create Budget",
+                    text = stringResource(R.string.create_budget),
                     style = MaterialTheme.typography.headlineSmall
                 )
 
                 OutlinedTextField(
                     state = nameState,
-                    label = { Text("Name") },
-                    placeholder = { Text("My Daily Budget") },
+                    label = { Text(stringResource(R.string.form_name)) },
+                    placeholder = { Text(stringResource(R.string.form_name_placeholder)) },
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     modifier = Modifier.onFocusChanged {
                         if (it.isFocused) nameState.clearText()
                     }
@@ -99,12 +106,13 @@ fun BudgetDialog(
 
                 OutlinedTextField(
                     state = amountState,
-                    label = { Text("Amount") },
+                    label = { Text(stringResource(R.string.form_amount)) },
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal
                     ),
                     placeholder = {
-                        Text("500.00")
+                        Text(stringResource(R.string.form_amount_placeholder))
                     },
                     inputTransformation = InputTransformation {
                         val text = asCharSequence().toString()
@@ -129,7 +137,7 @@ fun BudgetDialog(
                         value = selectedOption.getFriendlyName(),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Select frequency") },
+                        label = { Text(stringResource(R.string.select_frequency)) },
                         trailingIcon = {
                             Icon(
                                 Icons.Default.KeyboardArrowDown,
@@ -159,7 +167,7 @@ fun BudgetDialog(
                 }
 
                 Text(
-                    text = "Scope",
+                    text = stringResource(R.string.form_scope),
                     modifier = Modifier.padding(top = 8.dp)
                 )
                 CategoryFilter(
@@ -174,24 +182,25 @@ fun BudgetDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(
-                        onClick = { onDismissRequest() }
+                        onClick = onDismissRequest
                     ) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.btn_cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = {
                             onSave(
                                 budget?.id ?: 0,
-                                nameState.text.toString(),
-                                amountState.text.toString(),
+                                nameState.text.toString().ifBlank { DEFAULT_BUDGET_NAME },
+                                amountState.text.toString().ifBlank { DEFAULT_AMOUNT },
                                 selectedOption,
                                 tempMap
                             )
                         }
                     ) {
                         Text(
-                            if (budget == null) "Save" else "Update"
+                            if (budget == null) stringResource(R.string.btn_save)
+                            else stringResource(R.string.btn_update)
                         )
                     }
                 }

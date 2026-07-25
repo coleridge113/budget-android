@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
@@ -183,12 +184,14 @@ fun ExpenseForm(
                     },
                     modifier = Modifier.onFocusChanged {
                         if (it.isFocused) typeState.clearText()
-                    }
+                    },
+                    lineLimits = TextFieldLineLimits.SingleLine
                 )
 
                 OutlinedTextField(
                     state = amountState,
                     label = { Text("Amount") },
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal
                     ),
@@ -214,6 +217,7 @@ fun ExpenseForm(
                     value = selectedDate.formatToDisplay(),
                     onValueChange = {},
                     label = { Text("Date") },
+                    singleLine = true,
                     readOnly = true,
                     trailingIcon = {
                         Icon(

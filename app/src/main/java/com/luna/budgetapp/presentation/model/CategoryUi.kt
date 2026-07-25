@@ -3,6 +3,7 @@ package com.luna.budgetapp.presentation.model
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Commute
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Fastfood
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.FitnessCenter
@@ -21,6 +22,7 @@ import com.luna.budgetapp.ui.theme.FitnessChartColor
 import com.luna.budgetapp.ui.theme.FoodChartColor
 import com.luna.budgetapp.ui.theme.GroceryChartColor
 import com.luna.budgetapp.ui.theme.HouseChartColor
+import com.luna.budgetapp.ui.theme.LeisureChartColor
 import com.luna.budgetapp.ui.theme.OthersChartColor
 import com.luna.budgetapp.ui.theme.PersonalChartColor
 
@@ -37,5 +39,6 @@ enum class CategoryOptions(
     GROCERY(Icons.Default.LocalGroceryStore, GroceryChartColor),
     FITNESS(Icons.Default.FitnessCenter, FitnessChartColor),
     PERSONAL(Icons.Default.Person, PersonalChartColor),
+    LEISURE(Icons.Default.CreditCard, LeisureChartColor),
     OTHERS(Icons.Default.Money, OthersChartColor)
 }

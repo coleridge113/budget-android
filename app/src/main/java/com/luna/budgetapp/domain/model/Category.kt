@@ -10,6 +10,7 @@ enum class Category {
     OTHERS,
     GROCERY,
     FITNESS,
+    LEISURE,
     PERSONAL;
 
     fun getDisplayName(): String {

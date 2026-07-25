@@ -52,4 +52,5 @@ val BillsChartColor = GruvboxLightPurple
 val GroceryChartColor = GruvboxGreen
 val FitnessChartColor = GruvboxYellow
 val PersonalChartColor = GruvboxLightBlue
+val LeisureChartColor = GruvboxLightAqua
 val OthersChartColor = GruvboxGray

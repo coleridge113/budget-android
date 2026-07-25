@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.luna.budgetapp.R
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.CategoryFilterDialog
@@ -157,8 +159,8 @@ fun MainContent(
 
             is DialogState.ConfirmDeleteExpense ->
                 ConfirmationDialog(
-                    message = "Delete this expense?",
-                    confirmText = "Delete",
+                    message = stringResource(R.string.confirm_delete_expense),
+                    confirmText = stringResource(R.string.btn_delete),
                     isDestructive = true,
                     onDismiss = { onEvent(Event.DismissDialog) },
                     onConfirm = { onEvent(Event.DeleteExpense(dialog.expenseId)) }

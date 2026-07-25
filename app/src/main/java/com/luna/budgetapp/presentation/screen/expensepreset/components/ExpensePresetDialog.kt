@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
@@ -44,11 +45,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.R
 import com.luna.budgetapp.common.Constants.EMPTY
 import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.ExpensePreset
@@ -115,12 +118,12 @@ fun ExpensePresetDialog(
                         }
                         showDatePicker = false
                     }) {
-                        Text("OK")
+                        Text(stringResource(R.string.btn_ok))
                     }
                 },
                 dismissButton = {
                     TextButton(onClick = { showDatePicker = false }) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.btn_cancel))
                     }
                 }
             ) {
@@ -144,9 +147,9 @@ fun ExpensePresetDialog(
             ) {
                 Text(
                     text = when (action) {
-                        ExpenseFormAction.EDIT -> "Edit Expense Preset"
-                        ExpenseFormAction.ADD -> "Add Expense Preset"
-                        else -> "Add Custom Expense"
+                        ExpenseFormAction.EDIT -> stringResource(R.string.edit_expense_preset)
+                        ExpenseFormAction.ADD -> stringResource(R.string.add_expense_preset)
+                        else -> stringResource(R.string.add_custom_expense)
                     },
                     style = MaterialTheme.typography.headlineSmall
                 )
@@ -159,7 +162,7 @@ fun ExpensePresetDialog(
                         value = selectedOption.getDisplayName(),
                         onValueChange = {},
                         readOnly = true,
-                        label = if (!isLocked) {{ Text("Select category") }} else null,
+                        label = if (!isLocked) {{ Text(stringResource(R.string.select_category)) }} else null,
                         trailingIcon = {
                             if (!isLocked) {
                                 Icon(
@@ -198,18 +201,19 @@ fun ExpensePresetDialog(
 
                 OutlinedTextField(
                     state = typeState,
-                    label = { Text("Type") },
+                    label = { Text(stringResource(R.string.form_type)) },
                     placeholder = {
                         Text(selectedPreset?.type ?: EMPTY)
                     },
                     modifier = Modifier.onFocusChanged {
                         if (it.isFocused) typeState.clearText()
-                    }
+                    },
+                    lineLimits = TextFieldLineLimits.SingleLine
                 )
 
                 OutlinedTextField(
                     state = amountState,
-                    label = { Text("Amount") },
+                    label = { Text(stringResource(R.string.form_amount)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Decimal
                     ),
@@ -230,18 +234,20 @@ fun ExpensePresetDialog(
                     },
                     modifier = Modifier.onFocusChanged {
                         if (it.isFocused) amountState.clearText()
-                    }
+                    },
+                    lineLimits = TextFieldLineLimits.SingleLine
                 )
 
                 OutlinedTextField(
                     value = selectedDate.formatToDisplay(),
                     onValueChange = {},
-                    label = { Text("Date") },
+                    label = { Text(stringResource(R.string.form_date)) },
                     readOnly = true,
+                    singleLine = true,
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Default.CalendarMonth,
-                            contentDescription = "Select Date",
+                            contentDescription = stringResource(R.string.select_date),
                             modifier = Modifier.clickable { showDatePicker = true }
                         )
                     },
@@ -260,7 +266,7 @@ fun ExpensePresetDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismissRequest) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.btn_cancel))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -277,7 +283,7 @@ fun ExpensePresetDialog(
                         },
                         enabled = !isSaving
                     ) {
-                        Text("Confirm")
+                        Text(stringResource(R.string.btn_confirm))
                     }
                 }
             }

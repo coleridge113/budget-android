@@ -28,9 +28,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.R
 import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.presentation.model.ChartData
 import com.luna.budgetapp.presentation.screen.utils.formatToPercentage
@@ -133,7 +135,7 @@ fun ExpenseDonutChart(
             modifier = Modifier.clickable { onClickCenter() }
         ) {
             Text(
-                text = "Total",
+                text = stringResource(R.string.chart_total),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

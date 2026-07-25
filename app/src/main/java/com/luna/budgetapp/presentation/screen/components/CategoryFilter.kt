@@ -153,7 +153,7 @@ fun CategoryFilterDialog(
                     OutlinedTextField(
                         value = profileNameInput,
                         onValueChange = { profileNameInput = it },
-                        label = { Text("Profile Name") },
+                        label = { Text(stringResource(R.string.profile_name)) },
                         singleLine = true
                     )
 

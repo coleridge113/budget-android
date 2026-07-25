@@ -134,11 +134,6 @@ fun MainContent(
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
-
-//                HorizontalDivider(
-//                    modifier = Modifier.padding(horizontal = 164.dp),
-//                    color = MaterialTheme.colorScheme.outline
-//                )
             }
         }
     }

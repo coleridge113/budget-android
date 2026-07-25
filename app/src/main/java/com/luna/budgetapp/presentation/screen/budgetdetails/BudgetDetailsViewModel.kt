@@ -30,7 +30,7 @@ class BudgetDetailsViewModel(
     private val budgetUseCases: BudgetUseCases,
     private val expenseUseCases: ExpenseUseCases
 ): ViewModel() {
-    val budgetId: Long = checkNotNull(savedStateHandle["budgetId"])
+    private val budgetId: Long = checkNotNull(savedStateHandle["budgetId"])
     private val _dialogState = MutableStateFlow<DialogState?>(null)
     private val _dateFlow = MutableStateFlow<DateRange?>(null)
     private val _budget = budgetUseCases.getBudgetById(budgetId)

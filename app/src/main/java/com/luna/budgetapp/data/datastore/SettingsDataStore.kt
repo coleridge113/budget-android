@@ -21,6 +21,7 @@ class SettingsDataStore(
         val customStart = longPreferencesKey("custom_start")
         val customEnd = longPreferencesKey("custom_end")
         val isMigratedToFireStore = booleanPreferencesKey("is_migrated_to_firestore")
+        val isGuest = booleanPreferencesKey("is_guest")
     }
 
     /* ------------------------------
@@ -136,5 +137,19 @@ class SettingsDataStore(
     private fun clearCustom(prefs: MutablePreferences) {
         prefs.remove(Keys.customStart)
         prefs.remove(Keys.customEnd)
+    }
+
+    /* ------------------------------
+       Guest State
+    ------------------------------ */
+    val isGuestFlow: Flow<Boolean> =
+        dataStore.data.map { prefs ->
+            prefs[Keys.isGuest] ?: false
+        }
+
+    suspend fun setGuestMode(isGuest: Boolean) {
+        dataStore.edit { prefs ->
+            prefs[Keys.isGuest] = isGuest
+        }
     }
 }

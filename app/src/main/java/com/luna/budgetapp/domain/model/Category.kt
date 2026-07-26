@@ -17,3 +17,9 @@ enum class Category {
         return name.lowercase().replaceFirstChar { it.uppercase() }
     }
 }
+
+fun String.toCategory(): Category {
+    return Category.entries.find { 
+        it.name.equals(this, ignoreCase = true)
+    } ?: Category.OTHERS
+}

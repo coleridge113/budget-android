@@ -26,16 +26,17 @@ class BudgetRepositoryImpl(
 ) : BudgetRepository {
 
     override fun getBudgets(): Flow<List<Budget>> {
-        return dao.getBudgetsWithInteractors().map { list ->
-            list.map { it.toModel() }
-        }
-            .flowOn(Dispatchers.IO)
+        return dao.getBudgetsWithInteractors()
+            .map { list ->
+                list.map { it.toModel() }
+            }.flowOn(Dispatchers.IO)
     }
 
     override fun getBudgetByName(name: String): Flow<Budget> {
-        return dao.getBudgetWithInteractorsByName(name).mapNotNull { compoundObj ->
-            compoundObj?.toModel()
-        }.flowOn(Dispatchers.IO)
+        return dao.getBudgetWithInteractorsByName(name)
+            .mapNotNull { compoundObj ->
+                compoundObj?.toModel()
+            }.flowOn(Dispatchers.IO)
     }
 
     override fun getBudgetById(budgetId: Long): Flow<Budget> {

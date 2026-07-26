@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.analysis.components.DailyExpenseBarChart
 import com.luna.budgetapp.presentation.screen.components.ExpenseTable
@@ -148,8 +149,8 @@ fun MainContent(
 private fun MainContentPreviewLight() {
     val now = LocalDateTime.now()
     val dummyExpenses = listOf(
-        Expense(1L, "Coffee", 9000, "Food", "Expense", now.minusDays(6)),
-        Expense(2L, "Lunch", 15000, "Food", "Expense", now.minusDays(6)),
+        Expense(1L, "Coffee", 9000, Category.FOOD, "Expense", now.minusDays(6)),
+        Expense(2L, "Lunch", 15000, Category.FOOD, "Expense", now.minusDays(6)),
     )
 
     val successState = UiState.Success(
@@ -181,17 +182,17 @@ private fun MainContentPreviewLight() {
 private fun MainContentPreviewDark() {
     val now = LocalDateTime.now()
     val dummyExpenses = listOf(
-        Expense(1L, "Coffee", 9000, "Food", "Expense", now.minusDays(6)),
-        Expense(2L, "Lunch", 15000, "Food", "Expense", now.minusDays(6)),
-        Expense(3L, "Grab", 20000, "Transport", "Expense", now.minusDays(5)),
-        Expense(4L, "Dinner", 18000, "Food", "Expense", now.minusDays(4)),
-        Expense(5L, "Snacks", 7000, "Food", "Expense", now.minusDays(4)),
-        Expense(6L, "Groceries", 50000, "Groceries", "Expense", now.minusDays(3)),
-        Expense(7L, "Coffee", 9500, "Food", "Expense", now.minusDays(2)),
-        Expense(8L, "Taxi", 18000, "Transport", "Expense", now.minusDays(2)),
-        Expense(9L, "Lunch", 16000, "Food", "Expense", now.minusDays(1)),
-        Expense(10L, "Breakfast", 8000, "Food", "Expense", now),
-        Expense(11L, "Dinner", 20000, "Food", "Expense", now)
+        Expense(1L, "Coffee", 9000, Category.FOOD, "Expense", now.minusDays(6)),
+        Expense(2L, "Lunch", 15000, Category.FOOD, "Expense", now.minusDays(6)),
+        Expense(3L, "Grab", 20000,  Category.COMMUTE, "Expense", now.minusDays(5)),
+        Expense(4L, "Dinner", 18000, Category.FOOD, "Expense", now.minusDays(4)),
+        Expense(5L, "Snacks", 7000, Category.FOOD, "Expense", now.minusDays(4)),
+        Expense(6L, "Groceries", 50000, Category.GROCERY, "Expense", now.minusDays(3)),
+        Expense(7L, "Coffee", 9500, Category.FOOD, "Expense", now.minusDays(2)),
+        Expense(8L, "Taxi", 18000, Category.COMMUTE, "Expense", now.minusDays(2)),
+        Expense(9L, "Lunch", 16000, Category.FOOD, "Expense", now.minusDays(1)),
+        Expense(10L, "Breakfast", 8000, Category.FOOD, "Expense", now),
+        Expense(11L, "Dinner", 20000, Category.FOOD, "Expense", now)
     )
 
     val successState = UiState.Success(

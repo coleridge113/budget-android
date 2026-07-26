@@ -1,7 +1,9 @@
 package com.luna.budgetapp.domain.usecase.expense
 
 import com.luna.budgetapp.domain.model.Expense
+import com.luna.budgetapp.domain.model.toCategory
 import com.luna.budgetapp.domain.repository.ExpenseRepository
+import java.time.LocalDateTime
 
 class AddExpenseUseCase(
     private val repository: ExpenseRepository
@@ -10,10 +12,10 @@ class AddExpenseUseCase(
         category: String,
         type: String,
         amount: Long,
-        date: java.time.LocalDateTime = java.time.LocalDateTime.now()
+        date: LocalDateTime = LocalDateTime.now()
     ) {
         val expense = Expense(
-            category = category,
+            category = category.toCategory(),
             type = type,
             amount = amount,
             date = date

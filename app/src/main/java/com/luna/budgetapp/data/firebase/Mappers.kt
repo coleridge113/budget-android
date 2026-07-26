@@ -11,6 +11,7 @@ import com.luna.budgetapp.data.local.entity.ExpensePresetEntity
 import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.DateFilter
 import com.luna.budgetapp.domain.model.getDateFilter
+import com.luna.budgetapp.domain.model.toCategory
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -36,7 +37,7 @@ fun ExpenseEntity.toFirestoreModel(): Expense {
     return Expense(
         name = this.name,
         amount = this.amount,
-        category = this.category,
+        category = this.category.name,
         type = this.type,
         date = this.date.toDate() 
     )
@@ -47,7 +48,7 @@ fun Expense.toEntity(): ExpenseEntity {
         remoteId = this.id.ifBlank { null },
         name = this.name,
         amount = this.amount,
-        category = this.category,
+        category = this.category.toCategory(),
         type = this.type,
         date = this.date.toLocalDateTime()
     )
@@ -56,7 +57,7 @@ fun Expense.toEntity(): ExpenseEntity {
 fun ExpensePresetEntity.toFirestoreModel(): ExpensePreset {
     return ExpensePreset(
         amount = this.amount,
-        category = this.category,
+        category = this.category.name,
         type = this.type,
         createdAt = this.createdAt.toDate()
     )
@@ -67,7 +68,7 @@ fun ExpensePreset.toEntity(): ExpensePresetEntity {
         id = 0,
         remoteId = this.id.ifBlank { null },
         amount = this.amount,
-        category = this.category,
+        category = this.category.toCategory(),
         type = this.type,
         createdAt = this.createdAt.toLocalDateTime()
     )
@@ -76,7 +77,7 @@ fun ExpensePreset.toEntity(): ExpensePresetEntity {
 fun CategoryFilterEntity.toFirestoreModel(): CategoryFilter {
     return CategoryFilter(
         profileName = this.profileName,
-        category = this.category.getDisplayName(),
+        category = this.category.name,
         active = this.isActive
     )
 }
@@ -84,7 +85,7 @@ fun CategoryFilterEntity.toFirestoreModel(): CategoryFilter {
 fun CategoryFilter.toEntity(): CategoryFilterEntity {
     return CategoryFilterEntity(
         profileName = this.profileName,
-        category = Category.entries.first { it.getDisplayName() == this.category },
+        category = this.category.toCategory(),
         isActive = this.active
     )
 }

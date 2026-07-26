@@ -32,6 +32,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.toLast7DaysExpenses
 import com.luna.budgetapp.presentation.screen.utils.formatToDay
@@ -183,13 +184,13 @@ private fun DailyExpenseBarChartPreview() {
         ) {
             DailyExpenseBarChart(
                 expenses = listOf(
-                    Expense(amount = 10000, category = "Food", type = "Lunch", date = LocalDateTime.now()),
-                    Expense(amount = 5000, category = "Transport", type = "Bus", date = LocalDateTime.now().minusDays(1)),
-                    Expense(amount = 20000, category = "Shopping", type = "Clothes", date = LocalDateTime.now().minusDays(2)),
-                    Expense(amount = 15000, category = "Food", type = "Dinner", date = LocalDateTime.now().minusDays(3)),
-                    Expense(amount = 8000, category = "Transport", type = "Taxi", date = LocalDateTime.now().minusDays(4)),
-                    Expense(amount = 12000, category = "Entertainment", type = "Movie", date = LocalDateTime.now().minusDays(5)),
-                    Expense(amount = 30000, category = "Bills", type = "Rent", date = LocalDateTime.now().minusDays(6))
+                    Expense(amount = 10000, category = Category.FOOD, type = "Lunch", date = LocalDateTime.now()),
+                    Expense(amount = 5000, category = Category.FOOD, type = "Bus", date = LocalDateTime.now().minusDays(1)),
+                    Expense(amount = 20000, category = Category.FOOD, type = "Clothes", date = LocalDateTime.now().minusDays(2)),
+                    Expense(amount = 15000, category = Category.FOOD, type = "Dinner", date = LocalDateTime.now().minusDays(3)),
+                    Expense(amount = 8000, category = Category.COMMUTE, type = "Taxi", date = LocalDateTime.now().minusDays(4)),
+                    Expense(amount = 12000, category = Category.LEISURE, type = "Movie", date = LocalDateTime.now().minusDays(5)),
+                    Expense(amount = 30000, category = Category.BILLS, type = "Rent", date = LocalDateTime.now().minusDays(6))
                 ),
                 selectedDate = LocalDate.now(),
                 onClickBar = {}

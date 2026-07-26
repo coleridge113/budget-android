@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.presentation.screen.components.SwipeableTableItem
 import com.luna.budgetapp.presentation.screen.utils.getIconForCategory
@@ -133,7 +134,7 @@ fun ExpensePresetItemPreview() {
     val item = ExpensePreset(
             id = 1L,
             amount = 450,
-            category = "Coffee",
+            category = Category.BEVERAGE,
             type = "Food & Drink"
         )
 
@@ -160,19 +161,19 @@ fun ExpensePresetTablePreview() {
         ExpensePreset(
             id = 1L,
             amount = 14000,
-            category = "BEVERAGE",
+            category = Category.BEVERAGE,
             type = "Coffee"
         ),
         ExpensePreset(
             id = 2L,
             amount = 1200,
-            category = "FOOD",
+            category = Category.FOOD,
             type = "Lunch"
         ),
         ExpensePreset(
             id = 3L,
             amount = 350000,
-            category = "COMMUTE",
+            category = Category.COMMUTE,
             type = "Angkas"
         ),
     )

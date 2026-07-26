@@ -27,6 +27,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.utils.formatToDisplay
 import com.luna.budgetapp.presentation.screen.utils.getIconForCategory
@@ -108,7 +109,7 @@ fun ExpenseItem(
 @Composable
 fun ExpenseItemPreview() {
     val expense = Expense(
-        category = "BEVERAGE",
+        category = Category.BEVERAGE,
         type = "Coffee",
         amount = 10000
     )

@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.presentation.screen.components.SwipeableTableItem
 import com.luna.budgetapp.presentation.screen.utils.formatToDisplay
@@ -138,9 +139,10 @@ fun ExpenseItem(
 @Composable
 fun ExpenseTablePreview() {
     val expenses = listOf(
-        Expense(id = 1, amount = 10000, category = "FOOD", type = "Lunch"),
-        Expense(id = 2, amount = 5000, category = "COMMUTE", type = "Taxi"),
-        Expense(id = 3, amount = 20000, category = "BILLS", type = "Electricity")
+        Expense(id = 1, amount = 10000, category = Category.FOOD, type = "Lunch"),
+        Expense(id = 2, amount = 5000, category = Category.COMMUTE, type = "Taxi"),
+        Expense(id = 3, amount = 20000, category = Category.BILLS, type = "Electricity"),
+        Expense(id = 3, amount = 115000, category = Category.LEISURE, type = "Bulalo")
     )
 
     LazyWalletTheme {

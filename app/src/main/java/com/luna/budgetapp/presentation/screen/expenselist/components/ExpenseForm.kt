@@ -90,7 +90,7 @@ fun ExpenseForm(
 
         LaunchedEffect(Unit) {
             selectedOption = options.firstOrNull { option ->
-                option.getDisplayName().equals(selectedExpense.category, ignoreCase = true)
+                option == selectedExpense.category
             } ?: options.first()
         }
 
@@ -280,7 +280,7 @@ fun ExpensePresetDialogPreview() {
     val dummyExpense = Expense(
         id = 1L,
         amount = 14000,
-        category = "Food",
+        category = Category.FOOD,
         type = "Lunch",
     )
 

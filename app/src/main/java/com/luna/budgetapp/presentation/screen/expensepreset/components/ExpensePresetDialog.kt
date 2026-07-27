@@ -101,7 +101,7 @@ fun ExpensePresetDialog(
         LaunchedEffect(Unit) {
             selectedPreset?.let {
                 selectedOption = options.firstOrNull { option ->
-                    option.getDisplayName().equals(it.category, ignoreCase = true)
+                    option == it.category
                 } ?: options.first()
             }
         }

@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.luna.budgetapp.R
+import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.Expense
 import com.luna.budgetapp.domain.model.ExpensePreset
 import com.luna.budgetapp.presentation.nav.Routes
@@ -290,13 +291,13 @@ fun MainContent(
 fun ExpenseRoutePreviewLight() {
     val expensesState = ExpensesState(
         expensePresets = listOf(
-            ExpensePreset(amount = 10000, category = "FOOD", type = "Lunch"),
-            ExpensePreset(amount = 14000, category = "BEVERAGE", type = "Coffee")
+            ExpensePreset(amount = 10000, category = Category.FOOD, type = "Lunch"),
+            ExpensePreset(amount = 14000, category = Category.BEVERAGE, type = "Coffee")
         ),
         expenses = listOf(
-            Expense(id = 1, amount = 5000, category = "FOOD", type = "Lunch"),
-            Expense(id = 2, amount = 1500, category = "BEVERAGE", type = "Coffee"),
-            Expense(id = 3, amount = 20000, category = "SHOPPING", type = "Groceries")
+            Expense(id = 1, amount = 5000, category = Category.FOOD, type = "Lunch"),
+            Expense(id = 2, amount = 1500, category = Category.BEVERAGE, type = "Coffee"),
+            Expense(id = 3, amount = 20000, category = Category.LEISURE, type = "Groceries")
         )
     )
 

@@ -88,13 +88,13 @@ class DataMigrationRepository(
         try {
             val expenses = userRef.collection("expenses").get().await()
                 .toObjects(Expense::class.java)
-            
+
             val presets = userRef.collection("expense_presets").get().await()
                 .toObjects(ExpensePreset::class.java)
-            
+
             val filters = userRef.collection("category_filters").get().await()
                 .toObjects(CategoryFilter::class.java)
-            
+
             val budgets = userRef.collection("budgets").get().await()
                 .toObjects(Budget::class.java)
 

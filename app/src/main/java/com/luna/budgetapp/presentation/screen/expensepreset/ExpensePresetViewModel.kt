@@ -155,7 +155,7 @@ class ExpensePresetViewModel(
         val expensePreset = ExpensePreset(
             id = id,
             amount = parseAmountExpression(amount),
-            category = category.name,
+            category = category,
             type = type.ifEmpty { category.getDisplayName() }.trim(),
             createdAt = date ?: java.time.LocalDateTime.now()
         )
@@ -184,7 +184,7 @@ class ExpensePresetViewModel(
         val amount = customAmount?.let { parseAmountExpression(it) } ?: expensePreset.amount
         viewModelScope.launch {
             expenseUseCases.addExpense(
-                category = expensePreset.category,
+                category = expensePreset.category.name,
                 type = customType ?: expensePreset.type,
                 amount = amount,
                 date = customDate ?: java.time.LocalDateTime.now()

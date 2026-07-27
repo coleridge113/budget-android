@@ -25,6 +25,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,31 +39,39 @@ class BudgetViewModel(
     val navigation = _navigation.receiveAsFlow()
     private val _dialogState = MutableStateFlow<DialogState?>(null)
     private val _budgets = budgetUseCases.getAllBudget()
-    private val _expenses = _budgets
-        .flatMapLatest { budgets ->
-            if (budgets.isEmpty()) {
-                flowOf(emptyMap())
-            } else {
-                val expenseFlows = budgets.map { budget ->
-                    val (start, end) = budget.frequency.resolve()
-                    expenseUseCases.getExpensesByDateRange(
-                        categories = budget.interactors.map { it.name },
-                        start = start,
-                        end = end
-                    ).map { expenses -> budget.id to expenses }
-                }
-                combine(expenseFlows) { it.toMap() }
+    private val _expenses = _budgets.flatMapLatest { budgets ->
+        if (budgets.isEmpty()) {
+            flowOf(emptyMap())
+        } else {
+            val expenseFlows = budgets.map { budget ->
+                val (start, end) = budget.frequency.resolve()
+                expenseUseCases.getExpensesByDateRange(
+                    categories = budget.interactors.map { it.name },
+                    start = start,
+                    end = end
+                ).map { expenses -> budget.id to expenses }
             }
+            combine(expenseFlows) { it.toMap() }
         }
+    }
 
-    private val _monthlyOutlook =
-        combine(_budgets, _expenses) { budgets, expenses ->
-            OutlookDetails(
-                income = 0L,
-                projectedSpend = budgets.sumOf { it.frequency.projectAmountToMonth(it.limit) },
-                actualSpend = expenses.values.flatten().distinctBy { it.id }.sumOf { it.amount },
-            )
-        }
+    private val now = LocalDateTime.now()
+    private val _totalAmount =
+        expenseUseCases.getTotalAmountByDateRange(
+            start = now.withDayOfMonth(1).with(LocalTime.MIN),
+            end = now
+        )
+
+    private val _monthlyOutlook = combine(
+        _budgets, 
+        _totalAmount
+    ) { budgets, totalAmount ->
+        OutlookDetails(
+            income = 0L,
+            projectedSpend = budgets.sumOf { it.frequency.projectAmountToMonth(it.limit) },
+            actualSpend = totalAmount
+        )
+    }
 
     private val _successState = combine(
         _budgets,

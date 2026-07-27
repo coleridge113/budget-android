@@ -34,21 +34,23 @@ class BudgetDetailsViewModel(
     private val _dialogState = MutableStateFlow<DialogState?>(null)
     private val _dateFlow = MutableStateFlow<DateRange?>(null)
     private val _budget = budgetUseCases.getBudgetById(budgetId)
-    private val _expenses =
-        combine(_budget, _dateFlow) { budget, date ->
-            budget to date
-        }
-            .flatMapLatest { (budget, date) ->
-                val (defaultStart, defaultEnd) = budget.frequency.resolve()
-                val start = _dateFlow.value?.start
-                val end = _dateFlow.value?.end
+    private val _expenses = combine(
+        _budget, 
+        _dateFlow
+    ) { budget, date ->
+        budget to date
+    }
+        .flatMapLatest { (budget, date) ->
+            val (defaultStart, defaultEnd) = budget.frequency.resolve()
+            val start = _dateFlow.value?.start
+            val end = _dateFlow.value?.end
 
-                expenseUseCases.getExpensesByDateRange(
-                    categories = budget.interactors.map { it.name },
-                    start = start ?: defaultStart,
-                    end = end ?: defaultEnd
-                )
-            }
+            expenseUseCases.getExpensesByDateRange(
+                categories = budget.interactors.map { it.name },
+                start = start ?: defaultStart,
+                end = end ?: defaultEnd
+            )
+        }
 
     val uiState = combine(
         _budget,

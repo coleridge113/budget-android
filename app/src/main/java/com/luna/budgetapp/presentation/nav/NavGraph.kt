@@ -193,9 +193,9 @@ fun NavGraphSetup(
 private fun getTabIndex(destination: NavDestination?): Int {
     return when {
         destination?.hasRoute<Routes.ExpensePresetRoute>() == true -> 0
-        destination?.hasRoute<Routes.ExpensesRoute>() == true -> 1
-        destination?.hasRoute<Routes.AnalysisRoute>() == true -> 2
-        destination?.hasRoute<Routes.BudgetRoute>() == true -> 3
+        destination?.hasRoute<Routes.BudgetRoute>() == true -> 1
+        destination?.hasRoute<Routes.ExpensesRoute>() == true -> 2
+//        destination?.hasRoute<Routes.AnalysisRoute>() == true -> 2
         else -> -1
     }
 }

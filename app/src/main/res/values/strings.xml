@@ -11,6 +11,10 @@
     <string name="btn_save">Save</string>
     <string name="btn_update">Update</string>
     <string name="btn_yes">Yes</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="btn_google_sign_in">Sign in with Google</string>
+    <string name="btn_guest_sign_in">Sign in as Guest</string>
 
     # Forms
     <string name="edit_expense_preset">Edit Expense Preset</string>

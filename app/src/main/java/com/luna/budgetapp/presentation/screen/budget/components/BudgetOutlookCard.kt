@@ -48,19 +48,19 @@ fun BudgetOutlookCard(
             Row(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Income",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = details.income.toCurrency(),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+//                Column(
+//                    modifier = Modifier.weight(1f),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    Text(
+//                        text = "Income",
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                    Text(
+//                        text = details.income.toCurrency(),
+//                        style = MaterialTheme.typography.bodyMedium
+//                    )
+//                }
                 Column(
                     modifier = Modifier.weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally

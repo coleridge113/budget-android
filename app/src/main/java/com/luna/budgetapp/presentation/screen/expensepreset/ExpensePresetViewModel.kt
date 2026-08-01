@@ -2,8 +2,10 @@ package com.luna.budgetapp.presentation.screen.expensepreset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.luna.budgetapp.domain.model.Category
 import com.luna.budgetapp.domain.model.ExpensePreset
+import com.luna.budgetapp.domain.usecase.AuthUseCases
 import com.luna.budgetapp.domain.usecase.BudgetUseCases
 import com.luna.budgetapp.domain.usecase.ExpenseUseCases
 import com.luna.budgetapp.domain.usecase.PresetUseCases
@@ -28,7 +30,7 @@ class ExpensePresetViewModel(
     private val presetUseCases: PresetUseCases,
     private val expenseUseCases: ExpenseUseCases,
     private val profileUseCases: ProfileUseCases,
-    private val budgetUseCases: BudgetUseCases
+    private val authUseCases: AuthUseCases
 ): ViewModel() {
 
     private val _errorState = MutableStateFlow<String?>(null)
@@ -111,13 +113,13 @@ class ExpensePresetViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            Event.SignOut -> signOutUser()
             Event.ShowSignOutDialog -> showSignOutDialog()
             Event.GotoExpenseRoute -> gotoExpenseRoute(Navigation.GotoExpenseRoute)
             Event.GotoAnalysisRoute -> gotoExpenseRoute(Navigation.GotoAnalysisRoute)
             Event.DismissDialog -> dismissDialog()
             Event.ShowDeleteConfirmationDialog -> showExpenseDeleteConfirmationDialog()
             Event.DeleteLatestExpense -> deleteLatestExpense()
+            is Event.SignOut -> signOutUser(event.auth)
             is Event.AddExpense -> addExpense(event.expensePreset, event.customAmount, event.customType, event.customDate)
             is Event.AddExpensePreset -> showExpenseForm(event.selectedPreset, event.action)
             is Event.AddCustomExpense -> showExpenseForm(event.selectedPreset, event.action)
@@ -244,8 +246,9 @@ class ExpensePresetViewModel(
         }
     }
 
-    private fun signOutUser() {
+    private fun signOutUser(auth: FirebaseAuth) {
         viewModelScope.launch {
+            authUseCases.signOut(auth)
             _navigation.send(Navigation.Logout)
         }
     }

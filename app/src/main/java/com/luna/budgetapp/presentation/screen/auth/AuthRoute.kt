@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -103,6 +105,9 @@ fun AuthRoute(
                         onEvent(Event.HandleError(error as Exception))
                     }
                 }
+            },
+            handleGuestSignIn = {
+                onEvent(Event.HandleSignInSuccess)
             }
         )
     }
@@ -115,6 +120,7 @@ fun AuthContent(
     onEvent: (Event) -> Unit,
     dialog: DialogState?,
     handleGoogleSignIn: () -> Unit,
+    handleGuestSignIn: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (val dialog = dialog) {
@@ -180,7 +186,7 @@ fun AuthContent(
                             )
                         )
                     },
-                    text = "Sign Up",
+                    text = stringResource(R.string.btn_sign_up),
                     modifier = Modifier.padding(16.dp)
                 )
                 PrimaryButton(
@@ -192,7 +198,7 @@ fun AuthContent(
                             )
                         )
                     },
-                    text = "Sign In",
+                    text = stringResource(R.string.btn_sign_in),
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -220,7 +226,8 @@ fun AuthContent(
             }
 
             Column(
-                modifier = Modifier.padding(top = 20.dp)
+                modifier = Modifier.padding(top = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
                     onClick = handleGoogleSignIn
@@ -232,7 +239,21 @@ fun AuthContent(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "Sign in with Google"
+                        text = stringResource(R.string.btn_google_sign_in)
+                    )
+                }
+
+                Button(
+                    onClick = handleGuestSignIn
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.btn_guest_sign_in)
                     )
                 }
             }
@@ -262,7 +283,8 @@ fun LoginScreenPreviewLight() {
                 onEvent = {},
                 modifier = Modifier,
                 dialog = null,
-                handleGoogleSignIn = {}
+                handleGoogleSignIn = {},
+                handleGuestSignIn = {}
             )
         }
     }
@@ -285,7 +307,8 @@ fun LoginScreenPreviewDark() {
                 onEvent = {},
                 modifier = Modifier,
                 dialog = null,
-                handleGoogleSignIn = {}
+                handleGoogleSignIn = {},
+                handleGuestSignIn = {}
             )
         }
     }
@@ -309,7 +332,8 @@ fun LoginScreenPreviewDialog() {
                 onEvent = {},
                 modifier = Modifier,
                 dialog = dialog,
-                handleGoogleSignIn = {}
+                handleGoogleSignIn = {},
+                handleGuestSignIn = {}
             )
         }
     }

@@ -66,12 +66,13 @@ fun ExpensePresetRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val auth = remember { FirebaseAuth.getInstance() }
+    val onEvent = viewModel::onEvent
 
     LaunchedEffect(Unit) {
         viewModel.navigation.collectLatest { navigation ->
             when (navigation) {
                 Navigation.Logout -> {
-                    auth.signOut()
+                    onEvent(Event.SignOut(auth))
                     navController.navigate(Routes.AuthRoute) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true
@@ -91,7 +92,8 @@ fun ExpensePresetRoute(
             MainContent(
                 uiState = state,
                 modifier = Modifier,
-                onEvent = viewModel::onEvent,
+                onEvent = onEvent,
+                auth = auth
             )
         }
     }
@@ -100,8 +102,9 @@ fun ExpensePresetRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainContent(
-    uiState: UiState.Success,
     modifier: Modifier = Modifier,
+    uiState: UiState.Success,
+    auth: FirebaseAuth,
     onEvent: (Event) -> Unit
 ) {
     val expensePresets = uiState.expensesState.expensePresets
@@ -151,7 +154,7 @@ fun MainContent(
                         confirmText = stringResource(R.string.btn_yes),
                         isDestructive = true,
                         onDismiss = { onEvent(Event.DismissDialog) },
-                        onConfirm = { onEvent(Event.SignOut) }
+                        onConfirm = { onEvent(Event.SignOut(auth)) }
                     )
                 }
                 DialogState.ConfirmDeleteExpense -> {
@@ -304,12 +307,14 @@ fun ExpenseRoutePreviewLight() {
     val uiState = UiState.Success(
         expensesState = expensesState
     )
+    val auth = FirebaseAuth.getInstance()
 
     LazyWalletTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             MainContent(
                 uiState = uiState,
-                onEvent = {}
+                onEvent = {},
+                auth = auth
             )
         }
     }
@@ -323,6 +328,7 @@ fun ExpenseRoutePreviewLight() {
 @Composable
 fun ExpenseRoutePreviewDark() {
     val uiState = UiState.Success()
+    val auth = FirebaseAuth.getInstance()
 
     LazyWalletTheme {
         Surface(
@@ -330,7 +336,8 @@ fun ExpenseRoutePreviewDark() {
         ) {
             MainContent(
                 uiState = uiState,
-                onEvent = {}
+                onEvent = {},
+                auth = auth
             )
         }
     }
@@ -344,6 +351,7 @@ fun ExpenseRoutePreviewDark() {
 @Composable
 fun ExpenseRoutePreviewDialog() {
     val expenseFormDialog = DialogState.ExpenseForm()
+    val auth = FirebaseAuth.getInstance()
     val uiState = UiState.Success(
         dialogState = expenseFormDialog
     )
@@ -354,7 +362,8 @@ fun ExpenseRoutePreviewDialog() {
         ) {
             MainContent(
                 uiState = uiState,
-                onEvent = {}
+                onEvent = {},
+                auth = auth
             )
         }
     }

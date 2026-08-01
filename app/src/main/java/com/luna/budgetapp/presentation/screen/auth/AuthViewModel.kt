@@ -1,6 +1,5 @@
 package com.luna.budgetapp.presentation.screen.auth
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.credentials.Credential
@@ -8,7 +7,6 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.exceptions.NoCredentialException
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.luna.budgetapp.domain.usecase.AuthUseCases
-import com.luna.budgetapp.domain.usecase.SettingsUseCases
 import com.luna.budgetapp.data.firebase.migration.DataMigrationRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +15,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.luna.budgetapp.data.datastore.SettingsDataStore
 import kotlinx.coroutines.flow.update
 
 class AuthViewModel(
     private val authUseCases: AuthUseCases,
-    private val settingsUseCases: SettingsUseCases,
-    private val migrationRepository: DataMigrationRepository
+    private val migrationRepository: DataMigrationRepository,
+    private val settings: SettingsDataStore
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState.Success())
@@ -36,7 +35,7 @@ class AuthViewModel(
 
     fun onEvent(event: Event) {
         when (event) {
-            is Event.HandleSignInSuccess -> handleSignInSuccess()
+            is Event.HandleSignInSuccess -> handleSignInSuccess(event.isGuest)
             is Event.SignInGoogle -> signInGoogle(event.credential)
             is Event.SignInEmailPassword -> signInEmailPassword(event.email, event.password)
             is Event.SignUp -> signUp(event.email, event.password)
@@ -45,12 +44,15 @@ class AuthViewModel(
         }
     }
 
-    private fun handleSignInSuccess() {
+    private fun handleSignInSuccess(isGuest: Boolean) {
         viewModelScope.launch {
             try {
                 migrationRepository.syncFromCloud()
-            } catch (_: Exception) { }
-            _navigation.send(Navigation.GotoAddExpenseRoute)
+            } catch (_: Exception) {
+            } finally {
+                settings.setGuestMode(isGuest)
+                _navigation.send(Navigation.GotoAddExpenseRoute)
+            }
         }
     }
 
@@ -67,7 +69,7 @@ class AuthViewModel(
                         idToken = googleIdTokenCredential.idToken,
                         onSuccess = { task ->
                             if (task.isSuccessful) {
-                                handleSignInSuccess()
+                                handleSignInSuccess(isGuest = false)
                             }
                         },
                         onFailure = { error ->
@@ -92,7 +94,7 @@ class AuthViewModel(
                     password = password,
                     onSuccess = { task ->
                         if (task.isSuccessful) {
-                            handleSignInSuccess()
+                            handleSignInSuccess(isGuest = false)
                         }
                     },
                     onFailure = { error ->
@@ -116,7 +118,7 @@ class AuthViewModel(
                     password = password,
                     onSuccess = { task ->
                         if (task.isSuccessful) {
-                            handleSignInSuccess()
+                            handleSignInSuccess(isGuest = false)
                         }
                     },
                     onFailure = { error ->

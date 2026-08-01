@@ -12,7 +12,7 @@ sealed interface UiState {
 
 sealed interface Event {
     data object DismissDialog : Event
-    data object HandleSignInSuccess : Event
+    data class HandleSignInSuccess(val isGuest: Boolean) : Event
     data class SignInGoogle(val credential: Credential?) : Event
     data class SignInEmailPassword(val email: String, val password: String) : Event
     data class SignUp(val email: String, val password: String) : Event

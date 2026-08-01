@@ -72,7 +72,6 @@ fun ExpensePresetRoute(
         viewModel.navigation.collectLatest { navigation ->
             when (navigation) {
                 Navigation.Logout -> {
-                    onEvent(Event.SignOut(auth))
                     navController.navigate(Routes.AuthRoute) {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true

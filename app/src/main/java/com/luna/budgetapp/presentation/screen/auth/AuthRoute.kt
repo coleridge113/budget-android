@@ -107,7 +107,7 @@ fun AuthRoute(
                 }
             },
             handleGuestSignIn = {
-                onEvent(Event.HandleSignInSuccess)
+                onEvent(Event.HandleSignInSuccess(true))
             }
         )
     }
@@ -131,7 +131,7 @@ fun AuthContent(
     }
     if (isUserSignedIn) {
         LaunchedEffect(Unit) {
-            onEvent(Event.HandleSignInSuccess)
+            onEvent(Event.HandleSignInSuccess(false))
         }
     } else {
         val emailState = rememberTextFieldState()

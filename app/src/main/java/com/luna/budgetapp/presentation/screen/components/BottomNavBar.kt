@@ -14,6 +14,7 @@ fun BottomNavBar(
     navCallback: (NavOptions) -> Unit
 ) {
     val items = NavOptions.entries
+        .filter { it != NavOptions.ANALYSIS }
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,

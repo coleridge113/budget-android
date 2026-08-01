@@ -11,7 +11,7 @@ enum class NavOptions(
     val icon: ImageVector
 ) {
     HOME(Icons.Default.Home),
+    BUDGET(Icons.Default.Wallet),
     LIST(Icons.AutoMirrored.Filled.FormatListBulleted),
     ANALYSIS(Icons.Default.BarChart),
-    BUDGET(Icons.Default.Wallet)
 }

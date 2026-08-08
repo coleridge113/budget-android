@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.AndroidUiModes
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,16 +71,16 @@ fun BudgetOutlookCard2(
                 // Left Section: Stats
                 Column(
                     modifier = Modifier
-                        .weight(1.3f) // FIX: Increased weight to give the large text more room
+                        .weight(1.3f)
                         .padding(end = 12.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp) // FIX: Even, responsive spacing
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
                 ) {
                     StatRow(
                         icon = Icons.Default.AccountBalanceWallet,
                         secondaryIcon = Icons.Default.ArrowUpward,
                         label = "Income",
                         value = details.income.toCurrency(),
-                        color = GruvboxGreen
+                        color = MaterialTheme.colorScheme.secondary
                     )
 
                     Column {
@@ -104,28 +106,20 @@ fun BudgetOutlookCard2(
                         secondaryIcon = Icons.Default.ArrowDownward,
                         label = "Expenses",
                         value = details.actualSpend.toCurrency(),
-                        color = GruvboxRed
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
 
                 // Right Section: Chart
                 Box(
                     modifier = Modifier
-                        .weight(1f) // Takes the remaining horizontal space
-                        .aspectRatio(1f), // FIX: This mathematically guarantees a perfect circle!
+                        .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     OutlookChart(
                         actual = details.actualSpend,
                         projected = details.projectedSpend,
                         income = details.income
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.Savings, // Piggy bank icon from image_9dd6d9.png
-                        contentDescription = null,
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
@@ -168,15 +162,25 @@ private fun StatRow(
             }
         }
         Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = "$label: $value",
-            style = MaterialTheme.typography.titleMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp
-            ),
-            maxLines = 1
-        )
+        Column {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp
+                ),
+                maxLines = 1
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = FontWeight.Normal
+                ),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                maxLines = 1
+            )
+        }
     }
 }
 
@@ -192,7 +196,7 @@ private fun OutlookChart(
     Box(modifier = Modifier.fillMaxSize()) {
         Canvas(
             modifier = Modifier
-                .fillMaxSize()
+                .aspectRatio(1f)
                 .padding(top = 28.dp, bottom = 4.dp, start = 8.dp) // FIX: Padding shifts the chart to make room for labels
         ) {
             val strokeWidth = 14.dp.toPx()
@@ -270,7 +274,10 @@ private fun OutlookChart(
     }
 }
 
-@Preview
+@Preview(
+    device = Devices.PIXEL_7,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_NO
+)
 @Composable
 fun BudgetOutlookCardPreview2() {
     val details = OutlookDetails(
@@ -282,6 +289,48 @@ fun BudgetOutlookCardPreview2() {
         Box(modifier = Modifier.padding(16.dp)) {
             BudgetOutlookCard2(
                 details = details
+            )
+        }
+    }
+}
+
+@Preview(
+    device = Devices.PIXEL_7,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_NO
+)
+@Composable
+fun StatRowPreview() {
+    LazyWalletTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            StatRow(
+                icon = Icons.Default.AccountBalanceWallet,
+                secondaryIcon = Icons.Default.ArrowUpward,
+                label = "Income",
+                value = "3,000.00",
+                color = MaterialTheme.colorScheme.secondary,
+            )
+
+        }
+    }
+}
+
+@Preview(
+    device = Devices.PIXEL_7,
+    uiMode = AndroidUiModes.UI_MODE_NIGHT_NO
+)
+@Composable
+fun OutlookChartPreview() {
+    LazyWalletTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            modifier = Modifier.height(240.dp)
+        ) {
+            OutlookChart(
+                actual = 5_000L,
+                projected = 32_000L,
+                income = 35_000L
             )
         }
     }

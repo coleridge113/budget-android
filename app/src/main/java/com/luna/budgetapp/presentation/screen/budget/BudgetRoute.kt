@@ -27,7 +27,7 @@ import com.luna.budgetapp.R
 import com.luna.budgetapp.presentation.nav.Routes
 import com.luna.budgetapp.presentation.screen.budget.components.BudgetCard2
 import com.luna.budgetapp.presentation.screen.budget.components.BudgetDialog
-import com.luna.budgetapp.presentation.screen.budget.components.BudgetOutlookCard2
+import com.luna.budgetapp.presentation.screen.budget.components.BudgetOutlookCard
 import com.luna.budgetapp.presentation.screen.components.ConfirmationDialog
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.compose.viewmodel.koinViewModel
@@ -106,7 +106,7 @@ fun MainContent(
         Column(
             modifier = Modifier
         ) {
-            BudgetOutlookCard2(
+            BudgetOutlookCard(
                 modifier = Modifier,
                 details = monthlyOutlook
             )

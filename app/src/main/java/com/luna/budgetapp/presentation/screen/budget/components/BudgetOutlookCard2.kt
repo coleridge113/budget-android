@@ -19,12 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.AndroidUiModes
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -192,83 +196,115 @@ private fun OutlookChart(
 ) {
     val actualRatio = if (income > 0) (actual.toFloat() / income).coerceAtMost(1f) else 0f
     val projectedRatio = if (income > 0) (projected.toFloat() / income).coerceAtMost(1f) else 0f
+    val maxArcAngle = 290f
+    val arcStartAngle = -90f
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    val textMeasurer = rememberTextMeasurer()
+    val labelStyle = MaterialTheme.typography.labelSmall.copy(
+        fontSize = 12.sp,
+        fontWeight = FontWeight.SemiBold
+    )
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
+
+    Box(
+        modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
         Canvas(
             modifier = Modifier
                 .aspectRatio(1f)
-                .padding(top = 28.dp, bottom = 4.dp, start = 8.dp) // FIX: Padding shifts the chart to make room for labels
+                .padding(8.dp)
+                .drawWithContent {
+                    drawContent()
+
+                    val strokeWidth = 14.dp.toPx()
+                    val innerStrokeWidth = 12.dp.toPx()
+                    val spacing = 8.dp.toPx()
+
+                    // Measure text dimensions dynamically
+                    val actualLayout = textMeasurer.measure("Actual", labelStyle)
+                    val projectedLayout = textMeasurer.measure("Projected", labelStyle)
+
+                    // Center x-coordinate where -90° arc starts
+                    val topCenterX = size.width / 2f
+
+                    // Outer ring top edge Y-coordinate
+                    val outerRingTopY = -18f
+
+                    // Inner ring top edge Y-coordinate
+                    val innerRingTopY = strokeWidth + spacing - 16f
+
+                    // 3. Draw "Actual" label anchored right above the Outer Ring start
+                    drawText(
+                        textLayoutResult = actualLayout,
+                        color = onSurfaceColor.copy(alpha = 0.8f),
+                        topLeft = Offset(
+                            x = topCenterX - actualLayout.size.width - 12.dp.toPx(), // Sits just to the left of top-center
+                            y = outerRingTopY - (actualLayout.size.height / 2f) + (strokeWidth / 2f)
+                        )
+                    )
+
+                    // 4. Draw "Projected" label anchored right above the Inner Ring start
+                    drawText(
+                        textLayoutResult = projectedLayout,
+                        color = onSurfaceColor.copy(alpha = 0.6f),
+                        topLeft = Offset(
+                            x = topCenterX - projectedLayout.size.width - 12.dp.toPx(),
+                            y = innerRingTopY - (projectedLayout.size.height / 2f) + (innerStrokeWidth / 2f)
+                        )
+                    )
+                }
         ) {
             val strokeWidth = 14.dp.toPx()
             val innerStrokeWidth = 12.dp.toPx()
             val spacing = 8.dp.toPx()
 
-            // Outer Ring - Actual
+            // Outer Ring - Actual Background Track
             drawArc(
                 color = GruvboxRed.copy(alpha = 0.2f),
-                startAngle = 0f,
-                sweepAngle = 360f,
+                startAngle = arcStartAngle,
+                sweepAngle = maxArcAngle,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
+            // Outer Ring - Actual Progress
             drawArc(
                 color = GruvboxRed,
-                startAngle = -90f, // Starts exact top-center
-                sweepAngle = 360f * actualRatio,
+                startAngle = arcStartAngle,
+                sweepAngle = maxArcAngle * actualRatio,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
 
-            // Inner Ring - Projected
+            // Inner Ring - Projected (Dimensions)
             val innerSize = size.copy(
                 width = size.width - (strokeWidth + spacing) * 2,
                 height = size.height - (strokeWidth + spacing) * 2
             )
-            val innerOffset = androidx.compose.ui.geometry.Offset(
+            val innerOffset = Offset(
                 (size.width - innerSize.width) / 2,
                 (size.height - innerSize.height) / 2
             )
 
+            // Inner Ring - Projected Background Track
             drawArc(
                 color = GruvboxOrange.copy(alpha = 0.2f),
-                startAngle = 0f,
-                sweepAngle = 360f,
+                startAngle = arcStartAngle,
+                sweepAngle = maxArcAngle,
                 useCenter = false,
                 style = Stroke(width = innerStrokeWidth, cap = StrokeCap.Round),
                 topLeft = innerOffset,
                 size = innerSize
             )
+            // Inner Ring - Projected Progress
             drawArc(
                 color = GruvboxOrange,
-                startAngle = -90f,
-                sweepAngle = 360f * projectedRatio,
+                startAngle = arcStartAngle,
+                sweepAngle = maxArcAngle * projectedRatio,
                 useCenter = false,
                 style = Stroke(width = innerStrokeWidth, cap = StrokeCap.Round),
                 topLeft = innerOffset,
                 size = innerSize
-            )
-        }
-
-        // FIX: Labels cleanly nested in the Top-Start quadrant outside the Canvas bounds
-        Column(
-            modifier = Modifier.align(Alignment.TopStart),
-            horizontalAlignment = Alignment.End
-        ) {
-            Text(
-                text = "Actual",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
-            Text(
-                text = "Projected",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
             )
         }
     }
